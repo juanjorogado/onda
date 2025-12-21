@@ -11,7 +11,7 @@ export function useNowPlaying(station?: Station | null) {
   const [track, setTrack] = useState<TrackInfo>({});
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval>;
     const fetchNowPlaying = async () => {
       if (!station) {
         setTrack({});
