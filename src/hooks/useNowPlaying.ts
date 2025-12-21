@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Station } from '../stations';
+import { Station } from '../data/stations';
 
 export interface TrackInfo {
   title?: string;
@@ -11,7 +11,7 @@ export function useNowPlaying(station?: Station | null) {
   const [track, setTrack] = useState<TrackInfo>({});
 
   useEffect(() => {
-    let timer: any;
+    let timer: NodeJS.Timeout;
     const fetchNowPlaying = async () => {
       if (!station) {
         setTrack({});
@@ -30,17 +30,9 @@ export function useNowPlaying(station?: Station | null) {
             return;
           }
         }
-        setTrack({
-          title: undefined,
-          artist: undefined,
-          cover: station.cover,
-        });
+        setTrack({ title: undefined, artist: undefined, cover: station.cover });
       } catch {
-        setTrack({
-          title: undefined,
-          artist: undefined,
-          cover: station.cover,
-        });
+        setTrack({ title: undefined, artist: undefined, cover: station.cover });
       }
     };
 

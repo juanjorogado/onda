@@ -1,0 +1,40 @@
+/* Animations */
+
+/* Pulse animation */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Wave indicator animation */
+.wave-indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--color-brand);
+  border: 1px solid var(--color-brand);
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.wave-indicator.playing {
+  animation: wave-pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes wave-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(237, 63, 28, 0.7);
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+    box-shadow: 0 0 0 4px rgba(237, 63, 28, 0);
+  }
+}
+

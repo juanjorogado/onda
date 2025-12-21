@@ -26,7 +26,7 @@ export function useAudioPlayer({ volume = 1.0, src }: Options) {
         }
       }
     }
-  }, [src]);
+  }, [src, isPlaying, setIsPlaying]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -34,16 +34,9 @@ export function useAudioPlayer({ volume = 1.0, src }: Options) {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch(() => {
-            setIsPlaying(false);
-          });
-      }
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
     }
   };
 

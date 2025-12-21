@@ -1,41 +1,28 @@
-import { useState, useEffect } from 'react';
-import { stations, Station } from './stations';
-import { useWakeLock } from './scripts/useWakeLock';
-import { useNow } from './scripts/useNow';
-import { useAudioPlayer } from './scripts/useAudioPlayer';
+import { useWakeLock } from './hooks/useWakeLock';
+import { useCurrentTime } from './hooks/useCurrentTime';
+import { useRadioPlayer } from './hooks/useRadioPlayer';
 import { Header } from './components/Header';
 import { Clocks } from './components/Clocks';
 import { CoverArt } from './components/CoverArt';
 import { NowPlaying } from './components/NowPlaying';
-import { useNowPlaying } from './scripts/useNowPlaying';
 
 function App() {
-  const [currentStation, setCurrentStation] = useState<Station | null>(null);
   useWakeLock();
-  const time = useNow();
-  const { audioRef, isPlaying, setIsPlaying, togglePlay } = useAudioPlayer({
-    volume: 1.0,
-    src: currentStation?.url,
-  });
-  const track = useNowPlaying(currentStation);
+  const time = useCurrentTime();
   
-  const nextStation = () => {
-    if (!stations.length) return;
-    let nextIndex;
-    do {
-      nextIndex = Math.floor(Math.random() * stations.length);
-    } while (stations[nextIndex].id === currentStation?.id && stations.length > 1);
-    setCurrentStation(stations[nextIndex]);
-    setIsPlaying(true);
-  };
-
-  useEffect(() => {
-    const randomStation = stations[Math.floor(Math.random() * stations.length)];
-    setCurrentStation(randomStation);
-  }, []);
-
-  const headerName = currentStation?.name ?? 'ONDA';
-  const headerLocation = currentStation?.location ?? '';
+  const {
+    currentStation,
+    audioRef,
+    isPlaying,
+    togglePlay,
+    nextStation,
+    handleAudioError,
+    handleAudioEnded,
+    headerName,
+    headerLocation,
+    coverArt,
+    track,
+  } = useRadioPlayer();
 
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
@@ -44,27 +31,20 @@ function App() {
       >
         <audio 
           ref={audioRef} 
-          onError={() => {
-              setIsPlaying(false);
-          }}
-          onEnded={() => setIsPlaying(false)}
+          onError={handleAudioError}
+          onEnded={handleAudioEnded}
         />
-        <Header name={headerName} location={headerLocation} />
+        <Header name={headerName} location={headerLocation} isPlaying={isPlaying} />
 
-        <div className="flex-1 w-full flex flex-col justify-start items-start gap-6 pt-4">
+        <div className="flex-1 w-full flex flex-col items-start gap-6 pt-4">
           {currentStation ? (
             <>
               <Clocks time={time} location={currentStation.location} timezone={currentStation.timezone} />
-              
-              <div className="space-y-2 w-full mt-8">
-                <div className="h-1 w-12 bg-brand"></div>
-              </div>
-
               <CoverArt 
-                cover={track.cover || currentStation.cover} 
+                cover={coverArt} 
                 isPlaying={isPlaying} 
                 onToggle={togglePlay}
-                onSwipe={() => nextStation()}
+                onSwipe={nextStation}
               />
               <NowPlaying title={track.title} artist={track.artist} />
             </>
