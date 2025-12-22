@@ -32,6 +32,8 @@ function App() {
       >
         <audio
           ref={audioRef}
+          crossOrigin="anonymous"
+          preload="none"
           onError={handleAudioError}
           onEnded={handleAudioEnded}
         />

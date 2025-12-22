@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { stations } from '../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from './useNowPlaying';
@@ -14,13 +14,6 @@ export function useRadioPlayer() {
   });
 
   const track = useNowPlaying(currentStation);
-
-  // Auto-play on mount
-  useEffect(() => {
-    if (currentStation && !isPlaying) {
-      setIsPlaying(true);
-    }
-  }, [currentStation, isPlaying, setIsPlaying]);
 
   // Función para cambiar a la siguiente estación
   const nextStation = useCallback(() => {
