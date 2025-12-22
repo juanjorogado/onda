@@ -61,3 +61,4 @@
 ✅ **Data**: camelCase, archivos `.ts`
 ✅ **Styles**: kebab-case o camelCase, archivos `.css`
 
+
