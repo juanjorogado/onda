@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { stations, Station } from '../data/stations';
+import { useState, useCallback } from 'react';
+import { stations } from '../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from './useNowPlaying';
 
