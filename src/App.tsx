@@ -9,13 +9,14 @@ import { NowPlaying } from './components/NowPlaying';
 function App() {
   useWakeLock();
   const time = useCurrentTime();
-  
+
   const {
     currentStation,
     audioRef,
     isPlaying,
     togglePlay,
     nextStation,
+    prevStation,
     handleAudioError,
     handleAudioEnded,
     headerName,
@@ -26,25 +27,28 @@ function App() {
 
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
-      <div 
-        className="bg-paper text-ink flex flex-col items-start p-4 gap-2 select-none overflow-hidden w-screen h-screen"
+      <div
+        className="bg-paper text-ink flex flex-col items-start p-4 sm:p-6 gap-2 select-none overflow-hidden w-screen h-screen"
       >
-        <audio 
-          ref={audioRef} 
+        <audio
+          ref={audioRef}
           onError={handleAudioError}
           onEnded={handleAudioEnded}
         />
         <Header name={headerName} location={headerLocation} isPlaying={isPlaying} />
 
-        <div className="flex-1 w-full flex flex-col items-start gap-6 pt-4">
+        <div className="flex-1 w-full flex flex-col items-start gap-4 sm:gap-6 pt-4">
           {currentStation ? (
             <>
               <Clocks time={time} location={currentStation.location} timezone={currentStation.timezone} />
-              <CoverArt 
-                cover={coverArt} 
-                isPlaying={isPlaying} 
+              <CoverArt
+                cover={coverArt}
+                isPlaying={isPlaying}
                 onToggle={togglePlay}
-                onSwipe={nextStation}
+                onSwipe={(direction) => {
+                  if (direction === 'left') nextStation();
+                  else if (direction === 'right') prevStation();
+                }}
               />
               <NowPlaying title={track.title} artist={track.artist} />
             </>

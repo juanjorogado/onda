@@ -1,4 +1,4 @@
-import { Play, Pause } from 'lucide-react';
+import { PlayCircle, PauseCircle } from 'lucide-react';
 import { useRef } from 'react';
 
 interface CoverArtProps {
@@ -40,7 +40,7 @@ export function CoverArt({ cover, isPlaying, onToggle, onSwipe }: CoverArtProps)
           e.stopPropagation();
         }
       }}
-      className="w-full h-65vh rounded-card shadow-xl transition-transform active:scale-95 group overflow-hidden relative bg-cover bg-center bg-no-repeat"
+      className="w-full aspect-square max-h-[65vh] rounded-card shadow-xl transition-transform active:scale-95 group overflow-hidden relative bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: `url(${cover}), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`,
       }}
@@ -48,9 +48,9 @@ export function CoverArt({ cover, isPlaying, onToggle, onSwipe }: CoverArtProps)
     >
       <div className={`absolute inset-0 bg-black-20 flex items-center justify-center transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
         {isPlaying ? (
-          <Pause className="w-12 h-12 text-white fill-current drop-shadow-md" />
+          <PauseCircle className="w-12 h-12 text-white fill-current drop-shadow-md" />
         ) : (
-          <Play className="w-12 h-12 text-white fill-current ml-1 drop-shadow-md" />
+          <PlayCircle className="w-12 h-12 text-white fill-current drop-shadow-md" />
         )}
       </div>
       <div className="absolute left-3 bottom-3 text-2xl">🔥</div>

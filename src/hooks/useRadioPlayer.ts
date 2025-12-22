@@ -4,32 +4,30 @@ import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from './useNowPlaying';
 
 export function useRadioPlayer() {
-  const [currentStation, setCurrentStation] = useState<Station | null>(null);
-  
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const currentStation = stations[currentIndex] || null;
+
   const { audioRef, isPlaying, setIsPlaying, togglePlay } = useAudioPlayer({
     volume: 1.0,
     src: currentStation?.url,
   });
-  
-  const track = useNowPlaying(currentStation);
 
-  // Inicialización: seleccionar estación aleatoria al montar
-  useEffect(() => {
-    if (stations.length > 0) {
-      const randomStation = stations[Math.floor(Math.random() * stations.length)];
-      setCurrentStation(randomStation);
-    }
-  }, []);
+  const track = useNowPlaying(currentStation);
 
   // Función para cambiar a la siguiente estación
   const nextStation = useCallback(() => {
-    if (!currentStation || stations.length <= 1) return;
-    
-    const availableStations = stations.filter(s => s.id !== currentStation.id);
-    const randomIndex = Math.floor(Math.random() * availableStations.length);
-    setCurrentStation(availableStations[randomIndex]);
+    if (stations.length <= 1) return;
+    setCurrentIndex((prev) => (prev + 1) % stations.length);
     setIsPlaying(true);
-  }, [currentStation, setIsPlaying]);
+  }, [setIsPlaying]);
+
+  // Función para cambiar a la estación anterior
+  const prevStation = useCallback(() => {
+    if (stations.length <= 1) return;
+    setCurrentIndex((prev) => (prev - 1 + stations.length) % stations.length);
+    setIsPlaying(true);
+  }, [setIsPlaying]);
 
   const handleAudioError = useCallback(() => setIsPlaying(false), [setIsPlaying]);
   const handleAudioEnded = useCallback(() => setIsPlaying(false), [setIsPlaying]);
@@ -44,6 +42,7 @@ export function useRadioPlayer() {
     isPlaying,
     togglePlay,
     nextStation,
+    prevStation,
     handleAudioError,
     handleAudioEnded,
     headerName,

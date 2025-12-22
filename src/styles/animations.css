@@ -6,36 +6,74 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
-/* Wave indicator animation */
-.wave-indicator {
-  width: 0.5rem;
-  height: 0.5rem;
+/* Water wave animation */
+.wave-container {
+  position: relative;
+  width: 1rem;
+  height: 1rem;
+}
+
+.wave-circle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: var(--color-brand);
-  border: 1px solid var(--color-brand);
-  display: inline-block;
-  transition: all 0.3s ease;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: none;
 }
 
-.wave-indicator.playing {
-  animation: wave-pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.wave-container.playing .wave-circle:nth-child(1) {
+  animation: water-wave-1 2s ease-out infinite;
 }
 
-@keyframes wave-pulse {
-  0%, 100% {
-    transform: scale(1);
+.wave-container.playing .wave-circle:nth-child(2) {
+  animation: water-wave-2 2s ease-out infinite 0.5s;
+}
+
+@keyframes water-wave-1 {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(237, 63, 28, 0.7);
   }
+
   50% {
-    transform: scale(1.15);
-    opacity: 0.9;
-    box-shadow: 0 0 0 4px rgba(237, 63, 28, 0);
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
   }
 }
 
+@keyframes water-wave-2 {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
 
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}

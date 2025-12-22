@@ -7,7 +7,10 @@ interface HeaderProps {
 export function Header({ name, location, isPlaying }: HeaderProps) {
   return (
     <div className="flex px-1 items-center gap-2 self-stretch text-ink">
-      <span className={`wave-indicator ${isPlaying ? 'playing' : ''}`}></span>
+      <div className={`wave-container ${isPlaying ? 'playing' : ''}`}>
+        <span className="wave-circle"></span>
+        <span className="wave-circle"></span>
+      </div>
       <div className="text-m tracking-wide">
         <span className="font-normal">{name}</span> <span className="font-light">— {location}</span>
       </div>
