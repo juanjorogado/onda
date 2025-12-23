@@ -1,12 +1,13 @@
-import { useRef, ReactNode, useEffect } from 'react';
+import { useRef, ReactNode, useEffect, useState } from 'react';
 import { useImageBrightness } from '../hooks/useImageBrightness';
-import { getCitySkyImageUnsplash } from '../utils/getCitySkyImage';
+import { getCitySkyImageUnsplash, getCitySkyImageGemini } from '../utils/getCitySkyImage';
 
 interface CoverArtProps {
   cover: string;
   stationCover: string;
   stationLocation: string;
   hasTrackInfo: boolean;
+  isPlaying: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
   children?: ReactNode;
@@ -15,13 +16,32 @@ interface CoverArtProps {
 
 const SWIPE_THRESHOLD = 50;
 
-export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, onToggle, onSwipe, children, onBrightnessChange }: CoverArtProps) {
+export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, isPlaying, onToggle, onSwipe, children, onBrightnessChange }: CoverArtProps) {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
 
-  // Usar cover del track si existe, si no el cover de la estación, si no imagen del cielo de la ciudad
-  const displayCover = cover || stationCover || getCitySkyImageUnsplash(stationLocation);
+  // Estado para el cover a mostrar
+  const [displayCover, setDisplayCover] = useState<string>(
+    cover || stationCover || getCitySkyImageUnsplash(stationLocation)
+  );
+
+  // Actualizar displayCover cuando cambien las props
+  useEffect(() => {
+    if (cover) {
+      setDisplayCover(cover);
+    } else if (stationCover) {
+      setDisplayCover(stationCover);
+    } else {
+      // Si no hay cover, generar imagen del cielo con Gemini
+      getCitySkyImageGemini(stationLocation).then((imageUrl: string) => {
+        setDisplayCover(imageUrl);
+      }).catch(() => {
+        // Si falla Gemini, usar Unsplash como fallback
+        setDisplayCover(getCitySkyImageUnsplash(stationLocation));
+      });
+    }
+  }, [cover, stationCover, stationLocation]);
   
   // Calcular brillo de la imagen
   const brightness = useImageBrightness(displayCover || null);
@@ -68,6 +88,15 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, o
       {children}
       {hasTrackInfo && (
         <div className="absolute left-3 bottom-3 text-2xl flame-icon">🔥</div>
+      )}
+      {!isPlaying && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="ripple-container">
+            <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
+            <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
+            <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
+          </div>
+        </div>
       )}
     </div>
   );

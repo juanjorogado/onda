@@ -49,6 +49,7 @@ function App() {
                 stationCover={currentStation.cover}
                 stationLocation={currentStation.location}
                 hasTrackInfo={!!(track.title || track.artist)}
+                isPlaying={isPlaying}
                 onToggle={togglePlay}
                 onSwipe={(direction) => {
                   if (direction === 'left') nextStation();

@@ -20,7 +20,7 @@
   --line-height-m: 1.5rem;
 
   /* Font weights */
-  --font-weight-light: 200;
+  --font-weight-light: 300;
   --font-weight-normal: 400;
 }
 
@@ -173,7 +173,7 @@ body {
 
 
 .font-sans {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 .tracking-wide {
