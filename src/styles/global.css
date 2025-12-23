@@ -306,9 +306,9 @@ body {
 
 /* Clock backdrop for better readability */
 .clock-backdrop {
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  background: rgba(0, 0, 0, 0);
   padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--radius-card);
   margin: 0 var(--spacing-2);

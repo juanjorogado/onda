@@ -55,7 +55,7 @@ function App() {
                 <Clocks time={time} location={currentStation.location} timezone={currentStation.timezone} />
               </CoverArt>
               <div className="w-full mt-2">
-                <NowPlaying title={track.title} artist={track.artist} />
+                <NowPlaying title={track.title} artist={track.artist} stationName={headerName} />
               </div>
             </>
           ) : (
