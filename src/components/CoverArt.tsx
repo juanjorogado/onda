@@ -1,14 +1,15 @@
-import { useRef } from 'react';
+import { useRef, ReactNode } from 'react';
 
 interface CoverArtProps {
   cover: string;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
+  children?: ReactNode;
 }
 
 const SWIPE_THRESHOLD = 50;
 
-export function CoverArt({ cover, onToggle, onSwipe }: CoverArtProps) {
+export function CoverArt({ cover, onToggle, onSwipe, children }: CoverArtProps) {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
@@ -38,11 +39,12 @@ export function CoverArt({ cover, onToggle, onSwipe }: CoverArtProps) {
           e.stopPropagation();
         }
       }}
-      className="w-full flex-1 rounded-card shadow-xl overflow-hidden relative bg-cover bg-center bg-no-repeat min-h-0 cursor-pointer"
+      className="w-full flex-1 rounded-card overflow-hidden relative bg-cover bg-center bg-no-repeat min-h-0 cursor-pointer"
       style={{
         backgroundImage: `url(${cover}), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`,
       }}
     >
+      {children}
       <div className="absolute left-3 bottom-3 text-2xl">🔥</div>
     </div>
   );
