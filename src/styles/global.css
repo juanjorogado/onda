@@ -2,10 +2,10 @@
   --color-brand: #ED3F1C;
   --color-ink: #000000;
   --color-paper: #FFFFFF;
-  --color-background: #0f0f0f;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --radius-card: 24px;
+  --color-background: #1E1E1E;
+  --color-gray-100: #F3F0E6;
+  --color-gray-200: #F3F0E6;
+  --radius-card: 16px;
 
   /* Spacing */
   --spacing-1: 0.25rem;
@@ -29,6 +29,7 @@
 
   /* Font weights */
   --font-weight-light: 200;
+  --font-weight-light-300: 300;
   --font-weight-normal: 400;
 }
 
@@ -148,12 +149,30 @@ body {
   padding-right: var(--spacing-1);
 }
 
+.px-3 {
+  padding-left: var(--spacing-3);
+  padding-right: var(--spacing-3);
+}
+
+.px-4 {
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
+}
+
+.mt-2 {
+  margin-top: var(--spacing-2);
+}
+
 .mt-4 {
   margin-top: var(--spacing-4);
 }
 
 .mt-8 {
   margin-top: var(--spacing-8);
+}
+
+.mb-8 {
+  margin-bottom: var(--spacing-8);
 }
 
 .pt-4 {
@@ -209,6 +228,20 @@ body {
   height: 65vh;
 }
 
+.min-h-0 {
+  min-height: 0;
+}
+
+.px-2 {
+  padding-left: var(--spacing-2);
+  padding-right: var(--spacing-2);
+}
+
+.py-4 {
+  padding-top: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+}
+
 /* Typography */
 .text-l {
   font-size: var(--font-size-l);
@@ -231,6 +264,10 @@ body {
 
 .font-light {
   font-weight: var(--font-weight-light);
+}
+
+.font-light-300 {
+  font-weight: var(--font-weight-light-300);
 }
 
 .font-sans {

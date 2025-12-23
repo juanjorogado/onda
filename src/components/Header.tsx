@@ -6,7 +6,7 @@ interface HeaderProps {
 
 export function Header({ name, location, isPlaying }: HeaderProps) {
   return (
-    <div className="flex px-1 items-center gap-2 self-stretch text-ink">
+    <div className="flex px-4 items-center gap-2 self-stretch text-ink">
       <div className={`wave-container ${isPlaying ? 'playing' : ''}`}>
         <span className="wave-circle"></span>
         <span className="wave-circle"></span>

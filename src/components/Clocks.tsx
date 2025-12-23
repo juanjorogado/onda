@@ -17,7 +17,7 @@ function ClockItem({ label, time }: { label: string; time: string }) {
 
 export function Clocks({ time, location, timezone }: ClocksProps) {
   return (
-    <div className="flex items-center gap-4 sm:gap-8 self-stretch">
+    <div className="flex items-center gap-8 px-3 self-stretch">
       <ClockItem label="Hora local" time={formatTime(time)} />
       <ClockItem label={location} time={formatTime(time, timezone)} />
     </div>

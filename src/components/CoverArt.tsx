@@ -1,4 +1,3 @@
-import { PlayCircle, PauseCircle } from 'lucide-react';
 import { useRef } from 'react';
 
 interface CoverArtProps {
@@ -16,7 +15,7 @@ export function CoverArt({ cover, isPlaying, onToggle, onSwipe }: CoverArtProps)
   const swiped = useRef(false);
 
   return (
-    <button
+    <div
       onClick={onToggle}
       onTouchStart={(e) => {
         const touch = e.touches[0];
@@ -40,20 +39,12 @@ export function CoverArt({ cover, isPlaying, onToggle, onSwipe }: CoverArtProps)
           e.stopPropagation();
         }
       }}
-      className="w-full aspect-square max-h-[65vh] rounded-card shadow-xl transition-transform active:scale-95 group overflow-hidden relative bg-cover bg-center bg-no-repeat"
+      className="w-full flex-1 rounded-card shadow-xl overflow-hidden relative bg-cover bg-center bg-no-repeat min-h-0 cursor-pointer"
       style={{
         backgroundImage: `url(${cover}), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`,
       }}
-      aria-label={isPlaying ? 'Pause' : 'Play'}
     >
-      <div className={`absolute inset-0 bg-black-20 flex items-center justify-center transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
-        {isPlaying ? (
-          <PauseCircle className="w-12 h-12 text-white fill-current drop-shadow-md" />
-        ) : (
-          <PlayCircle className="w-12 h-12 text-white fill-current drop-shadow-md" />
-        )}
-      </div>
       <div className="absolute left-3 bottom-3 text-2xl">🔥</div>
-    </button>
+    </div>
   );
 }

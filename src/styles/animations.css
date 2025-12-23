@@ -20,20 +20,32 @@
 /* Water wave animation */
 .wave-container {
   position: relative;
-  width: 1rem;
-  height: 1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wave-circle {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  border: 1px solid var(--color-brand);
   background-color: var(--color-brand);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   animation: none;
+}
+
+.wave-container.playing .wave-circle:nth-child(2) {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--color-brand);
+  background-color: transparent;
+  opacity: 0.6;
 }
 
 .wave-container.playing .wave-circle:nth-child(1) {
@@ -77,3 +89,5 @@
     opacity: 0;
   }
 }
+
+

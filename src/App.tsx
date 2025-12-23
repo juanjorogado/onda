@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
       <div
-        className="bg-paper text-ink flex flex-col items-start p-4 sm:p-6 gap-2 select-none overflow-hidden w-screen h-screen"
+        className="bg-paper text-ink flex flex-col items-start px-2 py-4 select-none overflow-hidden w-screen h-screen"
       >
         <audio
           ref={audioRef}
@@ -39,10 +39,12 @@ function App() {
         />
         <Header name={headerName} location={headerLocation} isPlaying={isPlaying} />
 
-        <div className="flex-1 w-full flex flex-col items-start gap-4 sm:gap-6 pt-4">
+        <div className="flex-1 w-full flex flex-col items-start overflow-hidden">
           {currentStation ? (
             <>
-              <Clocks time={time} location={currentStation.location} timezone={currentStation.timezone} />
+              <div className="w-full mb-8">
+                <Clocks time={time} location={currentStation.location} timezone={currentStation.timezone} />
+              </div>
               <CoverArt
                 cover={coverArt}
                 isPlaying={isPlaying}
@@ -52,7 +54,9 @@ function App() {
                   else if (direction === 'right') prevStation();
                 }}
               />
-              <NowPlaying title={track.title} artist={track.artist} />
+              <div className="w-full mt-2">
+                <NowPlaying title={track.title} artist={track.artist} />
+              </div>
             </>
           ) : (
             <div className="text-ink font-light animate-pulse">Loading...</div>
