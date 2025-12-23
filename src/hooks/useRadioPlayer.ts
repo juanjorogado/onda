@@ -46,7 +46,8 @@ export function useRadioPlayer() {
 
   const headerName = currentStation?.name ?? 'ONDA';
   const headerLocation = currentStation?.location ?? '';
-  const coverArt = track.cover || currentStation?.cover || '';
+  // Usar cover del track si existe, si no se usará el cover de la estación en CoverArt
+  const coverArt = track.cover || '';
 
   return {
     currentStation,

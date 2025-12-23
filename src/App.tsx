@@ -44,6 +44,8 @@ function App() {
             <>
               <CoverArt
                 cover={coverArt}
+                stationCover={currentStation.cover}
+                hasTrackInfo={!!(track.title || track.artist)}
                 onToggle={togglePlay}
                 onSwipe={(direction) => {
                   if (direction === 'left') nextStation();
