@@ -4,22 +4,24 @@ interface ClocksProps {
   time: Date;
   location: string;
   timezone: string;
+  isBright?: boolean;
 }
 
-function ClockItem({ label, time }: { label: string; time: string }) {
+function ClockItem({ label, time, isBright }: { label: string; time: string; isBright: boolean }) {
+  const textColor = isBright ? 'text-ink' : 'text-white';
   return (
     <div className="flex flex-col items-start">
-      <span className="text-m font-normal text-white">{label}</span>
-      <span className="text-l font-light text-white">{time}</span>
+      <span className={`text-m font-normal ${textColor}`}>{label}</span>
+      <span className={`text-l font-light ${textColor}`}>{time}</span>
     </div>
   );
 }
 
-export function Clocks({ time, location, timezone }: ClocksProps) {
+export function Clocks({ time, location, timezone, isBright = false }: ClocksProps) {
   return (
-    <div className="absolute top-4 left-0 right-0 flex items-center gap-8 clock-backdrop">
-      <ClockItem label="Hora local" time={formatTime(time)} />
-      <ClockItem label={location} time={formatTime(time, timezone)} />
+    <div className="absolute top-8 left-0 right-0 flex items-center gap-8 clock-backdrop">
+      <ClockItem label="Hora local" time={formatTime(time)} isBright={isBright} />
+      <ClockItem label={location} time={formatTime(time, timezone)} isBright={isBright} />
     </div>
   );
 }

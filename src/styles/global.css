@@ -34,7 +34,7 @@ body {
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .safe-area {
@@ -173,7 +173,7 @@ body {
 
 
 .font-sans {
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .tracking-wide {

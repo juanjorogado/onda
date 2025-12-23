@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useWakeLock } from './hooks/useWakeLock';
 import { useCurrentTime } from './hooks/useCurrentTime';
 import { useRadioPlayer } from './hooks/useRadioPlayer';
@@ -9,6 +10,7 @@ import { NowPlaying } from './components/NowPlaying';
 function App() {
   useWakeLock();
   const time = useCurrentTime();
+  const [coverBrightness, setCoverBrightness] = useState<number>(0.5);
 
   const {
     currentStation,
@@ -45,14 +47,21 @@ function App() {
               <CoverArt
                 cover={coverArt}
                 stationCover={currentStation.cover}
+                stationLocation={currentStation.location}
                 hasTrackInfo={!!(track.title || track.artist)}
                 onToggle={togglePlay}
                 onSwipe={(direction) => {
                   if (direction === 'left') nextStation();
                   else if (direction === 'right') prevStation();
                 }}
+                onBrightnessChange={setCoverBrightness}
               >
-                <Clocks time={time} location={currentStation.location} timezone={currentStation.timezone} />
+                <Clocks 
+                  time={time} 
+                  location={currentStation.location} 
+                  timezone={currentStation.timezone}
+                  isBright={coverBrightness > 0.5}
+                />
               </CoverArt>
               <div className="w-full mt-2">
                 <NowPlaying title={track.title} artist={track.artist} stationName={headerName} />

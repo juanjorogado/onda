@@ -1,23 +1,37 @@
-import { useRef, ReactNode } from 'react';
+import { useRef, ReactNode, useEffect } from 'react';
+import { useImageBrightness } from '../hooks/useImageBrightness';
+import { getCitySkyImageUnsplash } from '../utils/getCitySkyImage';
 
 interface CoverArtProps {
   cover: string;
   stationCover: string;
+  stationLocation: string;
   hasTrackInfo: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
   children?: ReactNode;
+  onBrightnessChange?: (brightness: number) => void;
 }
 
 const SWIPE_THRESHOLD = 50;
 
-export function CoverArt({ cover, stationCover, hasTrackInfo, onToggle, onSwipe, children }: CoverArtProps) {
+export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, onToggle, onSwipe, children, onBrightnessChange }: CoverArtProps) {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
 
-  // Usar cover del track si existe, si no el cover de la estación
-  const displayCover = cover || stationCover || '';
+  // Usar cover del track si existe, si no el cover de la estación, si no imagen del cielo de la ciudad
+  const displayCover = cover || stationCover || getCitySkyImageUnsplash(stationLocation);
+  
+  // Calcular brillo de la imagen
+  const brightness = useImageBrightness(displayCover || null);
+  
+  // Notificar cambio de brillo al componente padre
+  useEffect(() => {
+    if (onBrightnessChange) {
+      onBrightnessChange(brightness);
+    }
+  }, [brightness, onBrightnessChange]);
 
   return (
     <div
