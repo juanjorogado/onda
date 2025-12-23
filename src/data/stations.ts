@@ -19,33 +19,6 @@ export const stations: Station[] = [
     cover: 'https://somafm.com/img/groovesalad120.png'
   },
   {
-    id: 'defcon',
-    name: 'SomaFM: DefCon',
-    url: 'https://ice1.somafm.com/defcon-128-mp3',
-    genre: 'Techno / Hacking',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/defcon120.png'
-  },
-  {
-    id: 'jazz',
-    name: 'Jazz24',
-    url: 'https://live.wostreaming.net/direct/ppm-jazz24aac-ibc1',
-    genre: 'Jazz',
-    location: 'Seattle',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://www.jazz24.org/wp-content/uploads/2023/10/Jazz24_logo_2023_Color-1.png'
-  },
-  {
-    id: 'classic',
-    name: 'Venice Classic Radio',
-    url: 'https://uk2.internet-radio.com/proxy/veniceclassic?mp=/stream',
-    genre: 'Classical',
-    location: 'Venice',
-    timezone: 'Europe/Rome',
-    cover: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1200px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg'
-  },
-  {
     id: 'kexp',
     name: 'KEXP',
     url: 'https://kexp.streamguys1.com/kexp128.mp3',
@@ -55,21 +28,93 @@ export const stations: Station[] = [
     cover: 'https://cdn-profiles.tunein.com/s24996/images/logog.png?t=163001'
   },
   {
-    id: 'ibizaglobal',
-    name: 'Ibiza Global Radio',
-    url: 'https://ibizaglobalradio.streaming-pro.com:8024/ibizaglobalradio.mp3',
-    genre: 'Electronic',
-    location: 'Ibiza',
-    timezone: 'Europe/Madrid',
-    cover: 'https://ibizaglobalradio.com/wp-content/uploads/2022/01/LOGO-IGR-NEGRO.png'
-  },
-  {
-    id: 'dubstep',
-    name: 'SomaFM: Dub Step Beyond',
-    url: 'https://ice1.somafm.com/dubstep-128-mp3',
-    genre: 'Dubstep',
+    id: 'dronezone',
+    name: 'SomaFM: Drone Zone',
+    url: 'https://ice1.somafm.com/dronezone-128-mp3',
+    genre: 'Ambient / Drone',
     location: 'San Francisco',
     timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/dubstep120.png'
+    cover: 'https://somafm.com/img/dronezone120.png'
+  },
+  {
+    id: 'deepspace',
+    name: 'SomaFM: Deep Space One',
+    url: 'https://ice1.somafm.com/deepspaceone-128-mp3',
+    genre: 'Ambient / Space',
+    location: 'San Francisco',
+    timezone: 'America/Los_Angeles',
+    cover: 'https://somafm.com/img/deepspaceone120.png'
+  },
+  {
+    id: 'wfmujazz',
+    name: 'WFMU',
+    url: 'https://stream0.wfmu.org/freeform-128k',
+    genre: 'Freeform / Eclectic',
+    location: 'New Jersey',
+    timezone: 'America/New_York',
+    cover: 'https://wfmu.org/images/wfmu-logo.png'
+  },
+  {
+    id: 'nprmusic',
+    name: 'NPR Music',
+    url: 'https://npr-ice.streamguys1.com/live.mp3',
+    genre: 'Eclectic',
+    location: 'Washington DC',
+    timezone: 'America/New_York',
+    cover: 'https://media.npr.org/assets/img/2018/08/03/nprmusic_sq-7b1be9c5e3b0c0e0e0e0e0e0e0e0e0e0.png'
+  },
+  {
+    id: 'radiohead',
+    name: 'Radio Paradise',
+    url: 'https://stream.radioparadise.com/mp3-128',
+    genre: 'Eclectic',
+    location: 'California',
+    timezone: 'America/Los_Angeles',
+    cover: 'https://www.radioparadise.com/graphics/rp_logo.png'
+  },
+  {
+    id: 'fip',
+    name: 'FIP Radio',
+    url: 'https://icecast.radiofrance.fr/fip-hifi.aac',
+    genre: 'Eclectic',
+    location: 'Paris',
+    timezone: 'Europe/Paris',
+    cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/FIP_logo_0.png'
+  },
+  {
+    id: 'lush',
+    name: 'SomaFM: Lush',
+    url: 'https://ice1.somafm.com/lush-128-mp3',
+    genre: 'Ambient / Downtempo',
+    location: 'San Francisco',
+    timezone: 'America/Los_Angeles',
+    cover: 'https://somafm.com/img/lush120.png'
+  },
+  {
+    id: 'bootliquor',
+    name: 'SomaFM: Boot Liquor',
+    url: 'https://ice1.somafm.com/bootliquor-128-mp3',
+    genre: 'Country / Americana',
+    location: 'San Francisco',
+    timezone: 'America/Los_Angeles',
+    cover: 'https://somafm.com/img/bootliquor120.png'
+  },
+  {
+    id: 'nts1',
+    name: 'NTS Radio',
+    url: 'https://stream-relay-geo.ntslive.net/stream',
+    genre: 'Eclectic / Independent',
+    location: 'London',
+    timezone: 'Europe/London',
+    cover: 'https://nts.live/static/img/nts-logo.png'
+  },
+  {
+    id: 'franceinter',
+    name: 'France Inter',
+    url: 'https://icecast.radiofrance.fr/franceinter-hifi.aac',
+    genre: 'Eclectic / Cultural',
+    location: 'Paris',
+    timezone: 'Europe/Paris',
+    cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/France-Inter_logo_0.png'
   }
 ];

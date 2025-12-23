@@ -2,14 +2,13 @@ import { useRef } from 'react';
 
 interface CoverArtProps {
   cover: string;
-  isPlaying: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
 }
 
 const SWIPE_THRESHOLD = 50;
 
-export function CoverArt({ cover, isPlaying, onToggle, onSwipe }: CoverArtProps) {
+export function CoverArt({ cover, onToggle, onSwipe }: CoverArtProps) {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);

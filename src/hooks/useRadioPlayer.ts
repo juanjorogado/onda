@@ -1,10 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { stations } from '../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from './useNowPlaying';
 
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  // Inicializar con una estación aleatoria al montar
+  useEffect(() => {
+    if (stations.length > 0) {
+      const randomIndex = Math.floor(Math.random() * stations.length);
+      setCurrentIndex(randomIndex);
+    }
+  }, []);
 
   const currentStation = stations[currentIndex] || null;
 

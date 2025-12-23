@@ -47,7 +47,6 @@ function App() {
               </div>
               <CoverArt
                 cover={coverArt}
-                isPlaying={isPlaying}
                 onToggle={togglePlay}
                 onSwipe={(direction) => {
                   if (direction === 'left') nextStation();
