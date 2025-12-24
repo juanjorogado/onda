@@ -134,7 +134,7 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
         </div>
       ))}
       {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none">
           <div className="ripple-container">
             <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
             <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>

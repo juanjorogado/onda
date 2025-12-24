@@ -30,7 +30,7 @@ function App() {
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
       <div
-        className="bg-paper text-ink flex flex-col items-start px-2 py-4 select-none overflow-hidden w-full max-w-md mx-auto h-screen"
+        className="bg-paper text-ink flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
       >
         <audio
           ref={audioRef}
@@ -41,7 +41,7 @@ function App() {
         />
         <Header name={headerName} location={headerLocation} isPlaying={isPlaying} />
 
-        <div className="flex-1 w-full flex flex-col items-start overflow-hidden">
+        <div className="flex-1 w-full flex flex-col items-start overflow-hidden min-h-0">
           {currentStation ? (
             <>
               <CoverArt
@@ -62,11 +62,14 @@ function App() {
                   location={currentStation.location} 
                   timezone={currentStation.timezone}
                   isBright={coverBrightness > 0.5}
+                  hasTrackInfo={!!(track.title || track.artist)}
                 />
               </CoverArt>
-              <div className="w-full mt-2">
-                <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
-              </div>
+              {track.title || track.artist || headerName ? (
+                <div className="w-full px-4 py-2">
+                  <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
+                </div>
+              ) : null}
             </>
           ) : (
             <div className="w-full flex-1 flex items-center justify-center">

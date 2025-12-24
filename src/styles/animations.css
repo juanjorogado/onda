@@ -84,14 +84,30 @@
   }
 }
 
-/* Ripple animation for tap indicator */
+/* Ripple animation for tap indicator - Perfectamente centrado con punto rosa */
 .ripple-container {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 80px;
   height: 80px;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.ripple-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #FF69B4; /* Rosa */
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .ripple-circle {
@@ -101,17 +117,17 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  opacity: 0.5;
+  opacity: 0.4;
   transform: translate(-50%, -50%);
   animation: ripple var(--duration-very-slow) var(--easing-wave) infinite;
 }
 
 .ripple-circle.ripple-light {
-  border: 2px solid white;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
 }
 
 .ripple-circle.ripple-dark {
-  border: 2px solid var(--color-ink);
+  border: 1.5px solid rgba(0, 0, 0, 0.2);
 }
 
 .ripple-circle:nth-child(1) {
