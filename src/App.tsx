@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useWakeLock } from './hooks/useWakeLock';
 import { useCurrentTime } from './hooks/useCurrentTime';
 import { useRadioPlayer } from './hooks/useRadioPlayer';
+import { useMediaSession } from './hooks/useMediaSession';
 import { Header } from './components/Header';
 import { Clocks } from './components/Clocks';
 import { CoverArt } from './components/CoverArt';
@@ -27,6 +28,17 @@ function App() {
     track,
   } = useRadioPlayer();
 
+  // Configurar Media Session API para controles en pantalla de bloqueo (iOS/Android)
+  useMediaSession({
+    track,
+    stationName: headerName,
+    isPlaying,
+    onPlay: togglePlay,
+    onPause: togglePlay,
+    onPreviousTrack: prevStation,
+    onNextTrack: nextStation,
+  });
+
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
       <div
@@ -36,6 +48,7 @@ function App() {
           ref={audioRef}
           crossOrigin="anonymous"
           preload="none"
+          playsInline
           onError={handleAudioError}
           onEnded={handleAudioEnded}
         />
