@@ -3,7 +3,7 @@
   --color-brand: #ED3F1C;
   --color-ink: #000000;
   --color-paper: #FFFFFF;
-  --color-background: #F5F5F5;
+  --color-background: #FFFFFF;
   --color-gray-100: #F3F0E6;
   --color-gray-200: #F3F0E6;
   --color-text-primary: #000000;
@@ -57,6 +57,7 @@
 
 html {
   font-size: 18px;
+  background-color: #FFFFFF;
 }
 
 body {
@@ -363,9 +364,10 @@ body {
 /* Calculation: 100vh - header (~3rem) - padding top/bottom (2rem) - trackinfo (~4rem) - margins (~1rem) */
 /* Cover height - Ocupa la mayor parte de la pantalla, dejando espacio para header y trackinfo */
 .cover-height {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   width: 100%;
+  max-height: calc(100vh - 8rem);
 }
 
 /* Clock backdrop for better readability - Solo cuando hay track info */

@@ -51,3 +51,4 @@ export function getCitySkyImageUnsplash(city: string): string {
   return `https://source.unsplash.com/600x600/?sky,${encodeURIComponent(city)}`;
 }
 
+
