@@ -1,12 +1,4 @@
-export interface Station {
-  id: string;
-  name: string;
-  url: string;
-  genre: string;
-  location: string;
-  timezone: string;
-  cover: string;
-}
+import { Station } from '../types/station';
 
 export const stations: Station[] = [
   {

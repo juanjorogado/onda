@@ -215,6 +215,9 @@ body {
   bottom: var(--spacing-3);
 }
 
+.top-0 {
+  top: 0;
+}
 .top-4 {
   top: var(--spacing-4);
 }

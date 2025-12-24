@@ -13,23 +13,31 @@ src/
 ├── hooks/          # Custom React hooks
 │   ├── useAudioPlayer.ts
 │   ├── useCurrentTime.ts
+│   ├── useImageBrightness.ts
 │   ├── useNowPlaying.ts
 │   ├── useRadioPlayer.ts
 │   └── useWakeLock.ts
 │
-├── utils/          # Funciones utilitarias
+├── services/        # Servicios de API y lógica externa
+│   └── imageService.ts
+│
+├── utils/           # Funciones utilitarias puras
 │   └── formatTime.ts
 │
-├── data/           # Datos estáticos y configuración
+├── data/            # Datos estáticos y configuración
 │   └── stations.ts
 │
-├── styles/         # Estilos globales
+├── types/           # Tipos TypeScript compartidos
+│   ├── station.ts
+│   ├── track.ts
+│   └── vite-env.d.ts
+│
+├── styles/          # Estilos globales
+│   ├── animations.css
 │   └── global.css
 │
-├── types/          # Tipos TypeScript compartidos (futuro)
-│
-├── App.tsx         # Componente principal
-└── main.tsx        # Punto de entrada
+├── App.tsx          # Componente principal
+└── main.tsx         # Punto de entrada
 ```
 
 ## Convenciones de Nomenclatura
@@ -44,6 +52,11 @@ src/
 - **Extensión**: `.ts`
 - **Ejemplo**: `useCurrentTime.ts`, `useRadioPlayer.ts`
 
+### Servicios
+- **Formato**: camelCase con sufijo "Service"
+- **Extensión**: `.ts`
+- **Ejemplo**: `imageService.ts`
+
 ### Utilidades
 - **Formato**: camelCase
 - **Extensión**: `.ts`
@@ -54,16 +67,28 @@ src/
 - **Extensión**: `.ts`
 - **Ejemplo**: `stations.ts`
 
+### Tipos
+- **Formato**: camelCase
+- **Extensión**: `.ts`
+- **Ejemplo**: `station.ts`, `track.ts`
+
 ### Estilos
-- **Formato**: kebab-case o camelCase
+- **Formato**: kebab-case
 - **Extensión**: `.css`
-- **Ejemplo**: `global.css`
+- **Ejemplo**: `global.css`, `animations.css`
 
 ## Convenciones de Contenido
 
 - **Components**: Componentes React puros, sin lógica de negocio
 - **Hooks**: Lógica reutilizable y estado compartido
+- **Services**: Llamadas a APIs externas y servicios de terceros
 - **Utils**: Funciones puras sin dependencias de React
 - **Data**: Datos estáticos, constantes y configuraciones
+- **Types**: Interfaces y tipos TypeScript compartidos
 - **Styles**: Estilos globales y variables CSS
 
+## Separación de Responsabilidades
+
+- **Services vs Utils**: Los servicios manejan APIs externas y lógica asíncrona. Las utilidades son funciones puras y síncronas.
+- **Types**: Todos los tipos compartidos deben estar en `types/` para facilitar la importación y evitar duplicación.
+- **Data**: Solo datos estáticos. La lógica de obtención de datos dinámicos va en `services/` o `hooks/`.

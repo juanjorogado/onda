@@ -1,13 +1,31 @@
 interface NowPlayingProps {
   title?: string;
   artist?: string;
+  year?: number;
   stationName?: string;
 }
 
-export function NowPlaying({ title, artist, stationName }: NowPlayingProps) {
-  const text = title && artist 
-    ? `${title} — ${artist}` 
-    : title || artist || (stationName ? `Sonando la radio ${stationName}` : '');
+export function NowPlaying({ title, artist, year, stationName }: NowPlayingProps) {
+  let text = '';
+  
+  if (title && artist) {
+    text = `${title} — ${artist}`;
+    if (year) {
+      text += ` (${year})`;
+    }
+  } else if (title) {
+    text = title;
+    if (year) {
+      text += ` (${year})`;
+    }
+  } else if (artist) {
+    text = artist;
+    if (year) {
+      text += ` (${year})`;
+    }
+  } else if (stationName) {
+    text = `Sonando la radio ${stationName}`;
+  }
   
   if (!text) return null;
   

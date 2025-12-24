@@ -6,11 +6,9 @@ import { useNowPlaying } from './useNowPlaying';
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  // Inicializar con una estación aleatoria al montar
   useEffect(() => {
     if (stations.length > 0) {
-      const randomIndex = Math.floor(Math.random() * stations.length);
-      setCurrentIndex(randomIndex);
+      setCurrentIndex(Math.floor(Math.random() * stations.length));
     }
   }, []);
 
@@ -23,30 +21,23 @@ export function useRadioPlayer() {
 
   const track = useNowPlaying(currentStation);
 
-  // Función para cambiar a la siguiente estación
   const nextStation = useCallback(() => {
     if (stations.length <= 1) return;
     setCurrentIndex((prev) => (prev + 1) % stations.length);
     setIsPlaying(true);
   }, [setIsPlaying]);
 
-  // Función para cambiar a la estación anterior
   const prevStation = useCallback(() => {
     if (stations.length <= 1) return;
     setCurrentIndex((prev) => (prev - 1 + stations.length) % stations.length);
     setIsPlaying(true);
   }, [setIsPlaying]);
 
-  const handleAudioError = useCallback(() => {
-    // On error, try the next station
-    nextStation();
-  }, [nextStation]);
-
+  const handleAudioError = useCallback(() => nextStation(), [nextStation]);
   const handleAudioEnded = useCallback(() => setIsPlaying(false), [setIsPlaying]);
 
   const headerName = currentStation?.name ?? 'ONDA';
   const headerLocation = currentStation?.location ?? '';
-  // Usar cover del track si existe, si no se usará el cover de la estación en CoverArt
   const coverArt = track.cover || '';
 
   return {

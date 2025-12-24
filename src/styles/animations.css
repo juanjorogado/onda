@@ -102,10 +102,13 @@
 
 .ripple-circle {
   position: absolute;
+  top: 50%;
+  left: 50%;
   width: 80px;
   height: 80px;
   border-radius: 50%;
   opacity: 0.6;
+  transform: translate(-50%, -50%);
   animation: ripple 2s ease-out infinite;
 }
 
@@ -131,16 +134,74 @@
 
 @keyframes ripple {
   0% {
-    transform: scale(0.8);
+    transform: translate(-50%, -50%) scale(0.8);
     opacity: 0.6;
   }
   50% {
     opacity: 0.3;
   }
   100% {
-    transform: scale(2);
+    transform: translate(-50%, -50%) scale(2);
     opacity: 0;
   }
 }
 
+/* Flame particles animation */
+.flame-particle {
+  position: absolute;
+  font-size: 1.5rem;
+  pointer-events: none;
+  z-index: 20;
+  animation: flame-float 1.5s ease-out forwards;
+}
+
+.flame-particle:nth-child(odd) {
+  animation: flame-float-left 1.5s ease-out forwards;
+}
+
+.flame-particle:nth-child(even) {
+  animation: flame-float-right 1.5s ease-out forwards;
+}
+
+@keyframes flame-float {
+  0% {
+    transform: translate(0, 0) scale(0.8) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0, -120px) scale(1.2) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flame-float-left {
+  0% {
+    transform: translate(0, 0) scale(0.8) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-30px, -120px) scale(1.2) rotate(-15deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flame-float-right {
+  0% {
+    transform: translate(0, 0) scale(0.8) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(30px, -120px) scale(1.2) rotate(15deg);
+    opacity: 0;
+  }
+}
 

@@ -65,7 +65,7 @@ function App() {
                 />
               </CoverArt>
               <div className="w-full mt-2">
-                <NowPlaying title={track.title} artist={track.artist} stationName={headerName} />
+                <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
               </div>
             </>
           ) : (

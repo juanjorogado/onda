@@ -10,16 +10,16 @@ interface ClocksProps {
 function ClockItem({ label, time, isBright }: { label: string; time: string; isBright: boolean }) {
   const textColor = isBright ? 'text-ink' : 'text-white';
   return (
-    <div className="flex flex-col items-start">
+      <div className="flex flex-col items-start">
       <span className={`text-m font-normal ${textColor}`}>{label}</span>
       <span className={`text-l font-light ${textColor}`}>{time}</span>
-    </div>
+      </div>
   );
 }
 
 export function Clocks({ time, location, timezone, isBright = false }: ClocksProps) {
   return (
-    <div className="absolute top-0 left-0 right-0 flex items-center gap-8 clock-backdrop">
+    <div className="absolute top-8 left-0 right-0 flex items-center gap-8 clock-backdrop">
       <ClockItem label="Hora local" time={formatTime(time)} isBright={isBright} />
       <ClockItem label={location} time={formatTime(time, timezone)} isBright={isBright} />
     </div>

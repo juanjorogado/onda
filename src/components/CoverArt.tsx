@@ -1,6 +1,13 @@
 import { useRef, ReactNode, useEffect, useState } from 'react';
 import { useImageBrightness } from '../hooks/useImageBrightness';
-import { getCitySkyImageUnsplash, getCitySkyImageGemini } from '../utils/getCitySkyImage';
+import { getCitySkyImageUnsplash, getCitySkyImageGemini } from '../services/imageService';
+
+interface Flame {
+  id: number;
+  x: number;
+  y: number;
+  delay: number;
+}
 
 interface CoverArtProps {
   cover: string;
@@ -21,37 +28,56 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
   const startY = useRef(0);
   const swiped = useRef(false);
 
-  // Estado para el cover a mostrar
   const [displayCover, setDisplayCover] = useState<string>(
     cover || stationCover || getCitySkyImageUnsplash(stationLocation)
   );
 
-  // Actualizar displayCover cuando cambien las props
   useEffect(() => {
     if (cover) {
       setDisplayCover(cover);
     } else if (stationCover) {
       setDisplayCover(stationCover);
     } else {
-      // Si no hay cover, generar imagen del cielo con Gemini
-      getCitySkyImageGemini(stationLocation).then((imageUrl: string) => {
-        setDisplayCover(imageUrl);
-      }).catch(() => {
-        // Si falla Gemini, usar Unsplash como fallback
-        setDisplayCover(getCitySkyImageUnsplash(stationLocation));
-      });
+      getCitySkyImageGemini(stationLocation)
+        .then(setDisplayCover)
+        .catch(() => setDisplayCover(getCitySkyImageUnsplash(stationLocation)));
     }
   }, [cover, stationCover, stationLocation]);
   
-  // Calcular brillo de la imagen
   const brightness = useImageBrightness(displayCover || null);
+  const [flames, setFlames] = useState<Flame[]>([]);
   
-  // Notificar cambio de brillo al componente padre
   useEffect(() => {
-    if (onBrightnessChange) {
-      onBrightnessChange(brightness);
-    }
+    onBrightnessChange?.(brightness);
   }, [brightness, onBrightnessChange]);
+
+  const handleFlameClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const target = e.currentTarget as HTMLElement;
+    const container = target.closest('.cover-art-container') as HTMLElement;
+    
+    if (!container) return;
+    
+    const rect = target.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    
+    const x = rect.left - containerRect.left + rect.width / 2;
+    const y = rect.top - containerRect.top + rect.height / 2;
+    
+    const baseId = Date.now();
+    const newFlames: Flame[] = Array.from({ length: 8 }, (_, i) => ({
+      id: baseId + i,
+      x: x + (Math.random() - 0.5) * 40,
+      y: y + (Math.random() - 0.5) * 40,
+      delay: Math.random() * 0.2,
+    }));
+    
+    setFlames((prev) => [...prev, ...newFlames]);
+    
+    setTimeout(() => {
+      setFlames((prev) => prev.filter((f) => !newFlames.some((nf) => nf.id === f.id)));
+    }, 2000);
+  };
 
   return (
     <div
@@ -78,7 +104,7 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
           e.stopPropagation();
         }
       }}
-      className="w-full rounded-card overflow-hidden relative bg-cover bg-center bg-no-repeat cursor-pointer cover-height"
+      className="w-full rounded-card overflow-hidden relative bg-cover bg-center bg-no-repeat cursor-pointer cover-height cover-art-container"
       style={{
         backgroundImage: displayCover 
           ? `url(${displayCover}), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`
@@ -87,8 +113,26 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
     >
       {children}
       {hasTrackInfo && (
-        <div className="absolute left-3 bottom-3 text-2xl flame-icon">🔥</div>
+        <div 
+          className="absolute left-3 bottom-3 text-2xl flame-icon cursor-pointer z-10"
+          onClick={handleFlameClick}
+        >
+          🔥
+        </div>
       )}
+      {flames.map((flame) => (
+        <div
+          key={flame.id}
+          className="flame-particle"
+          style={{
+            left: `${flame.x}px`,
+            top: `${flame.y}px`,
+            animationDelay: `${flame.delay}s`,
+          }}
+        >
+          🔥
+        </div>
+      ))}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="ripple-container">
