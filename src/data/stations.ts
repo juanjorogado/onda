@@ -40,7 +40,7 @@ export const stations: Station[] = [
   {
     id: 'wfmujazz',
     name: 'WFMU',
-    url: 'https://stream0.wfmu.org/freeform-128k',
+    url: 'https://wfmu.org/wfmu.pls',
     genre: 'Freeform / Eclectic',
     location: 'New Jersey',
     timezone: 'America/New_York',
@@ -108,5 +108,41 @@ export const stations: Station[] = [
     location: 'Paris',
     timezone: 'Europe/Paris',
     cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/France-Inter_logo_0.png'
+  },
+  {
+    id: 'bbc6music',
+    name: 'BBC Radio 6 Music',
+    url: 'http://stream.live.vc.bbcmedia.co.uk/bbc_6music',
+    genre: 'Alternative / Discovery',
+    location: 'London',
+    timezone: 'Europe/London',
+    cover: 'https://ichef.bbci.co.uk/images/ic/1920x1080/p07kq8k8.png'
+  },
+  {
+    id: 'bbcradio2',
+    name: 'BBC Radio 2',
+    url: 'http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two',
+    genre: 'Pop / Rock / Adult Contemporary',
+    location: 'London',
+    timezone: 'Europe/London',
+    cover: 'https://ichef.bbci.co.uk/images/ic/1920x1080/p07kq8k8.png'
+  },
+  {
+    id: 'radiocaroline',
+    name: 'Radio Caroline',
+    url: 'http://sc5.radiocaroline.net:8040/listen.pls',
+    genre: 'Rock / Album Rock',
+    location: 'London',
+    timezone: 'Europe/London',
+    cover: 'https://www.radiocaroline.co.uk/wp-content/uploads/2020/03/radio-caroline-logo.png'
+  },
+  {
+    id: 'classicfm',
+    name: 'Classic FM',
+    url: 'http://media-ice.musicradio.com/ClassicFMMP3',
+    genre: 'Classical',
+    location: 'London',
+    timezone: 'Europe/London',
+    cover: 'https://www.classicfm.com/wp-content/uploads/2020/03/classic-fm-logo.png'
   }
 ];
