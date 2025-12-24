@@ -8,7 +8,13 @@ import { TrackInfo } from '../types/track';
  */
 export async function searchTrackLastFM(artist: string, title: string): Promise<TrackInfo | null> {
   try {
-    const API_KEY = import.meta.env.VITE_LASTFM_API_KEY || '8b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0';
+    const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
+    
+    // Si no hay API key, saltar Last.fm y usar solo MusicBrainz
+    if (!API_KEY) {
+      return null;
+    }
+    
     const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(title)}&format=json`;
     
     const response = await fetch(url);

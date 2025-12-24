@@ -5,7 +5,12 @@
  */
 export async function getCitySkyImageGemini(city: string): Promise<string> {
   try {
-    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyD1nXG0h60NJiJhtgxiZhFbDZyN7mTDLyM';
+    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    
+    if (!API_KEY) {
+      console.warn('VITE_GEMINI_API_KEY no está configurada. Usando fallback de Unsplash.');
+      return getCitySkyImageUnsplash(city);
+    }
     const prompt = `A beautiful sky view over ${city} city, showing the current weather and time of day, photorealistic, high quality`;
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${API_KEY}`, {
       method: 'POST',
