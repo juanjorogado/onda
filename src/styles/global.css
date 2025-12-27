@@ -377,7 +377,8 @@ body {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  max-height: calc(100vh - 8rem - 8px);
+  /* Header (~3rem) + Marquee (~4rem) + Buffer (~2rem) = 9rem */
+  max-height: calc(100vh - 9rem);
 }
 
 /* Clock backdrop for better readability - Solo cuando hay track info */
