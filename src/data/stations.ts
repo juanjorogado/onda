@@ -40,7 +40,7 @@ export const stations: Station[] = [
   {
     id: 'wfmujazz',
     name: 'WFMU',
-    url: 'https://wfmu.org/wfmu.pls',
+    url: 'https://stream3.wfmu.org/freeform-128k',
     genre: 'Freeform / Eclectic',
     location: 'New Jersey',
     timezone: 'America/New_York',
@@ -112,7 +112,7 @@ export const stations: Station[] = [
   {
     id: 'bbc6music',
     name: 'BBC Radio 6 Music',
-    url: 'http://stream.live.vc.bbcmedia.co.uk/bbc_6music',
+    url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_6music',
     genre: 'Alternative / Discovery',
     location: 'London',
     timezone: 'Europe/London',
@@ -121,7 +121,7 @@ export const stations: Station[] = [
   {
     id: 'bbcradio2',
     name: 'BBC Radio 2',
-    url: 'http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two',
+    url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two',
     genre: 'Pop / Rock / Adult Contemporary',
     location: 'London',
     timezone: 'Europe/London',
@@ -130,7 +130,7 @@ export const stations: Station[] = [
   {
     id: 'radiocaroline',
     name: 'Radio Caroline',
-    url: 'http://sc5.radiocaroline.net:8040/listen.pls',
+    url: 'https://radiocaroline.ice.infomaniak.ch/radiocaroline-128.mp3',
     genre: 'Rock / Album Rock',
     location: 'London',
     timezone: 'Europe/London',
@@ -139,7 +139,7 @@ export const stations: Station[] = [
   {
     id: 'classicfm',
     name: 'Classic FM',
-    url: 'http://media-ice.musicradio.com/ClassicFMMP3',
+    url: 'https://media-ice.musicradio.com/ClassicFMMP3',
     genre: 'Classical',
     location: 'London',
     timezone: 'Europe/London',

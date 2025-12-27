@@ -1,6 +1,6 @@
-import { useRef, ReactNode, useEffect, useState } from 'react';
+import { useRef, ReactNode, useEffect, useState, KeyboardEvent, TouchEvent, MouseEvent } from 'react';
 import { useImageBrightness } from '../hooks/useImageBrightness';
-import { getCitySkyImageUnsplash, getCitySkyImageGemini } from '../services/imageService';
+import { getCitySkyImageFallback, getCitySkyImageGemini } from '../services/imageService';
 
 interface Flame {
   id: number;
@@ -29,41 +29,47 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
   const swiped = useRef(false);
 
   const [displayCover, setDisplayCover] = useState<string>(
-    cover || stationCover || getCitySkyImageUnsplash(stationLocation)
+    cover || getCitySkyImageFallback(stationLocation)
   );
 
   useEffect(() => {
+    let isMounted = true;
     if (cover) {
       setDisplayCover(cover);
-    } else if (stationCover) {
-      setDisplayCover(stationCover);
     } else {
       getCitySkyImageGemini(stationLocation)
-        .then(setDisplayCover)
-        .catch(() => setDisplayCover(getCitySkyImageUnsplash(stationLocation)));
+        .then((img) => {
+          if (isMounted) setDisplayCover(img);
+        })
+        .catch(() => {
+          if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
+        });
     }
+    return () => {
+      isMounted = false;
+    };
   }, [cover, stationCover, stationLocation]);
-  
+
   const brightness = useImageBrightness(displayCover || null);
   const [flames, setFlames] = useState<Flame[]>([]);
-  
+
   useEffect(() => {
     onBrightnessChange?.(brightness);
   }, [brightness, onBrightnessChange]);
 
-  const handleFlameClick = (e: React.MouseEvent) => {
+  const handleFlameClick = (e: MouseEvent) => {
     e.stopPropagation();
     const target = e.currentTarget as HTMLElement;
     const container = target.closest('.cover-art-container') as HTMLElement;
-    
+
     if (!container) return;
-    
+
     const rect = target.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    
+
     const x = rect.left - containerRect.left + rect.width / 2;
     const y = rect.top - containerRect.top + rect.height / 2;
-    
+
     const baseId = Date.now();
     const newFlames: Flame[] = Array.from({ length: 8 }, (_, i) => ({
       id: baseId + i,
@@ -71,9 +77,9 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
       y: y + (Math.random() - 0.5) * 40,
       delay: Math.random() * 0.2,
     }));
-    
+
     setFlames((prev) => [...prev, ...newFlames]);
-    
+
     setTimeout(() => {
       setFlames((prev) => prev.filter((f) => !newFlames.some((nf) => nf.id === f.id)));
     }, 2000);
@@ -81,14 +87,23 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={isPlaying ? "Pause" : "Play"}
+      onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
       onClick={onToggle}
-      onTouchStart={(e) => {
+      onTouchStart={(e: TouchEvent<HTMLDivElement>) => {
         const touch = e.touches[0];
         startX.current = touch.clientX;
         startY.current = touch.clientY;
         swiped.current = false;
       }}
-      onTouchMove={(e) => {
+      onTouchMove={(e: TouchEvent<HTMLDivElement>) => {
         if (swiped.current || !onSwipe) return;
         const touch = e.touches[0];
         const dx = touch.clientX - startX.current;
@@ -98,7 +113,7 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
           onSwipe(dx > 0 ? 'right' : 'left');
         }
       }}
-      onTouchEnd={(e) => {
+      onTouchEnd={(e: TouchEvent<HTMLDivElement>) => {
         if (swiped.current) {
           e.preventDefault();
           e.stopPropagation();
@@ -106,16 +121,25 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
       }}
       className="w-full rounded-card overflow-hidden relative bg-cover bg-center bg-no-repeat cursor-pointer cover-height cover-art-container"
       style={{
-        backgroundImage: displayCover 
+        backgroundImage: displayCover
           ? `url(${displayCover}), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`
           : `linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`,
       }}
     >
       {children}
       {hasTrackInfo && (
-        <div 
+        <div
           className="absolute left-3 bottom-3 text-2xl flame-icon cursor-pointer z-10"
           onClick={handleFlameClick}
+          role="button"
+          tabIndex={0}
+          aria-label="Add flame effect"
+          onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              e.currentTarget.click();
+            }
+          }}
         >
           🔥
         </div>
