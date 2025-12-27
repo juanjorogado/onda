@@ -70,16 +70,16 @@ function App() {
                 }}
                 onBrightnessChange={setCoverBrightness}
               >
-                <Clocks 
-                  time={time} 
-                  location={currentStation.location} 
+                <Clocks
+                  time={time}
+                  location={currentStation.location}
                   timezone={currentStation.timezone}
                   isBright={coverBrightness > 0.5}
                   hasTrackInfo={!!(track.title || track.artist)}
                 />
               </CoverArt>
               {track.title || track.artist || headerName ? (
-                <div className="w-full px-4 py-2">
+                <div className="w-full py-2">
                   <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
                 </div>
               ) : null}
