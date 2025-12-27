@@ -11,7 +11,7 @@ export function Header({ name, location, isPlaying }: HeaderProps) {
         <span className="wave-circle"></span>
         <span className="wave-circle"></span>
       </div>
-      <div className="text-m line-height-m tracking-wide flex-1 min-w-0 truncate">
+      <div className="text-m tracking-wide flex-1 min-w-0 truncate">
         <span className="font-normal">{name}</span> {location && <span className="font-light">— {location}</span>}
       </div>
     </div>
