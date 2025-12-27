@@ -234,7 +234,7 @@ export async function searchTrackInfo(artist: string, title: string): Promise<Tr
   if (musicBrainzResult) {
     return {
       ...musicBrainzResult,
-      cover: lastFMResult?.cover || null,
+      cover: lastFMResult?.cover || undefined,
     };
   }
   
