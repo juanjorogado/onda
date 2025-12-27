@@ -2,15 +2,6 @@ import { Station } from '../types/station';
 
 export const stations: Station[] = [
   {
-    id: 'groovesalad',
-    name: 'SomaFM: Groove Salad',
-    url: 'https://ice1.somafm.com/groovesalad-128-mp3',
-    genre: 'Ambient / Chill',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/groovesalad120.png'
-  },
-  {
     id: 'kexp',
     name: 'KEXP',
     url: 'https://kexp.streamguys1.com/kexp128.mp3',
@@ -20,27 +11,9 @@ export const stations: Station[] = [
     cover: 'https://cdn-profiles.tunein.com/s24996/images/logog.png?t=163001'
   },
   {
-    id: 'dronezone',
-    name: 'SomaFM: Drone Zone',
-    url: 'https://ice1.somafm.com/dronezone-128-mp3',
-    genre: 'Ambient / Drone',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/dronezone120.png'
-  },
-  {
-    id: 'deepspace',
-    name: 'SomaFM: Deep Space One',
-    url: 'https://ice1.somafm.com/deepspaceone-128-mp3',
-    genre: 'Ambient / Space',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/deepspaceone120.png'
-  },
-  {
     id: 'wfmujazz',
     name: 'WFMU',
-    url: 'https://stream3.wfmu.org/freeform-128k',
+    url: 'https://wfmu.org/wfmu.pls',
     genre: 'Freeform / Eclectic',
     location: 'New Jersey',
     timezone: 'America/New_York',
@@ -67,20 +40,21 @@ export const stations: Station[] = [
   {
     id: 'fip',
     name: 'FIP Radio',
-    url: 'https://icecast.radiofrance.fr/fip-hifi.aac',
+    url: 'https://icecast.radiofrance.fr/fip-midfi.mp3',
     genre: 'Eclectic',
     location: 'Paris',
     timezone: 'Europe/Paris',
     cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/FIP_logo_0.png'
   },
+  // Soul & R&B Stations - Alternative sources
   {
-    id: 'lush',
-    name: 'SomaFM: Lush',
-    url: 'https://ice1.somafm.com/lush-128-mp3',
-    genre: 'Ambient / Downtempo',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/lush120.png'
+    id: '181fm-soul',
+    name: '181.fm - Soul',
+    url: 'https://listen.181fm.com/181-soul_128k.mp3',
+    genre: 'Soul / R&B',
+    location: 'United States',
+    timezone: 'America/New_York',
+    cover: ''
   },
   {
     id: 'bootliquor',
@@ -109,40 +83,32 @@ export const stations: Station[] = [
     timezone: 'Europe/Paris',
     cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/France-Inter_logo_0.png'
   },
+  // Soul & R&B Stations from OpenTune
   {
-    id: 'bbc6music',
-    name: 'BBC Radio 6 Music',
-    url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_6music',
-    genre: 'Alternative / Discovery',
-    location: 'London',
-    timezone: 'Europe/London',
-    cover: 'https://ichef.bbci.co.uk/images/ic/1920x1080/p07kq8k8.png'
+    id: 'somafm-fluid',
+    name: 'SomaFM: Fluid',
+    url: 'https://ice1.somafm.com/fluid-128-mp3',
+    genre: 'Soul / Future Soul / Hip Hop',
+    location: 'San Francisco',
+    timezone: 'America/Los_Angeles',
+    cover: 'https://somafm.com/img/fluid120.png'
   },
   {
-    id: 'bbcradio2',
-    name: 'BBC Radio 2',
-    url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two',
-    genre: 'Pop / Rock / Adult Contemporary',
-    location: 'London',
-    timezone: 'Europe/London',
-    cover: 'https://ichef.bbci.co.uk/images/ic/1920x1080/p07kq8k8.png'
+    id: 'jazzradio-soul',
+    name: 'Jazz Radio Soul',
+    url: 'https://jazz-wr09.ice.infomaniak.ch/jazz-wr09-128.mp3',
+    genre: 'Soul / Jazz',
+    location: 'Paris',
+    timezone: 'Europe/Paris',
+    cover: 'https://www.jazzradio.fr/img/logo-jazz-radio.png'
   },
   {
-    id: 'radiocaroline',
-    name: 'Radio Caroline',
-    url: 'https://radiocaroline.ice.infomaniak.ch/radiocaroline-128.mp3',
-    genre: 'Rock / Album Rock',
-    location: 'London',
-    timezone: 'Europe/London',
-    cover: 'https://www.radiocaroline.co.uk/wp-content/uploads/2020/03/radio-caroline-logo.png'
-  },
-  {
-    id: 'classicfm',
-    name: 'Classic FM',
-    url: 'https://media-ice.musicradio.com/ClassicFMMP3',
-    genre: 'Classical',
-    location: 'London',
-    timezone: 'Europe/London',
-    cover: 'https://www.classicfm.com/wp-content/uploads/2020/03/classic-fm-logo.png'
+    id: '54-funk-soul',
+    name: '54 Funk Soul Dance',
+    url: 'https://stream.laut.fm/54-funk-soul-dance',
+    genre: 'Funk / Soul / Dance',
+    location: 'Germany',
+    timezone: 'Europe/Berlin',
+    cover: ''
   }
 ];

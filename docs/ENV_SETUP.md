@@ -12,9 +12,13 @@ Este proyecto requiere variables de entorno para funcionar correctamente. Sigue 
 2. **Añade las siguientes variables de entorno:**
 
    ```env
-   # Google Gemini API Key (requerida para generar imágenes del cielo)
+   # Google Gemini API Key (opcional, para generar imágenes del cielo/nubes)
    # Obtén tu API key en: https://makersuite.google.com/app/apikey
    VITE_GEMINI_API_KEY=tu_api_key_aqui
+
+   # OpenAI API Key (opcional, alternativa a Gemini para generar imágenes)
+   # Obtén tu API key en: https://platform.openai.com/api-keys
+   VITE_OPENAI_API_KEY=tu_api_key_aqui
 
    # Last.fm API Key (opcional, para información de tracks)
    # Obtén tu API key en: https://www.last.fm/api/account/create
@@ -25,10 +29,15 @@ Este proyecto requiere variables de entorno para funcionar correctamente. Sigue 
 
 ## Variables de Entorno
 
-### `VITE_GEMINI_API_KEY` (Requerida)
-- **Descripción**: API key de Google Gemini para generar imágenes del cielo de las ciudades
+### `VITE_GEMINI_API_KEY` (Opcional)
+- **Descripción**: API key de Google Gemini para generar imágenes del cielo/nubes de las ciudades usando IA
 - **Obtener**: https://makersuite.google.com/app/apikey
-- **Comportamiento**: Si no está configurada, la app usará Unsplash como fallback
+- **Comportamiento**: Si no está configurada, se intentará usar DALL-E o Unsplash como fallback
+
+### `VITE_OPENAI_API_KEY` (Opcional)
+- **Descripción**: API key de OpenAI para generar imágenes del cielo/nubes usando DALL-E (alternativa a Gemini)
+- **Obtener**: https://platform.openai.com/api-keys
+- **Comportamiento**: Se usa si Gemini no está disponible. Si ninguna está configurada, se usa Unsplash como fallback
 
 ### `VITE_LASTFM_API_KEY` (Opcional)
 - **Descripción**: API key de Last.fm para obtener información adicional de tracks
@@ -49,8 +58,9 @@ Si estás usando Vercel:
 1. Ve a tu proyecto en Vercel Dashboard
 2. Settings → Environment Variables
 3. Añade las variables:
-   - `VITE_GEMINI_API_KEY`
-   - `VITE_LASTFM_API_KEY`
+   - `VITE_GEMINI_API_KEY` (opcional)
+   - `VITE_OPENAI_API_KEY` (opcional, alternativa a Gemini)
+   - `VITE_LASTFM_API_KEY` (opcional)
 4. Haz un nuevo deploy
 
 ## Verificación

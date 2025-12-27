@@ -1,6 +1,6 @@
 import { useRef, ReactNode, useEffect, useState, KeyboardEvent, TouchEvent, MouseEvent } from 'react';
 import { useImageBrightness } from '../hooks/useImageBrightness';
-import { getCitySkyImageFallback, getCitySkyImageGemini } from '../services/imageService';
+import { getCitySkyImage, getCitySkyImageFallback } from '../services/imageService';
 
 interface Flame {
   id: number;
@@ -34,10 +34,15 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
 
   useEffect(() => {
     let isMounted = true;
+    
+    // Prioridad: cover del track > cover de la estación > imagen generada de la ciudad
     if (cover) {
       setDisplayCover(cover);
+    } else if (stationCover) {
+      setDisplayCover(stationCover);
     } else {
-      getCitySkyImageGemini(stationLocation)
+      // Generar imagen de cielo/nubes de la ciudad cuando no hay cover
+      getCitySkyImage(stationLocation)
         .then((img) => {
           if (isMounted) setDisplayCover(img);
         })
@@ -45,6 +50,7 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
           if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
         });
     }
+    
     return () => {
       isMounted = false;
     };
