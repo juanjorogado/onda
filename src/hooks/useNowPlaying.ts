@@ -14,7 +14,7 @@ export function useNowPlaying(station?: Station | null) {
         return;
       }
       try {
-        let trackInfo: TrackInfo = { cover: station.cover };
+        let trackInfo: TrackInfo = {};
         
         // Intentar obtener información de la estación
         if (station.id.toLowerCase() === 'kexp') {
@@ -28,10 +28,10 @@ export function useNowPlaying(station?: Station | null) {
             const releaseDate = item?.release_date || item?.album_release_date;
             const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
             
-            trackInfo = { title, artist, cover: cover || station.cover, year };
+            trackInfo = { title, artist, cover, year };
             
-            // Si tenemos título y artista, intentar buscar información adicional si falta cover o year
-            if (title && artist && (!cover || !year)) {
+            // Si tenemos título y artista pero no cover, buscar en servicios externos
+            if (title && artist && !cover) {
               const additionalInfo = await searchTrackInfo(artist, title);
               if (additionalInfo) {
                 trackInfo = {
@@ -47,10 +47,17 @@ export function useNowPlaying(station?: Station | null) {
           }
         }
         
-        // Si la estación no proporciona información, intentar buscar usando servicios externos
-        // Nota: Sin título/artista de la estación, no podemos buscar. 
-        // En el futuro se podría implementar reconocimiento de audio o metadata del stream
-        setTrack({ title: undefined, artist: undefined, cover: station.cover });
+        // Si no hay cover de la estación (station.cover vacío o no existe)
+        // y tenemos información de track (título/artista), buscar el cover de la canción
+        // Nota: Esto se puede expandir para otras estaciones que proporcionen metadata
+        if (!station.cover) {
+          // Por ahora, solo buscamos si tenemos información de track de alguna fuente
+          // En el futuro se podría implementar reconocimiento de audio o metadata del stream
+          setTrack({ title: undefined, artist: undefined, cover: undefined });
+        } else {
+          // Si hay cover de la estación, usarlo como fallback
+          setTrack({ title: undefined, artist: undefined, cover: undefined });
+        }
       } catch {
         setTrack({ title: undefined, artist: undefined, cover: station.cover });
       }

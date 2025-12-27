@@ -69,6 +69,8 @@ function App() {
                   else if (direction === 'right') prevStation();
                 }}
                 onBrightnessChange={setCoverBrightness}
+                trackTitle={track.title}
+                trackArtist={track.artist}
               >
                 <Clocks
                   time={time}

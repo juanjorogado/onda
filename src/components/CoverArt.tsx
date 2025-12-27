@@ -1,6 +1,7 @@
 import { useRef, ReactNode, useEffect, useState, KeyboardEvent, TouchEvent, MouseEvent } from 'react';
 import { useImageBrightness } from '../hooks/useImageBrightness';
 import { getCitySkyImage, getCitySkyImageFallback } from '../services/imageService';
+import { searchTrackInfo } from '../services/trackService';
 
 interface Flame {
   id: number;
@@ -19,29 +20,62 @@ interface CoverArtProps {
   onSwipe?: (direction: 'left' | 'right') => void;
   children?: ReactNode;
   onBrightnessChange?: (brightness: number) => void;
+  trackTitle?: string;
+  trackArtist?: string;
 }
 
 const SWIPE_THRESHOLD = 50;
 
-export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, isPlaying, onToggle, onSwipe, children, onBrightnessChange }: CoverArtProps) {
+export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, isPlaying, onToggle, onSwipe, children, onBrightnessChange, trackTitle, trackArtist }: CoverArtProps) {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
 
   const [displayCover, setDisplayCover] = useState<string>(
-    cover || getCitySkyImageFallback(stationLocation)
+    cover || stationCover || getCitySkyImageFallback(stationLocation)
   );
 
   useEffect(() => {
     let isMounted = true;
     
-    // Prioridad: cover del track > cover de la estación > imagen generada de la ciudad
+    // Prioridad: cover del track > cover de la estación > buscar cover de la canción > imagen generada de la ciudad
     if (cover) {
+      // Cover del track (ya buscado en servicios externos)
       setDisplayCover(cover);
     } else if (stationCover) {
+      // Cover de la estación desde stations.ts
       setDisplayCover(stationCover);
+    } else if (trackTitle && trackArtist) {
+      // Si no hay cover de la estación pero tenemos información del track, buscar el cover de la canción
+      searchTrackInfo(trackArtist, trackTitle)
+        .then((trackInfo) => {
+          if (isMounted && trackInfo?.cover) {
+            setDisplayCover(trackInfo.cover);
+          } else if (isMounted) {
+            // Si no se encuentra cover de la canción, generar imagen de cielo/nubes
+            getCitySkyImage(stationLocation)
+              .then((img) => {
+                if (isMounted) setDisplayCover(img);
+              })
+              .catch(() => {
+                if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
+              });
+          }
+        })
+        .catch(() => {
+          // Si falla la búsqueda, generar imagen de cielo/nubes
+          if (isMounted) {
+            getCitySkyImage(stationLocation)
+              .then((img) => {
+                if (isMounted) setDisplayCover(img);
+              })
+              .catch(() => {
+                if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
+              });
+          }
+        });
     } else {
-      // Generar imagen de cielo/nubes de la ciudad cuando no hay cover
+      // Si no hay cover de la estación ni información del track, generar imagen de cielo/nubes de la ciudad
       getCitySkyImage(stationLocation)
         .then((img) => {
           if (isMounted) setDisplayCover(img);
@@ -54,7 +88,7 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
     return () => {
       isMounted = false;
     };
-  }, [cover, stationCover, stationLocation]);
+  }, [cover, stationCover, stationLocation, trackTitle, trackArtist]);
 
   const brightness = useImageBrightness(displayCover || null);
   const [flames, setFlames] = useState<Flame[]>([]);
