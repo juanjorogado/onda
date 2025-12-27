@@ -10,10 +10,14 @@
   --radius-card: 16px;
 
   /* Spacing */
-  --spacing-2: 0.5rem; /* 8px */
-  --spacing-3: 0.75rem; /* 12px */
-  --spacing-4: 1rem; /* 16px */
-  --spacing-8: 2rem; /* 32px */
+  --spacing-2: 0.5rem;
+  /* 8px */
+  --spacing-3: 0.75rem;
+  /* 12px */
+  --spacing-4: 1rem;
+  /* 16px */
+  --spacing-8: 2rem;
+  /* 32px */
 
   /* Font sizes */
   --font-size-l: 2.25rem;
@@ -30,10 +34,14 @@
   --easing-ease-out: ease-out;
   --easing-ease-in: ease-in;
   --easing-ease-in-out: ease-in-out;
-  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1); /* Material Design smooth */
-  --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Suave y ondulante */
-  --easing-wave: cubic-bezier(0.42, 0, 0.58, 1); /* Movimiento de onda */
-  --easing-echo: cubic-bezier(0.33, 1, 0.68, 1); /* Eco suave */
+  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Material Design smooth */
+  --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Suave y ondulante */
+  --easing-wave: cubic-bezier(0.42, 0, 0.58, 1);
+  /* Movimiento de onda */
+  --easing-echo: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Eco suave */
 
   /* Animation durations - Pausado y calmado */
   --duration-fast: 0.6s;
@@ -48,7 +56,7 @@
   :root {
     --color-ink: #FFFFFF;
     --color-paper: #1E1E1E;
-    --color-background: #0F0F0F;
+    --color-background: #1E1E1E;
     --color-gray-100: #2A2A2A;
     --color-gray-200: #2A2A2A;
     --color-text-primary: #FFFFFF;
@@ -57,7 +65,7 @@
 
 html {
   font-size: 18px;
-  background-color: #FFFFFF;
+  background-color: var(--color-background);
 }
 
 body {
@@ -337,6 +345,7 @@ body {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -355,6 +364,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
