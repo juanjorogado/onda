@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export const Header = memo(({ name, location, isPlaying }: HeaderProps) => {
   return (
-    <div className="flex px-4 items-center gap-2 self-stretch text-ink" style={{ paddingTop: '8px', paddingBottom: '8px' }}>
+    <div className="flex px-4 items-center gap-2 self-stretch text-ink" style={{ paddingTop: '8px', paddingBottom: '16px' }}>
       <div className={`wave-container ${isPlaying ? 'playing' : ''}`}>
         <span className="wave-circle"></span>
         <span className="wave-circle"></span>

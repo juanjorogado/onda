@@ -13,10 +13,10 @@ const ClockItem = memo(({ label, time, isBright }: { label: string; time: string
   const textColor = isBright ? 'text-ink' : 'text-white';
   return (
     <div className="flex flex-col items-start gap-1 min-w-0 flex-1">
-      <span className={`text-xs font-normal uppercase tracking-wider opacity-80 ${textColor} text-fade-in`}>
+      <span className={`text-m font-normal tracking-wider opacity-80 ${textColor} text-fade-in`}>
         {label}
       </span>
-      <span className={`text-3xl font-light ${textColor} text-fade-in tabular-nums`}>
+      <span className={`text-xl font-light ${textColor} text-fade-in tabular-nums`}>
         {time}
       </span>
     </div>
@@ -33,7 +33,6 @@ export const Clocks = memo(({ time, location, timezone, isBright = false }: Cloc
     <div className="clocks-container">
       <div className="clocks-content">
         <ClockItem label="Hora local" time={localTime} isBright={isBright} />
-        <div className="clocks-divider" />
         <ClockItem label={location} time={stationTime} isBright={isBright} />
       </div>
     </div>

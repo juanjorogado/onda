@@ -1,4 +1,4 @@
-import { memo, useRef, ReactNode, useState, KeyboardEvent, TouchEvent, useEffect, useCallback } from 'react';
+import { memo, useRef, useState, KeyboardEvent, TouchEvent, useEffect, useCallback, ReactNode } from 'react';
 import { getCityGradientFallback } from '../services/imageService';
 import { SWIPE_THRESHOLD, GRADIENT_UPDATE_INTERVAL, BRIGHTNESS_VALUES, HOUR_RANGES } from '../constants';
 
@@ -11,13 +11,13 @@ interface CoverArtProps {
   isPlaying: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
-  children?: ReactNode;
   onBrightnessChange?: (brightness: number) => void;
   trackTitle?: string;
   trackArtist?: string;
+  children?: ReactNode;
 }
 
-export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, hasTrackInfo: _hasTrackInfo, isPlaying, onToggle, onSwipe, children, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist }: CoverArtProps) => {
+export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, hasTrackInfo: _hasTrackInfo, isPlaying, onToggle, onSwipe, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist, children }: CoverArtProps) => {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
@@ -111,7 +111,7 @@ export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocat
       <div 
         className="absolute inset-0 cover-layer cover-base gradient-animated"
         style={{
-          background: gradient,
+          backgroundImage: gradient,
         }}
       />
       {/* Cover del track si viene de los datos de la radio */}
@@ -128,10 +128,11 @@ export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocat
         />
       )}
       <div className="relative z-10 w-full h-full">
-        {/* Relojes en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0">
-          {children}
-        </div>
+        {children && (
+          <div className="absolute bottom-0 left-0 right-0 z-20">
+            {children}
+          </div>
+        )}
         {isPlaying && (
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
             <div className={`wave-container ${isPlaying ? 'playing' : ''}`}>

@@ -1,85 +1,66 @@
 :root {
-  /* Light theme (default) */
+  /* Colors */
   --color-brand: #ED3F1C;
   --color-ink: #000000;
   --color-paper: #FFFFFF;
   --color-background: #FFFFFF;
-  --color-gray-100: #F3F0E6;
-  --color-gray-200: #F3F0E6;
   --color-text-primary: #000000;
-  --radius-card: 16px;
+  --color-white: #FFFFFF;
 
   /* Spacing */
+  --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
-  /* 8px */
   --spacing-3: 0.75rem;
-  /* 12px */
   --spacing-4: 1rem;
-  /* 16px */
+  --spacing-6: 1.5rem;
   --spacing-8: 2rem;
-  /* 32px */
 
-  /* Font sizes */
-  --font-size-l: 2.25rem;
-  --font-size-m: 1.5rem;
-  --line-height-l: 3rem;
-  --line-height-m: 1.5rem;
+  /* Typography */
+  --font-size-m: 20px;
+  --font-size-xl: 40px;
+  
+  --line-height-m: 1.2;
+  --line-height-xl: 1.2;
 
-  /* Font weights */
   --font-weight-light: 300;
   --font-weight-normal: 400;
 
-  /* Animation easing - Suave, ondulante, calmado */
-  --easing-ease: ease;
-  --easing-ease-out: ease-out;
-  --easing-ease-in: ease-in;
-  --easing-ease-in-out: ease-in-out;
-  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  /* Material Design smooth */
-  --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  /* Suave y ondulante */
-  --easing-wave: cubic-bezier(0.42, 0, 0.58, 1);
-  /* Movimiento de onda */
-  --easing-echo: cubic-bezier(0.33, 1, 0.68, 1);
-  /* Eco suave */
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.1em;
 
-  /* Animation durations - Pausado y calmado */
-  --duration-fast: 0.6s;
+  /* Layout */
+  --radius-card: var(--spacing-4);
+  --max-width-md: 28rem;
+  --header-height: 3rem;
+  --marquee-height: 4rem;
+
+  /* Opacity */
+  --opacity-80: 0.8;
+
+  /* Animation */
+  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --easing-wave: cubic-bezier(0.42, 0, 0.58, 1);
+  --easing-echo: cubic-bezier(0.33, 1, 0.68, 1);
+
   --duration-normal: 1s;
   --duration-slow: 3s;
   --duration-slower: 20s;
   --duration-very-slow: 4s;
-
-  /* Sky gradient tokens - Colores del cielo según la hora del día */
-  /* Estos tokens se usan como referencia, los gradientes reales se generan dinámicamente */
-  --sky-dawn-hue-start: 15;
-  --sky-dawn-hue-end: 35;
-  --sky-day-hue-start: 200;
-  --sky-day-hue-end: 220;
-  --sky-dusk-hue-start: 10;
-  --sky-dusk-hue-end: 280;
-  --sky-night-hue-start: 240;
-  --sky-night-hue-end: 270;
-  
-  --sky-saturation-base: 60;
-  --sky-lightness-day: 70;
-  --sky-lightness-night: 25;
 }
 
 /* Dark theme */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-ink: #FFFFFF;
+    --color-ink: var(--color-white);
     --color-paper: #1E1E1E;
     --color-background: #1E1E1E;
-    --color-gray-100: #2A2A2A;
-    --color-gray-200: #2A2A2A;
-    --color-text-primary: #FFFFFF;
+    --color-text-primary: var(--color-white);
   }
 }
 
 html {
-  font-size: 18px;
+  font-size: 16px;
   background-color: var(--color-background);
 }
 
@@ -100,23 +81,6 @@ body {
   padding-left: env(safe-area-inset-left);
 }
 
-@media (max-width: 360px) {
-  html {
-    font-size: 17px;
-  }
-}
-
-@media (min-width: 414px) {
-  html {
-    font-size: 19px;
-  }
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 20px;
-  }
-}
 
 /* Layout utilities */
 .flex {
@@ -141,6 +105,10 @@ body {
 
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
 }
 
 /* Spacing */
@@ -172,7 +140,7 @@ body {
 }
 
 .max-w-md {
-  max-width: 28rem;
+  max-width: var(--max-width-md);
 }
 
 .mx-auto {
@@ -208,19 +176,14 @@ body {
 }
 
 /* Typography */
-.text-l {
-  font-size: var(--font-size-l);
-  line-height: var(--line-height-l);
-}
-
 .text-m {
   font-size: var(--font-size-m);
   line-height: var(--line-height-m);
 }
 
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
+.text-xl {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
 }
 
 .font-normal {
@@ -236,7 +199,7 @@ body {
 }
 
 .tracking-wide {
-  letter-spacing: 0.025em;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 /* Colors */
@@ -245,7 +208,7 @@ body {
 }
 
 .text-white {
-  color: white;
+  color: var(--color-white);
 }
 
 .bg-paper {
@@ -385,69 +348,38 @@ body {
   }
 }
 
-/* Cover height calculation to ensure trackinfo is visible in fold */
-/* Calculation: 100vh - header (~3rem) - padding top/bottom (2rem) - trackinfo (~4rem) - margins (~1rem) */
-/* Cover height - Ocupa la mayor parte de la pantalla, dejando espacio para header y trackinfo */
 .cover-height {
-  flex: 1 1 auto;
-  min-height: 0;
   width: 100%;
-  /* Header (~3rem) + Marquee (~4rem) + Buffer (~2rem) = 9rem */
-  max-height: calc(100vh - 9rem);
+  height: calc(100vh - var(--header-height) - var(--marquee-height));
+  min-height: 0;
 }
 
 /* Clocks Component - Diseño mejorado */
 .clocks-container {
   width: 100%;
-  padding: 0 0.75rem 0.75rem 0.75rem;
 }
 
 .clocks-content {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.15) 0%,
-    rgba(0, 0, 0, 0.25) 100%
-  );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 16px;
+  gap: var(--spacing-6);
+  padding-top: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+  padding-left: var(--spacing-3);
+  padding-right: var(--spacing-3);
+  border-radius: var(--radius-card);
   transition: background var(--duration-normal) var(--easing-gentle);
 }
 
-.clocks-divider {
-  width: 1px;
-  align-self: stretch;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  flex-shrink: 0;
-}
 
-/* Estilos de tipografía para relojes */
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.text-3xl {
-  font-size: 2.5rem;
-  line-height: 1.1;
-}
 
 .uppercase {
   text-transform: uppercase;
 }
 
 .tracking-wider {
-  letter-spacing: 0.1em;
+  letter-spacing: var(--letter-spacing-wider);
 }
 
 .tabular-nums {
@@ -455,33 +387,13 @@ body {
 }
 
 .opacity-80 {
-  opacity: 0.8;
+  opacity: var(--opacity-80);
 }
 
 .gap-1 {
-  gap: 0.25rem;
+  gap: var(--spacing-1);
 }
 
 .min-w-0 {
   min-width: 0;
-}
-
-/* Dark mode adjustments for clocks */
-@media (prefers-color-scheme: dark) {
-  .clocks-content {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.12) 100%
-    );
-  }
-  
-  .clocks-divider {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.2) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-  }
 }

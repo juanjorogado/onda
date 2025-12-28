@@ -24,9 +24,9 @@ export const NowPlaying = memo(({ title, artist, year, stationName }: NowPlaying
   if (!text) return null;
   
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden text-ink">
       <div className="marquee">
-        <span className="text-l font-normal inline-block whitespace-nowrap text-fade-in">{text}</span>
+        <span className="text-xl font-normal inline-block whitespace-nowrap">{text}</span>
       </div>
     </div>
   );

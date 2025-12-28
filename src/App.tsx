@@ -96,7 +96,7 @@ function App() {
                 />
               </CoverArt>
               {showNowPlaying && (
-                <div className="w-full py-2">
+                <div className="w-full py-2 flex-shrink-0">
                   <Suspense fallback={null}>
                     <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
                   </Suspense>
@@ -106,8 +106,8 @@ function App() {
           ) : (
             <div className="w-full flex-1 flex items-center justify-center">
               <div className="wave-container playing">
-                <span className="wave-circle"></span>
-                <span className="wave-circle"></span>
+              
+              
               </div>
             </div>
           )}

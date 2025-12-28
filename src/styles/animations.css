@@ -4,6 +4,20 @@
 .gradient-animated {
   transition: background var(--duration-slow) var(--easing-gentle);
   will-change: background;
+  background-size: 200% 200%;
+  animation: gradientShift 15s var(--easing-wave) infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Water wave animation */
