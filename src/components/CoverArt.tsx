@@ -1,19 +1,12 @@
-import { useRef, ReactNode, useEffect, useState, KeyboardEvent, TouchEvent, MouseEvent } from 'react';
-import { useImageBrightness } from '../hooks/useImageBrightness';
-import { getCitySkyImage, getCitySkyImageFallback } from '../services/imageService';
-import { searchTrackInfo } from '../services/trackService';
-
-interface Flame {
-  id: number;
-  x: number;
-  y: number;
-  delay: number;
-}
+import { memo, useRef, ReactNode, useState, KeyboardEvent, TouchEvent, useEffect, useCallback } from 'react';
+import { getCityGradientFallback } from '../services/imageService';
+import { SWIPE_THRESHOLD, GRADIENT_UPDATE_INTERVAL, BRIGHTNESS_VALUES, HOUR_RANGES } from '../constants';
 
 interface CoverArtProps {
   cover: string;
   stationCover: string;
   stationLocation: string;
+  stationTimezone?: string;
   hasTrackInfo: boolean;
   isPlaying: boolean;
   onToggle: () => void;
@@ -24,106 +17,59 @@ interface CoverArtProps {
   trackArtist?: string;
 }
 
-const SWIPE_THRESHOLD = 50;
-
-export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, isPlaying, onToggle, onSwipe, children, onBrightnessChange, trackTitle, trackArtist }: CoverArtProps) {
+export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, hasTrackInfo: _hasTrackInfo, isPlaying, onToggle, onSwipe, children, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist }: CoverArtProps) => {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
 
-  const [displayCover, setDisplayCover] = useState<string>(
-    cover || stationCover || getCitySkyImageFallback(stationLocation)
-  );
+  // Estado para el gradiente que se actualiza según la hora
+  const [gradient, setGradient] = useState(() => getCityGradientFallback(stationLocation, stationTimezone));
+  const [, setBrightness] = useState(0.4);
 
+  // Memoizar el cálculo del brillo
+  const calculateBrightness = useCallback((hour: number): number => {
+    if (hour >= HOUR_RANGES.DAY_START && hour < HOUR_RANGES.DAY_END) return BRIGHTNESS_VALUES.DAY;
+    if (hour >= HOUR_RANGES.DAWN_START && hour < HOUR_RANGES.DAWN_END) return BRIGHTNESS_VALUES.DAWN;
+    if (hour >= HOUR_RANGES.DUSK_START && hour < HOUR_RANGES.DUSK_END) return BRIGHTNESS_VALUES.DUSK;
+    return BRIGHTNESS_VALUES.NIGHT;
+  }, []);
+
+  // Actualizar gradiente según la hora del día (cada minuto)
   useEffect(() => {
-    let isMounted = true;
-    
-    // Prioridad: cover del track > cover de la estación > buscar cover de la canción > imagen generada de la ciudad
-    if (cover) {
-      // Cover del track (ya buscado en servicios externos)
-      setDisplayCover(cover);
-    } else if (stationCover) {
-      // Cover de la estación desde stations.ts
-      setDisplayCover(stationCover);
-    } else if (trackTitle && trackArtist) {
-      // Si no hay cover de la estación pero tenemos información del track, buscar el cover de la canción
-      searchTrackInfo(trackArtist, trackTitle)
-        .then((trackInfo) => {
-          if (isMounted && trackInfo?.cover) {
-            setDisplayCover(trackInfo.cover);
-          } else if (isMounted) {
-            // Si no se encuentra cover de la canción, generar imagen de cielo/nubes
-            getCitySkyImage(stationLocation)
-              .then((img) => {
-                if (isMounted) setDisplayCover(img);
-              })
-              .catch(() => {
-                if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
-              });
-          }
-        })
-        .catch(() => {
-          // Si falla la búsqueda, generar imagen de cielo/nubes
-          if (isMounted) {
-            getCitySkyImage(stationLocation)
-              .then((img) => {
-                if (isMounted) setDisplayCover(img);
-              })
-              .catch(() => {
-                if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
-              });
-          }
-        });
-    } else {
-      // Si no hay cover de la estación ni información del track, generar imagen de cielo/nubes de la ciudad
-      getCitySkyImage(stationLocation)
-        .then((img) => {
-          if (isMounted) setDisplayCover(img);
-        })
-        .catch(() => {
-          if (isMounted) setDisplayCover(getCitySkyImageFallback(stationLocation));
-        });
-    }
-    
-    return () => {
-      isMounted = false;
+    const updateGradient = () => {
+      const newGradient = getCityGradientFallback(stationLocation, stationTimezone);
+      setGradient(newGradient);
+      
+      // Calcular brillo basado en la hora del día
+      const hour = stationTimezone 
+        ? new Date().toLocaleString('en-US', { timeZone: stationTimezone, hour: 'numeric', hour12: false })
+        : new Date().getHours();
+      const hourNum = typeof hour === 'string' ? parseInt(hour, 10) : hour;
+      
+      const newBrightness = calculateBrightness(hourNum);
+      setBrightness(newBrightness);
+      onBrightnessChange?.(newBrightness);
     };
-  }, [cover, stationCover, stationLocation, trackTitle, trackArtist]);
 
-  const brightness = useImageBrightness(displayCover || null);
-  const [flames, setFlames] = useState<Flame[]>([]);
+    // Actualizar inmediatamente
+    updateGradient();
 
-  useEffect(() => {
-    onBrightnessChange?.(brightness);
-  }, [brightness, onBrightnessChange]);
+    // Actualizar cada minuto para cambios suaves
+    const interval = setInterval(updateGradient, GRADIENT_UPDATE_INTERVAL);
 
-  const handleFlameClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    const target = e.currentTarget as HTMLElement;
-    const container = target.closest('.cover-art-container') as HTMLElement;
+    // Escuchar cambios en el dark mode
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleDarkModeChange = () => {
+      updateGradient();
+    };
+    darkModeQuery.addEventListener('change', handleDarkModeChange);
 
-    if (!container) return;
+    return () => {
+      clearInterval(interval);
+      darkModeQuery.removeEventListener('change', handleDarkModeChange);
+    };
+  }, [stationLocation, stationTimezone, onBrightnessChange, calculateBrightness]);
 
-    const rect = target.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    const x = rect.left - containerRect.left + rect.width / 2;
-    const y = rect.top - containerRect.top + rect.height / 2;
-
-    const baseId = Date.now();
-    const newFlames: Flame[] = Array.from({ length: 8 }, (_, i) => ({
-      id: baseId + i,
-      x: x + (Math.random() - 0.5) * 40,
-      y: y + (Math.random() - 0.5) * 40,
-      delay: Math.random() * 0.2,
-    }));
-
-    setFlames((prev) => [...prev, ...newFlames]);
-
-    setTimeout(() => {
-      setFlames((prev) => prev.filter((f) => !newFlames.some((nf) => nf.id === f.id)));
-    }, 2000);
-  };
 
   return (
     <div
@@ -159,53 +105,44 @@ export function CoverArt({ cover, stationCover, stationLocation, hasTrackInfo, i
           e.stopPropagation();
         }
       }}
-      className="w-full rounded-card overflow-hidden relative bg-cover bg-center bg-no-repeat cursor-pointer cover-height cover-art-container"
-      style={{
-        backgroundImage: displayCover
-          ? `url(${displayCover}), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`
-          : `linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200))`,
-      }}
+      className="w-full rounded-card overflow-hidden relative cursor-pointer cover-height cover-art-container"
     >
-      {children}
-      {hasTrackInfo && (
-        <div
-          className="absolute left-3 bottom-3 text-2xl flame-icon cursor-pointer z-10"
-          onClick={handleFlameClick}
-          role="button"
-          tabIndex={0}
-          aria-label="Add flame effect"
-          onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              e.currentTarget.click();
-            }
-          }}
-        >
-          🔥
-        </div>
-      )}
-      {flames.map((flame) => (
-        <div
-          key={flame.id}
-          className="flame-particle"
+      {/* Fondo con gradiente basado en la hora del día */}
+      <div 
+        className="absolute inset-0 cover-layer cover-base gradient-animated"
+        style={{
+          background: gradient,
+        }}
+      />
+      {/* Cover del track si viene de los datos de la radio */}
+      {cover && (
+        <div 
+          className="absolute inset-0 cover-layer cover-track"
           style={{
-            left: `${flame.x}px`,
-            top: `${flame.y}px`,
-            animationDelay: `${flame.delay}s`,
+            backgroundImage: `url(${cover})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 1,
           }}
-        >
-          🔥
-        </div>
-      ))}
-      {!isPlaying && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="ripple-container">
-            <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
-            <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
-            <span className={`ripple-circle ${brightness > 0.5 ? 'ripple-dark' : 'ripple-light'}`}></span>
-          </div>
-        </div>
+        />
       )}
+      <div className="relative z-10 w-full h-full">
+        {/* Relojes en la parte inferior */}
+        <div className="absolute bottom-0 left-0 right-0">
+          {children}
+        </div>
+        {isPlaying && (
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div className={`wave-container ${isPlaying ? 'playing' : ''}`}>
+              <span className="wave-circle"></span>
+              <span className="wave-circle"></span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+});
+
+CoverArt.displayName = 'CoverArt';

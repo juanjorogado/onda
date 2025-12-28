@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { stations } from '../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from './useNowPlaying';
@@ -12,7 +12,8 @@ export function useRadioPlayer() {
     }
   }, []);
 
-  const currentStation = stations[currentIndex] || null;
+  // Memoizar la estación actual para evitar recálculos
+  const currentStation = useMemo(() => stations[currentIndex] || null, [currentIndex]);
 
   const { audioRef, isPlaying, setIsPlaying, togglePlay } = useAudioPlayer({
     volume: 1.0,
@@ -36,9 +37,10 @@ export function useRadioPlayer() {
   const handleAudioError = useCallback(() => nextStation(), [nextStation]);
   const handleAudioEnded = useCallback(() => setIsPlaying(false), [setIsPlaying]);
 
-  const headerName = currentStation?.name ?? 'ONDA';
-  const headerLocation = currentStation?.location ?? '';
-  const coverArt = track.cover || '';
+  // Memoizar valores derivados
+  const headerName = useMemo(() => currentStation?.name ?? 'ONDA', [currentStation?.name]);
+  const headerLocation = useMemo(() => currentStation?.location ?? '', [currentStation?.location]);
+  const coverArt = useMemo(() => track.cover || '', [track.cover]);
 
   return {
     currentStation,

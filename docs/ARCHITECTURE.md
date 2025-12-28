@@ -13,7 +13,7 @@ src/
 ├── hooks/          # Custom React hooks
 │   ├── useAudioPlayer.ts
 │   ├── useCurrentTime.ts
-│   ├── useImageBrightness.ts
+│   ├── useMediaSession.ts
 │   ├── useNowPlaying.ts
 │   ├── useRadioPlayer.ts
 │   └── useWakeLock.ts
@@ -22,7 +22,11 @@ src/
 │   └── imageService.ts
 │
 ├── utils/           # Funciones utilitarias puras
-│   └── formatTime.ts
+│   ├── formatTime.ts
+│   └── throttle.ts
+│
+├── constants/       # Constantes centralizadas
+│   └── index.ts
 │
 ├── data/            # Datos estáticos y configuración
 │   └── stations.ts

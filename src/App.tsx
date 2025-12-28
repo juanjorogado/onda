@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useWakeLock } from './hooks/useWakeLock';
 import { useCurrentTime } from './hooks/useCurrentTime';
 import { useRadioPlayer } from './hooks/useRadioPlayer';
@@ -6,7 +6,10 @@ import { useMediaSession } from './hooks/useMediaSession';
 import { Header } from './components/Header';
 import { Clocks } from './components/Clocks';
 import { CoverArt } from './components/CoverArt';
-import { NowPlaying } from './components/NowPlaying';
+import { BRIGHTNESS_THRESHOLD } from './constants';
+
+// Lazy load de componente no crítico
+const NowPlaying = lazy(() => import('./components/NowPlaying').then(module => ({ default: module.NowPlaying })));
 
 function App() {
   useWakeLock();
@@ -27,6 +30,21 @@ function App() {
     coverArt,
     track,
   } = useRadioPlayer();
+
+  // Memoizar callbacks para evitar re-renders innecesarios
+  const handleSwipe = useCallback((direction: 'left' | 'right') => {
+    if (direction === 'left') nextStation();
+    else if (direction === 'right') prevStation();
+  }, [nextStation, prevStation]);
+
+  const handleBrightnessChange = useCallback((brightness: number) => {
+    setCoverBrightness(brightness);
+  }, []);
+
+  // Memoizar valores derivados
+  const isBright = useMemo(() => coverBrightness > BRIGHTNESS_THRESHOLD, [coverBrightness]);
+  const hasTrackInfo = useMemo(() => !!(track.title || track.artist), [track.title, track.artist]);
+  const showNowPlaying = useMemo(() => !!(track.title || track.artist || headerName), [track.title, track.artist, headerName]);
 
   // Configurar Media Session API para controles en pantalla de bloqueo (iOS/Android)
   useMediaSession({
@@ -61,14 +79,12 @@ function App() {
                 cover={coverArt}
                 stationCover={currentStation.cover}
                 stationLocation={currentStation.location}
-                hasTrackInfo={!!(track.title || track.artist)}
+                stationTimezone={currentStation.timezone}
+                hasTrackInfo={hasTrackInfo}
                 isPlaying={isPlaying}
                 onToggle={togglePlay}
-                onSwipe={(direction) => {
-                  if (direction === 'left') nextStation();
-                  else if (direction === 'right') prevStation();
-                }}
-                onBrightnessChange={setCoverBrightness}
+                onSwipe={handleSwipe}
+                onBrightnessChange={handleBrightnessChange}
                 trackTitle={track.title}
                 trackArtist={track.artist}
               >
@@ -76,15 +92,16 @@ function App() {
                   time={time}
                   location={currentStation.location}
                   timezone={currentStation.timezone}
-                  isBright={coverBrightness > 0.5}
-                  hasTrackInfo={!!(track.title || track.artist)}
+                  isBright={isBright}
                 />
               </CoverArt>
-              {track.title || track.artist || headerName ? (
+              {showNowPlaying && (
                 <div className="w-full py-2">
-                  <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
+                  <Suspense fallback={null}>
+                    <NowPlaying title={track.title} artist={track.artist} year={track.year} stationName={headerName} />
+                  </Suspense>
                 </div>
-              ) : null}
+              )}
             </>
           ) : (
             <div className="w-full flex-1 flex items-center justify-center">

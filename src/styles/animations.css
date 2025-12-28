@@ -1,18 +1,9 @@
 /* Animations */
 
-/* Pulse animation - Pausado y suave */
-.animate-pulse {
-  animation: pulse var(--duration-very-slow) var(--easing-gentle) infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+/* Gradient animation - Transición suave del gradiente según la hora del día */
+.gradient-animated {
+  transition: background var(--duration-slow) var(--easing-gentle);
+  will-change: background;
 }
 
 /* Water wave animation */
@@ -84,131 +75,46 @@
   }
 }
 
-/* Ripple animation for tap indicator - Perfectamente centrado con punto rosa */
-.ripple-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80px;
-  height: 80px;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Cover image transition - Suave y fluida estilo Dieter Rams */
+.cover-art-container {
+  position: relative;
 }
 
-
-.ripple-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  opacity: 0.4;
-  transform: translate(-50%, -50%);
-  animation: ripple var(--duration-very-slow) var(--easing-wave) infinite;
+/* Capas de cover para transiciones suaves */
+.cover-layer {
+  transition: opacity var(--duration-slow) var(--easing-gentle);
+  will-change: opacity;
 }
 
-.ripple-circle.ripple-light {
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+.cover-base {
+  z-index: 1;
 }
 
-.ripple-circle.ripple-dark {
-  border: 1.5px solid rgba(0, 0, 0, 0.2);
+.cover-track {
+  z-index: 2;
 }
 
-.ripple-circle:nth-child(1) {
-  animation-delay: 0s;
+/* Text transitions - Fluidez y suavidad estilo Dieter Rams */
+.text-transition {
+  transition: opacity var(--duration-normal) var(--easing-gentle),
+              transform var(--duration-normal) var(--easing-smooth);
 }
 
-.ripple-circle:nth-child(2) {
-  animation-delay: 1s;
+.text-fade-in {
+  animation: textFadeIn var(--duration-normal) var(--easing-gentle) forwards;
+  opacity: 0;
+  transform: translateY(4px);
 }
 
-.ripple-circle:nth-child(3) {
-  animation-delay: 2s;
-}
-
-@keyframes ripple {
+@keyframes textFadeIn {
   0% {
-    transform: translate(-50%, -50%) scale(0.9);
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.25;
+    opacity: 0;
+    transform: translateY(4px);
   }
   100% {
-    transform: translate(-50%, -50%) scale(2.5);
-    opacity: 0;
-  }
-}
-
-/* Flame particles animation - Pausado y suave como eco */
-.flame-particle {
-  position: absolute;
-  font-size: 1.5rem;
-  pointer-events: none;
-  z-index: 20;
-  animation: flame-float var(--duration-very-slow) var(--easing-echo) forwards;
-}
-
-.flame-particle:nth-child(odd) {
-  animation: flame-float-left var(--duration-very-slow) var(--easing-echo) forwards;
-}
-
-.flame-particle:nth-child(even) {
-  animation: flame-float-right var(--duration-very-slow) var(--easing-echo) forwards;
-}
-
-@keyframes flame-float {
-  0% {
-    transform: translate(0, 0) scale(0.9) rotate(0deg);
     opacity: 1;
-  }
-  30% {
-    opacity: 0.7;
-  }
-  70% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translate(0, -100px) scale(1.1) rotate(10deg);
-    opacity: 0;
+    transform: translateY(0);
   }
 }
 
-@keyframes flame-float-left {
-  0% {
-    transform: translate(0, 0) scale(0.9) rotate(0deg);
-    opacity: 1;
-  }
-  30% {
-    opacity: 0.7;
-  }
-  70% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translate(-25px, -100px) scale(1.1) rotate(-10deg);
-    opacity: 0;
-  }
-}
-
-@keyframes flame-float-right {
-  0% {
-    transform: translate(0, 0) scale(0.9) rotate(0deg);
-    opacity: 1;
-  }
-  30% {
-    opacity: 0.7;
-  }
-  70% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translate(25px, -100px) scale(1.1) rotate(10deg);
-    opacity: 0;
-  }
-}
 

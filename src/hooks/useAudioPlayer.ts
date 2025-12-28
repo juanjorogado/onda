@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { AUDIO_CONFIG } from '../constants';
 
 interface Options {
   volume?: number;
   src?: string;
 }
 
-export function useAudioPlayer({ volume = 1.0, src }: Options) {
+export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Options) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 

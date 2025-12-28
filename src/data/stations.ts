@@ -85,15 +85,6 @@ export const stations: Station[] = [
   },
   // Soul & R&B Stations from OpenTune
   {
-    id: 'somafm-fluid',
-    name: 'SomaFM: Fluid',
-    url: 'https://ice1.somafm.com/fluid-128-mp3',
-    genre: 'Soul / Future Soul / Hip Hop',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/fluid120.png'
-  },
-  {
     id: 'jazzradio-soul',
     name: 'Jazz Radio Soul',
     url: 'https://jazz-wr09.ice.infomaniak.ch/jazz-wr09-128.mp3',
