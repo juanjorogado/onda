@@ -13,26 +13,24 @@ interface NowPlayingProps {
 export const NowPlaying = memo(({ title, artist, album, year, stationName, className, fontSize = 'xl' }: NowPlayingProps) => {
   const text = useMemo(() => {
     if (title && artist) {
-      const parts = [title, artist];
+      // Formato: "Nombre de la canción. Nombre del grupo — Álbum (Año)"
+      const titleArtist = `${title}. ${artist}`;
       if (album) {
-        parts.push(album);
+        return year ? `${titleArtist} — ${album} (${year})` : `${titleArtist} — ${album}`;
       }
-      const mainText = parts.join(' — ');
-      return year ? `${mainText} (${year})` : mainText;
+      return year ? `${titleArtist} (${year})` : titleArtist;
     } else if (title) {
-      const parts = [title];
+      // Solo título
       if (album) {
-        parts.push(album);
+        return year ? `${title} — ${album} (${year})` : `${title} — ${album}`;
       }
-      const mainText = parts.join(' — ');
-      return year ? `${mainText} (${year})` : mainText;
+      return year ? `${title} (${year})` : title;
     } else if (artist) {
-      const parts = [artist];
+      // Solo artista
       if (album) {
-        parts.push(album);
+        return year ? `${artist} — ${album} (${year})` : `${artist} — ${album}`;
       }
-      const mainText = parts.join(' — ');
-      return year ? `${mainText} (${year})` : mainText;
+      return year ? `${artist} (${year})` : artist;
     } else if (stationName) {
       return `Sonando la radio ${stationName}`;
     }
