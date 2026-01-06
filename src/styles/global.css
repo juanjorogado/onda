@@ -685,6 +685,14 @@ body {
   height: var(--spacing-14px);
   flex-shrink: 0;
   align-self: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playing-screen-onda .wave-container {
+  width: var(--spacing-14px);
+  height: var(--spacing-14px);
 }
 
 .playing-screen-ellipse-outer {

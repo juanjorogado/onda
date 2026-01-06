@@ -54,8 +54,17 @@ export const PlayingScreen = memo(({
         <div className="playing-screen-station">
           {/* Onda Logo */}
           <div className="playing-screen-onda">
-            <div className="playing-screen-ellipse-outer"></div>
-            <div className="playing-screen-ellipse-inner"></div>
+            {isPlaying ? (
+              <div className={`wave-container playing`}>
+                <span className="wave-circle"></span>
+                <span className="wave-circle"></span>
+              </div>
+            ) : (
+              <>
+                <div className="playing-screen-ellipse-outer"></div>
+                <div className="playing-screen-ellipse-inner"></div>
+              </>
+            )}
           </div>
           
           {/* Board with Station Name and Time */}
