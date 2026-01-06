@@ -1,24 +1,5 @@
 /* Animations */
 
-/* Gradient animation - Transición suave del gradiente según la hora del día */
-.gradient-animated {
-  transition: background var(--duration-slow) var(--easing-gentle);
-  will-change: background;
-  background-size: 200% 200%;
-  animation: gradientShift 15s var(--easing-wave) infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
 
 /* Water wave animation */
 .wave-container {
@@ -36,7 +17,7 @@
   height: 0.375rem; /* 6px */
   border-radius: 50%;
   border: 1px solid var(--color-brand);
-  background-color: var(--color-brand);
+  background-color: transparent;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -55,7 +36,7 @@
 
 .wave-container.playing .wave-circle:nth-child(1) {
   border: 1px solid var(--color-brand);
-  background-color: var(--color-brand);
+  background-color: transparent;
   animation: water-wave-1 var(--duration-very-slow) var(--easing-wave) infinite;
 }
 
@@ -95,46 +76,5 @@
   }
 }
 
-/* Cover image transition - Suave y fluida estilo Dieter Rams */
-.cover-art-container {
-  position: relative;
-}
-
-/* Capas de cover para transiciones suaves */
-.cover-layer {
-  transition: opacity var(--duration-slow) var(--easing-gentle);
-  will-change: opacity;
-}
-
-.cover-base {
-  z-index: 1;
-}
-
-.cover-track {
-  z-index: 2;
-}
-
-/* Text transitions - Fluidez y suavidad estilo Dieter Rams */
-.text-transition {
-  transition: opacity var(--duration-normal) var(--easing-gentle),
-              transform var(--duration-normal) var(--easing-smooth);
-}
-
-.text-fade-in {
-  animation: textFadeIn var(--duration-normal) var(--easing-gentle) forwards;
-  opacity: 0;
-  transform: translateY(var(--spacing-1));
-}
-
-@keyframes textFadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(var(--spacing-1));
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 

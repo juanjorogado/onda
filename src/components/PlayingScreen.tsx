@@ -61,7 +61,7 @@ export const PlayingScreen = memo(({
               </div>
             ) : (
               <>
-                <div className="playing-screen-ellipse-outer"></div>
+
                 <div className="playing-screen-ellipse-inner"></div>
               </>
             )}
