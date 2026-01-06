@@ -7,7 +7,6 @@ interface CoverArtProps {
   stationCover: string;
   stationLocation: string;
   stationTimezone?: string;
-  hasTrackInfo: boolean;
   isPlaying: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
@@ -17,7 +16,7 @@ interface CoverArtProps {
   children?: ReactNode;
 }
 
-export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, hasTrackInfo, isPlaying, onToggle, onSwipe, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist, children }: CoverArtProps) => {
+export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, isPlaying, onToggle, onSwipe, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist, children }: CoverArtProps) => {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
