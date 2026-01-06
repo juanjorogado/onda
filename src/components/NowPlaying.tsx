@@ -11,15 +11,25 @@ interface NowPlayingProps {
 }
 
 export const NowPlaying = memo(({ title, artist, album, year, stationName, className, fontSize = 'xl' }: NowPlayingProps) => {
+  const fontSizeClass = fontSize === 'm' ? 'text-m' : 'text-xl';
+  
+  if (title && artist) {
+    // Formato: "Nombre de la canción. Nombre del grupo — Álbum (Año)"
+    const albumYear = album ? (year ? ` — ${album} (${year})` : ` — ${album}`) : (year ? ` (${year})` : '');
+    
+    return (
+      <div className={`w-full overflow-hidden text-ink ${className || ''}`}>
+        <div className="marquee">
+          <span className={`${fontSizeClass} font-normal inline-block whitespace-nowrap`}>
+            {title}. <span style={{ fontWeight: 'var(--font-weight-light)' }}>{artist}</span>{albumYear}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  
   const text = useMemo(() => {
-    if (title && artist) {
-      // Formato: "Nombre de la canción. Nombre del grupo — Álbum (Año)"
-      const titleArtist = `${title}. ${artist}`;
-      if (album) {
-        return year ? `${titleArtist} — ${album} (${year})` : `${titleArtist} — ${album}`;
-      }
-      return year ? `${titleArtist} (${year})` : titleArtist;
-    } else if (title) {
+    if (title) {
       // Solo título
       if (album) {
         return year ? `${title} — ${album} (${year})` : `${title} — ${album}`;
@@ -38,8 +48,6 @@ export const NowPlaying = memo(({ title, artist, album, year, stationName, class
   }, [title, artist, album, year, stationName]);
   
   if (!text) return null;
-  
-  const fontSizeClass = fontSize === 'm' ? 'text-m' : 'text-xl';
   
   return (
     <div className={`w-full overflow-hidden text-ink ${className || ''}`}>

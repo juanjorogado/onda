@@ -21,6 +21,7 @@
   --line-height-m: 1.2;
   --line-height-xl: 1.2;
 
+  --font-weight-light: 300;
   --font-weight-normal: 400;
 
   /* Layout */
@@ -230,6 +231,20 @@ body {
 .marquee {
   overflow: hidden;
   white-space: nowrap;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 8px,
+    black calc(100% - 8px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 8px,
+    black calc(100% - 8px),
+    transparent 100%
+  );
 }
 
 .marquee span {
@@ -376,6 +391,31 @@ body {
   background: linear-gradient(to bottom, var(--gradient-waiting-start) 0%, var(--gradient-waiting-end) 100%);
   border-radius: var(--radius-22px);
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.waiting-screen-cover::before {
+  content: '';
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(0, 0, 0, 0.05) 60%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  background-size: 150% 150%;
+  border-radius: var(--radius-22px);
+  animation: gradient-shift 20s ease-in-out infinite;
+  opacity: 1;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
 
 /* Text "Pulsa para escuchar" */
@@ -512,7 +552,9 @@ body {
 /* Station Name */
 .playing-screen-station-name {
   height: var(--spacing-24px);
-  flex-shrink: 0;
+  flex-shrink: 1;
+  flex-grow: 1;
+  min-width: 0;
   align-self: start;
   color: var(--color-ink);
   font-size: var(--font-size-m);
@@ -521,7 +563,20 @@ body {
   font-style: normal;
   text-align: start;
   white-space: pre;
+  overflow: hidden;
   transition: color var(--duration-normal) var(--easing-smooth);
+  mask-image: linear-gradient(
+    to right,
+    black 0,
+    black calc(100% - 8px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0,
+    black calc(100% - 8px),
+    transparent 100%
+  );
 }
 
 .playing-screen-station-name-bold {
@@ -560,6 +615,30 @@ body {
   flex-shrink: 1;
   flex-grow: 0;
   position: relative;
+  overflow: hidden;
+}
+
+.playing-screen-cover::before {
+  content: '';
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(0, 0, 0, 0.05) 60%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  background-size: 150% 150%;
+  border-radius: var(--radius-22px);
+  animation: gradient-shift 20s ease-in-out infinite;
+  opacity: 1;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
 
 .playing-screen-cover-content {
