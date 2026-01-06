@@ -17,7 +17,7 @@ interface CoverArtProps {
   children?: ReactNode;
 }
 
-export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, hasTrackInfo: _hasTrackInfo, isPlaying, onToggle, onSwipe, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist, children }: CoverArtProps) => {
+export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocation, stationTimezone, hasTrackInfo, isPlaying, onToggle, onSwipe, onBrightnessChange, trackTitle: _trackTitle, trackArtist: _trackArtist, children }: CoverArtProps) => {
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
@@ -105,7 +105,7 @@ export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocat
           e.stopPropagation();
         }
       }}
-      className="w-full rounded-card overflow-hidden relative cursor-pointer flex-1 min-h-0 cover-art-container"
+      className={`w-full rounded-card overflow-hidden relative cursor-pointer min-h-0 cover-art-container ${hasTrackInfo ? 'cover-height-with-trackinfo' : 'cover-height'}`}
     >
       {/* Fondo con gradiente basado en la hora del día */}
       <div 
