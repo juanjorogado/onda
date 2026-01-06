@@ -136,6 +136,7 @@ export const PlayingScreen = memo(({
                 borderRadius: 'var(--radius-22px)',
                 zIndex: 1
               }}
+              key={coverImage}
             />
           )}
           {children && (

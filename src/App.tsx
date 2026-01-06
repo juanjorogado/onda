@@ -58,6 +58,7 @@ function App() {
         <div className="flex-1 w-full flex flex-col items-start overflow-hidden min-h-0">
           {currentStation ? (
             <PlayingScreen
+              key={currentStation.id || currentStation.name}
               stationName={headerName}
               stationLocation={headerLocation}
               trackTitle={track.title}

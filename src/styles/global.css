@@ -74,6 +74,8 @@
   --duration-slow: 3s;
   --duration-slower: 20s;
   --duration-very-slow: 4s;
+  --duration-fast: 0.3s;
+  --duration-faster: 0.2s;
 
   /* Blur and mask values */
   --blur-marquee: 8px;
@@ -322,6 +324,7 @@ body {
   row-gap: var(--spacing-24px);
   flex-direction: column;
   flex-wrap: nowrap;
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.1s both;
 }
 
 /* Station Section */
@@ -422,6 +425,7 @@ body {
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+  animation: scale-in var(--duration-normal) var(--easing-smooth) 0.2s both;
 }
 
 .waiting-screen-cover::before {
@@ -461,6 +465,7 @@ body {
   text-align: left;
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.3s both;
 }
 
 /* Waiting Indicator */
@@ -497,6 +502,7 @@ body {
   flex-direction: column;
   align-items: center;
   transition: background-color var(--duration-normal) var(--easing-smooth);
+  animation: fade-in var(--duration-fast) var(--easing-smooth);
 }
 
 .playing-screen-board {
@@ -516,6 +522,7 @@ body {
   flex-direction: column;
   flex-wrap: nowrap;
   flex: 1 1 auto;
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.1s both;
 }
 
 /* Station Section */
@@ -532,6 +539,11 @@ body {
   padding-right: var(--spacing-8px);
   flex-direction: column;
   flex-wrap: nowrap;
+  animation: fade-in-down var(--duration-normal) var(--easing-smooth) 0.15s both;
+}
+
+.playing-screen-station.station-changing {
+  animation: station-change var(--duration-fast) var(--easing-smooth);
 }
 
 .playing-screen-station-board {
@@ -592,7 +604,7 @@ body {
   text-align: start;
   white-space: pre;
   overflow: hidden;
-  transition: color var(--duration-normal) var(--easing-smooth);
+  transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
   mask-image: linear-gradient(
     to right,
     black 0,
@@ -630,7 +642,7 @@ body {
   white-space: pre;
   margin-left: var(--spacing-8px);
   margin-right: var(--spacing-16px);
-  transition: color var(--duration-normal) var(--easing-smooth);
+  transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
 }
 
 /* Cover */
@@ -646,6 +658,13 @@ body {
   flex-grow: 0;
   position: relative;
   overflow: hidden;
+  animation: scale-in var(--duration-normal) var(--easing-smooth) 0.2s both;
+  transition: transform var(--duration-faster) var(--easing-smooth), background var(--duration-fast) var(--easing-smooth);
+}
+
+.playing-screen-cover:active {
+  animation: pulse var(--duration-faster) var(--easing-smooth);
+  transform: scale(0.98);
 }
 
 .playing-screen-cover::before {
@@ -669,6 +688,12 @@ body {
   z-index: var(--z-index-base);
   pointer-events: none;
   mix-blend-mode: overlay;
+}
+
+.playing-screen-cover-image {
+  animation: cover-fade-in var(--duration-normal) var(--easing-smooth);
+  transition: opacity var(--duration-fast) var(--easing-smooth);
+  will-change: opacity;
 }
 
 .playing-screen-cover-content {
@@ -697,6 +722,7 @@ body {
   /* Asegurar que siempre sea visible */
   position: relative;
   z-index: var(--z-index-content);
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.3s both;
 }
 
 .playing-screen-text-container .marquee {
