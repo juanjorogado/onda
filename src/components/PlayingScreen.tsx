@@ -1,7 +1,7 @@
 import { memo, KeyboardEvent, TouchEvent, useRef, ReactNode, useMemo } from 'react';
 import { useCurrentTime } from '../hooks/useCurrentTime';
 import { formatTime } from '../utils/formatTime';
-import { SWIPE_THRESHOLD } from '../constants';
+import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../constants';
 import { NowPlaying } from './NowPlaying';
 
 interface PlayingScreenProps {
@@ -104,14 +104,31 @@ export const PlayingScreen = memo(({
           }}
           className="playing-screen-cover cursor-pointer"
           style={{
-            background: coverImage 
-              ? `url(${coverImage}), ${coverGradient || 'linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%)'}`
-              : coverGradient || 'linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%)',
-            backgroundSize: coverImage ? 'cover, 100% 100%' : '100% 100%',
-            backgroundPosition: coverImage ? 'center, center' : 'center',
+            background: coverGradient || DEFAULT_GRADIENTS.PLAYING,
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
           }}
         >
+          {/* Cover del álbum si está disponible */}
+          {coverImage && (
+            <div 
+              className="playing-screen-cover-image"
+              style={{
+                backgroundImage: `url(${coverImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: 'var(--radius-22px)',
+                zIndex: 1
+              }}
+            />
+          )}
           {children && (
             <div className="playing-screen-cover-content">
               {children}

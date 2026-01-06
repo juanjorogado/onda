@@ -41,4 +41,10 @@ export const AUDIO_CONFIG = {
   PRELOAD: 'none' as const,
 } as const;
 
+// Gradientes por defecto
+export const DEFAULT_GRADIENTS = {
+  PLAYING: 'linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%)',
+  WAITING: 'linear-gradient(to bottom, rgba(182, 214, 194, 1) 0%, rgba(74, 96, 162, 0) 100%)',
+} as const;
+
 

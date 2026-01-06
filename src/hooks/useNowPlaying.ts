@@ -71,20 +71,21 @@ export function useNowPlaying(station?: Station | null) {
         }
       }
       
-      // Si no hay cover de la estación (station.cover vacío o no existe)
-      // y tenemos información de track (título/artista), buscar el cover de la canción
-      // Nota: Esto se puede expandir para otras estaciones que proporcionen metadata
-      if (!station.cover) {
-        // Por ahora, solo buscamos si tenemos información de track de alguna fuente
-        // En el futuro se podría implementar reconocimiento de audio o metadata del stream
-        if (!signal.aborted) {
-          setTrack({ title: undefined, artist: undefined, cover: undefined });
-        }
-      } else {
-        // Si hay cover de la estación, usarlo como fallback
-        if (!signal.aborted) {
-          setTrack({ title: undefined, artist: undefined, cover: undefined });
-        }
+      // Para otras estaciones, si tenemos información de track de alguna fuente
+      // (por ejemplo, si en el futuro se agrega metadata del stream o reconocimiento de audio),
+      // buscar el cover del álbum
+      // Por ahora, solo tenemos información de track para KEXP
+      // Pero si en el futuro se obtiene información de otras fuentes, aquí se buscaría el cover
+      
+      // Si no hay información de track, usar el cover de la estación como fallback
+      if (!signal.aborted) {
+        setTrack({ 
+          title: undefined, 
+          artist: undefined, 
+          album: undefined,
+          cover: station.cover || undefined,
+          year: undefined
+        });
       }
     } catch (error) {
       // Ignorar errores de abort

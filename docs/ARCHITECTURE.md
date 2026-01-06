@@ -5,10 +5,9 @@
 ```
 src/
 ├── components/     # Componentes React reutilizables
-│   ├── Clocks.tsx
-│   ├── CoverArt.tsx
-│   ├── Header.tsx
-│   └── NowPlaying.tsx
+│   ├── NowPlaying.tsx
+│   ├── PlayingScreen.tsx
+│   └── WaitingScreen.tsx
 │
 ├── hooks/          # Custom React hooks
 │   ├── useAudioPlayer.ts
@@ -19,11 +18,11 @@ src/
 │   └── useWakeLock.ts
 │
 ├── services/        # Servicios de API y lógica externa
-│   └── imageService.ts
+│   ├── imageService.ts
+│   └── trackService.ts
 │
 ├── utils/           # Funciones utilitarias puras
-│   ├── formatTime.ts
-│   └── throttle.ts
+│   └── formatTime.ts
 │
 ├── constants/       # Constantes centralizadas
 │   └── index.ts
@@ -49,7 +48,7 @@ src/
 ### Componentes
 - **Formato**: PascalCase
 - **Extensión**: `.tsx`
-- **Ejemplo**: `Header.tsx`, `CoverArt.tsx`
+- **Ejemplo**: `PlayingScreen.tsx`, `WaitingScreen.tsx`
 
 ### Hooks
 - **Formato**: camelCase con prefijo "use"

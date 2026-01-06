@@ -32,8 +32,8 @@
 
 .wave-circle {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 0.375rem; /* 6px */
+  height: 0.375rem; /* 6px */
   border-radius: 50%;
   border: 1px solid var(--color-brand);
   background-color: var(--color-brand);
@@ -44,11 +44,11 @@
 }
 
 .wave-container.playing .wave-circle:nth-child(2) {
-  width: 10px;
-  height: 10px;
+  width: 0.625rem; /* 10px */
+  height: 0.625rem; /* 10px */
   border: 1px solid var(--color-brand);
   background-color: transparent;
-  opacity: 0.6;
+  opacity: var(--opacity-60);
 }
 
 .wave-container.playing .wave-circle:nth-child(1) {
@@ -117,13 +117,13 @@
 .text-fade-in {
   animation: textFadeIn var(--duration-normal) var(--easing-gentle) forwards;
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(var(--spacing-1));
 }
 
 @keyframes textFadeIn {
   0% {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(var(--spacing-1));
   }
   100% {
     opacity: 1;

@@ -36,6 +36,51 @@
 
   /* Opacity */
   --opacity-80: 0.8;
+  --opacity-60: 0.6;
+
+  /* Colors with opacity */
+  --color-brand-60: rgba(237, 63, 28, 0.6);
+  --color-white-60: rgba(255, 255, 255, 0.6);
+  --color-dark-bg: #1E1E1E;
+
+  /* Additional Spacing */
+  --spacing-0-5: 0.125rem; /* 2px */
+  --spacing-8px: 0.5rem; /* 8px */
+  --spacing-14px: 0.875rem; /* 14px */
+  --spacing-16px: 1rem; /* 16px */
+  --spacing-22px: 1.375rem; /* 22px */
+  --spacing-24px: 1.5rem; /* 24px */
+  --spacing-26px: 1.625rem; /* 26px */
+  --spacing-32px: 2rem; /* 32px */
+  --spacing-48px: 3rem; /* 48px */
+  --spacing-96px: 6rem; /* 96px */
+  --spacing-341px: 21.3125rem; /* 341px */
+  --spacing-374px: 23.375rem; /* 374px */
+  --spacing-390px: 24.375rem; /* 390px */
+  --spacing-400px: 25rem; /* 400px */
+  --spacing-652px: 40.75rem; /* 652px */
+  --spacing-844px: 52.75rem; /* 844px */
+
+  /* Typography - Additional sizes */
+  --font-size-base: 16px;
+  --font-size-32px: 2rem; /* 32px */
+
+  /* Border radius */
+  --radius-22px: 1.375rem; /* 22px */
+
+  /* Layout - Additional */
+  --max-width-341px: 21.3125rem; /* 341px */
+  --max-width-374px: 23.375rem; /* 374px */
+  --max-width-390px: 24.375rem; /* 390px */
+  --min-height-400px: 25rem; /* 400px */
+  --height-652px: 40.75rem; /* 652px */
+  --min-height-844px: 52.75rem; /* 844px */
+
+  /* Gradient fallbacks */
+  --gradient-default-start: rgba(74, 96, 162, 1);
+  --gradient-default-end: rgba(74, 96, 162, 0);
+  --gradient-waiting-start: rgba(182, 214, 194, 1);
+  --gradient-waiting-end: rgba(74, 96, 162, 0);
 
   /* Animation */
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -53,23 +98,23 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-ink: var(--color-white);
-    --color-paper: #1E1E1E;
-    --color-background: #1E1E1E;
+    --color-paper: var(--color-dark-bg);
+    --color-background: var(--color-dark-bg);
     --color-text-primary: var(--color-white);
   }
   
   /* Ajustar opacidad de bordes en dark mode */
   .waiting-screen-indicator-ellipse-outer {
-    border-color: rgba(255, 255, 255, 0.6);
+    border-color: var(--color-white-60);
   }
   
   .playing-screen-ellipse-outer {
-    border-color: rgba(237, 63, 28, 0.6);
+    border-color: var(--color-brand-60);
   }
 }
 
 html {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   background-color: var(--color-background);
   color-scheme: light dark;
 }
@@ -368,26 +413,6 @@ body {
   }
 }
 
-/* Clocks Component - Diseño mejorado */
-.clocks-container {
-  width: 100%;
-}
-
-.clocks-content {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: var(--spacing-6);
-  padding-top: var(--spacing-4);
-  padding-bottom: var(--spacing-4);
-  padding-left: var(--spacing-3);
-  padding-right: var(--spacing-3);
-  border-radius: var(--radius-card);
-  transition: background var(--duration-normal) var(--easing-gentle);
-}
-
-
-
 .uppercase {
   text-transform: uppercase;
 }
@@ -416,8 +441,8 @@ body {
 .waiting-screen-container {
   position: relative;
   width: 100%;
-  max-width: 390px;
-  min-height: 844px;
+  max-width: var(--max-width-390px);
+  min-height: var(--min-height-844px);
   background: var(--color-paper);
   overflow: hidden;
   z-index: 0;
@@ -427,15 +452,15 @@ body {
 
 .waiting-screen-board {
   position: absolute;
-  left: 8px;
-  top: 26px;
+  left: var(--spacing-8px);
+  top: var(--spacing-26px);
   width: auto;
   height: auto;
   display: flex;
   align-items: start;
   align-content: stretch;
   justify-content: start;
-  row-gap: 24px;
+  row-gap: var(--spacing-24px);
   flex-direction: column;
   flex-wrap: nowrap;
 }
@@ -449,9 +474,9 @@ body {
   align-items: start;
   align-content: stretch;
   justify-content: start;
-  gap: 4px;
-  padding-left: 16px;
-  padding-right: 16px;
+  gap: var(--spacing-1);
+  padding-left: var(--spacing-16px);
+  padding-right: var(--spacing-16px);
   flex-direction: column;
   flex-wrap: nowrap;
 }
@@ -459,13 +484,13 @@ body {
 .waiting-screen-station-board {
   position: relative;
   width: 100%;
-  max-width: 341px;
+  max-width: var(--max-width-341px);
   height: auto;
   display: flex;
   align-items: start;
   align-content: stretch;
   justify-content: space-between;
-  row-gap: 4px;
+  row-gap: var(--spacing-1);
   flex-direction: row;
   flex-wrap: nowrap;
 }
@@ -473,29 +498,29 @@ body {
 /* Onda Logo */
 .waiting-screen-onda {
   position: relative;
-  width: 14px;
-  height: 14px;
+  width: var(--spacing-14px);
+  height: var(--spacing-14px);
   flex-shrink: 0;
   align-self: start;
 }
 
 .waiting-screen-ellipse-outer {
   position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 14px;
-  height: 14px;
-  border: 1px solid rgba(237, 63, 28, 0.6);
+  left: 0;
+  top: 0;
+  width: var(--spacing-14px);
+  height: var(--spacing-14px);
+  border: 1px solid var(--color-brand-60);
   border-radius: 50%;
   display: none;
 }
 
 .waiting-screen-ellipse-inner {
   position: absolute;
-  left: 3px;
-  top: 3px;
-  width: 8px;
-  height: 8px;
+  left: var(--spacing-3);
+  top: var(--spacing-3);
+  width: var(--spacing-8px);
+  height: var(--spacing-8px);
   border: 1px solid var(--color-brand);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
@@ -503,12 +528,12 @@ body {
 
 /* Madrid Text */
 .waiting-screen-madrid {
-  height: 24px;
+  height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
-  font-size: 20px;
-  line-height: 1.2;
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: 700;
@@ -519,12 +544,12 @@ body {
 
 /* Time Text */
 .waiting-screen-time {
-  height: 24px;
+  height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
-  font-size: 20px;
-  line-height: 1.2;
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: 700;
@@ -536,24 +561,24 @@ body {
 /* Cover */
 .waiting-screen-cover {
   width: 100%;
-  max-width: 374px;
-  height: 652px;
-  background: linear-gradient(to bottom, rgba(182, 214, 194, 1) 0%, rgba(74, 96, 162, 0) 100%);
-  border-radius: 22px;
+  max-width: var(--max-width-374px);
+  height: var(--height-652px);
+  background: linear-gradient(to bottom, var(--gradient-waiting-start) 0%, var(--gradient-waiting-end) 100%);
+  border-radius: var(--radius-22px);
   flex-shrink: 0;
 }
 
 /* Text "Pulsa para escuchar" */
 .waiting-screen-text {
   width: 100%;
-  max-width: 374px;
+  max-width: var(--max-width-374px);
   flex-shrink: 0;
   color: var(--color-ink);
-  font-size: 32px;
-  line-height: 1.2;
+  font-size: var(--font-size-32px);
+  line-height: var(--line-height-xl);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   text-align: left;
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);
@@ -565,28 +590,28 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 96px;
-  height: 96px;
+  width: var(--spacing-96px);
+  height: var(--spacing-96px);
 }
 
 .waiting-screen-indicator-ellipse-outer {
   position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 96px;
-  height: 96px;
+  left: 0;
+  top: 0;
+  width: var(--spacing-96px);
+  height: var(--spacing-96px);
   border: 1px solid var(--color-ink);
   border-radius: 50%;
-  opacity: 0.6;
+  opacity: var(--opacity-60);
   transition: border-color var(--duration-normal) var(--easing-smooth), opacity var(--duration-normal) var(--easing-smooth);
 }
 
 .waiting-screen-indicator-ellipse-inner {
   position: absolute;
-  left: 24px;
-  top: 24px;
-  width: 48px;
-  height: 48px;
+  left: var(--spacing-24px);
+  top: var(--spacing-24px);
+  width: var(--spacing-48px);
+  height: var(--spacing-48px);
   border: 1px solid var(--color-ink);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
@@ -608,9 +633,9 @@ body {
 
 .playing-screen-board {
   position: relative;
-  width: calc(100% - 16px);
-  max-width: 374px;
-  margin: 26px 8px 0 8px;
+  width: calc(100% - var(--spacing-16px));
+  max-width: var(--max-width-374px);
+  margin: var(--spacing-26px) var(--spacing-8px) 0 var(--spacing-8px);
   padding-left: 0;
   padding-right: 0;
   height: auto;
@@ -618,7 +643,7 @@ body {
   align-items: start;
   align-content: stretch;
   justify-content: start;
-  row-gap: 24px;
+  row-gap: var(--spacing-24px);
   flex-direction: column;
   flex-wrap: nowrap;
 }
@@ -632,9 +657,9 @@ body {
   align-items: start;
   align-content: stretch;
   justify-content: start;
-  gap: 4px;
-  padding-left: 16px;
-  padding-right: 16px;
+  gap: var(--spacing-1);
+  padding-left: var(--spacing-16px);
+  padding-right: var(--spacing-16px);
   flex-direction: column;
   flex-wrap: nowrap;
 }
@@ -642,13 +667,13 @@ body {
 .playing-screen-station-board {
   position: relative;
   width: 100%;
-  max-width: 341px;
+  max-width: var(--max-width-341px);
   height: auto;
   display: flex;
   align-items: start;
   align-content: stretch;
   justify-content: space-between;
-  row-gap: 4px;
+  row-gap: var(--spacing-1);
   flex-direction: row;
   flex-wrap: nowrap;
 }
@@ -656,29 +681,29 @@ body {
 /* Onda Logo - Visible cuando está playing */
 .playing-screen-onda {
   position: relative;
-  width: 14px;
-  height: 14px;
+  width: var(--spacing-14px);
+  height: var(--spacing-14px);
   flex-shrink: 0;
   align-self: start;
 }
 
 .playing-screen-ellipse-outer {
   position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 14px;
-  height: 14px;
-  border: 1px solid rgba(237, 63, 28, 0.6);
+  left: 0;
+  top: 0;
+  width: var(--spacing-14px);
+  height: var(--spacing-14px);
+  border: 1px solid var(--color-brand-60);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
 
 .playing-screen-ellipse-inner {
   position: absolute;
-  left: 3px;
-  top: 3px;
-  width: 8px;
-  height: 8px;
+  left: var(--spacing-3);
+  top: var(--spacing-3);
+  width: var(--spacing-8px);
+  height: var(--spacing-8px);
   border: 1px solid var(--color-brand);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
@@ -686,12 +711,12 @@ body {
 
 /* Station Name */
 .playing-screen-station-name {
-  height: 24px;
+  height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
-  font-size: 20px;
-  line-height: 1.2;
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   text-align: start;
@@ -704,17 +729,17 @@ body {
 }
 
 .playing-screen-station-name-normal {
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
 }
 
 /* Time Text */
 .playing-screen-time {
-  height: 24px;
+  height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
-  font-size: 20px;
-  line-height: 1.2;
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: 700;
@@ -726,12 +751,12 @@ body {
 /* Cover */
 .playing-screen-cover {
   width: 100%;
-  max-width: 374px;
-  min-height: 400px;
+  max-width: var(--max-width-374px);
+  min-height: var(--min-height-400px);
   height: 60vh;
-  max-height: 652px;
-  background: linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%);
-  border-radius: 22px;
+  max-height: var(--height-652px);
+  background: linear-gradient(to bottom, var(--gradient-default-start) 0%, var(--gradient-default-end) 100%);
+  border-radius: var(--radius-22px);
   flex-shrink: 0;
   position: relative;
 }
@@ -747,26 +772,26 @@ body {
 /* Track Text Container */
 .playing-screen-text-container {
   width: 100%;
-  max-width: 374px;
+  max-width: var(--max-width-374px);
   flex-shrink: 0;
   color: var(--color-ink);
-  font-size: 32px;
-  line-height: 1.2;
+  font-size: var(--font-size-32px);
+  line-height: var(--line-height-xl);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   transition: color var(--duration-normal) var(--easing-smooth);
 }
 
 .playing-screen-text-container .marquee {
   height: auto;
-  min-height: 38.4px; /* 32px * 1.2 line-height */
+  min-height: calc(var(--font-size-32px) * var(--line-height-xl));
 }
 
 .playing-screen-text-container .marquee span {
-  font-size: 32px;
-  line-height: 1.2;
-  font-weight: 400;
+  font-size: var(--font-size-32px);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-normal);
   color: var(--color-ink);
   transition: color var(--duration-normal) var(--easing-smooth);
 }
@@ -774,14 +799,14 @@ body {
 /* Track Text - Mantener para compatibilidad si se usa directamente */
 .playing-screen-text {
   width: 100%;
-  max-width: 374px;
+  max-width: var(--max-width-374px);
   flex-shrink: 0;
   color: var(--color-ink);
-  font-size: 32px;
-  line-height: 1.2;
+  font-size: var(--font-size-32px);
+  line-height: var(--line-height-xl);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   text-align: left;
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);

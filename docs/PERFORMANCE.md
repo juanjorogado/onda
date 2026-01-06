@@ -8,9 +8,8 @@ Este documento describe las optimizaciones implementadas para garantizar un rend
 
 Todos los componentes principales están envueltos con `React.memo` para evitar re-renders innecesarios:
 
-- `Header` - Solo se re-renderiza cuando cambian `name`, `location` o `isPlaying`
-- `Clocks` - Memoizado con `useMemo` para cálculos de tiempo
-- `CoverArt` - Memoizado para evitar re-renders en actualizaciones de gradiente
+- `PlayingScreen` - Memoizado para evitar re-renders innecesarios
+- `WaitingScreen` - Memoizado para evitar re-renders innecesarios
 - `NowPlaying` - Memoizado con `useMemo` para el texto formateado
 
 ### 2. Optimización de Hooks
@@ -115,4 +114,6 @@ Todas las constantes están en `src/constants/index.ts`:
 - [ ] Image lazy loading para covers
 - [ ] Prefetch de estaciones siguientes
 - [ ] Web Workers para cálculos pesados (si es necesario)
+
+
 

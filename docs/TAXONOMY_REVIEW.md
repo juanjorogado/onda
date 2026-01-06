@@ -5,53 +5,40 @@
 ### ✅ Correcto
 
 **Componentes (PascalCase)**
-- `Clocks.tsx` → Componente React
-- `CoverArt.tsx` → Componente React
-- `Header.tsx` → Componente React
-- `NowPlaying.tsx` → Componente React
+- `NowPlaying.tsx` → Componente React para mostrar información del track
+- `PlayingScreen.tsx` → Pantalla cuando la radio está reproduciendo
+- `WaitingScreen.tsx` → Pantalla cuando la radio está en espera
 
 **Hooks (camelCase con prefijo "use")**
-- `useAudioPlayer.ts` → Hook personalizado
-- `useNowPlaying.ts` → Hook personalizado
-- `useRadioPlayer.ts` → Hook personalizado
-- `useWakeLock.ts` → Hook personalizado
-- `useNow.ts` → Hook personalizado ⚠️
+- `useAudioPlayer.ts` → Hook para manejar el reproductor de audio
+- `useCurrentTime.ts` → Hook para obtener la hora actual
+- `useMediaSession.ts` → Hook para Media Session API
+- `useNowPlaying.ts` → Hook para obtener información del track actual
+- `useRadioPlayer.ts` → Hook principal para el reproductor de radio
+- `useWakeLock.ts` → Hook para mantener la pantalla activa
 
 **Utils (camelCase)**
-- `formatTime.ts` → Función utilitaria
+- `formatTime.ts` → Función utilitaria para formatear tiempo
+
+**Services (camelCase con sufijo "Service")**
+- `imageService.ts` → Servicio para manejar imágenes y gradientes
+- `trackService.ts` → Servicio para obtener información de tracks
 
 **Data (camelCase)**
-- `stations.ts` → Datos estáticos
+- `stations.ts` → Datos estáticos de estaciones de radio
 
 **Styles**
-- `index.css` → Estilos globales ⚠️
+- `global.css` → Estilos globales y variables CSS
+- `animations.css` → Animaciones y transiciones
 
-## Problemas Identificados
+## Convenciones Aplicadas
 
-### 1. **`useNow.ts` - Nombre poco descriptivo**
-   - **Problema**: El nombre "useNow" no es claro sobre qué retorna
-   - **Sugerencia**: `useCurrentTime.ts` o `useTime.ts`
-   - **Razón**: Es más descriptivo y sigue la convención de hooks
-
-### 2. **`Clocks.tsx` - Inconsistencia singular/plural**
-   - **Problema**: Usa plural mientras otros componentes usan singular
-   - **Sugerencia**: Mantener `Clocks` (es correcto porque muestra múltiples relojes) o `ClockDisplay`
-   - **Razón**: Aunque muestra múltiples relojes, el nombre es aceptable
-
-### 3. **`index.css` - Nombre genérico**
-   - **Problema**: "index" no describe el contenido
-   - **Sugerencia**: `global.css` o `styles.css`
-   - **Razón**: Más descriptivo del propósito del archivo
-
-## Recomendaciones
-
-### Opción 1: Cambios Mínimos (Recomendado)
-- Renombrar `useNow.ts` → `useCurrentTime.ts`
-- Renombrar `index.css` → `global.css`
-
-### Opción 2: Sin Cambios
-- Mantener nombres actuales si el equipo los entiende
-- Documentar la convención en README
+✅ **Componentes**: PascalCase, archivos `.tsx`
+✅ **Hooks**: camelCase con prefijo "use", archivos `.ts`
+✅ **Utils**: camelCase, archivos `.ts`
+✅ **Services**: camelCase con sufijo "Service", archivos `.ts`
+✅ **Data**: camelCase, archivos `.ts`
+✅ **Styles**: kebab-case, archivos `.css`
 
 ## Convenciones Aplicadas
 

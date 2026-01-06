@@ -57,15 +57,6 @@ export const stations: Station[] = [
     cover: ''
   },
   {
-    id: 'bootliquor',
-    name: 'SomaFM: Boot Liquor',
-    url: 'https://ice1.somafm.com/bootliquor-128-mp3',
-    genre: 'Country / Americana',
-    location: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://somafm.com/img/bootliquor120.png'
-  },
-  {
     id: 'nts1',
     name: 'NTS Radio',
     url: 'https://stream-relay-geo.ntslive.net/stream',
