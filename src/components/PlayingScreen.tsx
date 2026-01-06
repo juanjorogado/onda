@@ -43,7 +43,7 @@ export const PlayingScreen = memo(({
   // Hora de la ciudad de la estación
   const stationTime = useMemo(() => formatTime(time, timezone), [time, timezone]);
 
-  // Formatear nombre de estación: "BBC 6 — London" (bold para "BBC 6", normal para "— London")
+  // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", normal para "— London")
   const stationText = stationName;
   const locationText = stationLocation ? ` — ${stationLocation}` : '';
 
@@ -70,7 +70,7 @@ export const PlayingScreen = memo(({
           {/* Board with Station Name and Time */}
           <div className="playing-screen-station-board">
             <div className="playing-screen-station-name">
-              <span className="playing-screen-station-name-bold">{stationText}</span>
+              <span className="playing-screen-station-name-book">{stationText}</span>
               {locationText && <span className="playing-screen-station-name-normal">{locationText}</span>}
             </div>
             <div className="playing-screen-time">{stationTime}</div>

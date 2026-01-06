@@ -15,7 +15,7 @@
   --spacing-8: 2rem;
 
   /* Typography */
-  --font-size-m: 20px;
+  --font-size-m: 24px;
   --font-size-xl: 40px;
   
   --line-height-m: 1.2;
@@ -23,6 +23,7 @@
 
   --font-weight-light: 300;
   --font-weight-normal: 400;
+  --font-weight-book: 400;
 
   /* Layout */
   --radius-card: var(--spacing-4);
@@ -73,6 +74,33 @@
   --duration-slow: 3s;
   --duration-slower: 20s;
   --duration-very-slow: 4s;
+
+  /* Blur and mask values */
+  --blur-marquee: 8px;
+  --blur-station-name: 8px;
+
+  /* Cover height calculation */
+  --cover-height-offset: 240px;
+
+  /* Animation percentages */
+  --animation-overflow-top: -5%;
+  --animation-overflow-left: -5%;
+  --animation-overflow-width: 110%;
+  --animation-overflow-height: 110%;
+  --animation-background-size: 150%;
+
+  /* Gradient animation opacity values */
+  --gradient-overlay-white-start: rgba(255, 255, 255, 0.1);
+  --gradient-overlay-white-end: rgba(255, 255, 255, 0);
+  --gradient-overlay-black-mid: rgba(0, 0, 0, 0.05);
+  --gradient-overlay-black-end: rgba(0, 0, 0, 0.1);
+
+  /* Z-index layers */
+  --z-index-base: 0;
+  --z-index-content: 10;
+
+  /* Border width */
+  --border-width-1: 1px;
 }
 
 /* Dark theme */
@@ -234,15 +262,15 @@ body {
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    black 8px,
-    black calc(100% - 8px),
+    black var(--blur-marquee),
+    black calc(100% - var(--blur-marquee)),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
-    black 8px,
-    black calc(100% - 8px),
+    black var(--blur-marquee),
+    black calc(100% - var(--blur-marquee)),
     transparent 100%
   );
 }
@@ -276,7 +304,7 @@ body {
   min-height: var(--min-height-844px);
   background: var(--color-paper);
   overflow: hidden;
-  z-index: 0;
+  z-index: var(--z-index-base);
   margin: 0 auto;
   transition: background-color var(--duration-normal) var(--easing-smooth);
 }
@@ -346,7 +374,7 @@ body {
   transform: translate(-50%, -50%);
   width: var(--spacing-8px);
   height: var(--spacing-8px);
-  border: 1px solid var(--color-brand);
+  border: var(--border-width-1) solid var(--color-brand);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
@@ -361,7 +389,7 @@ body {
   line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--font-weight-book);
   text-align: start;
   white-space: pre;
   transition: color var(--duration-normal) var(--easing-smooth);
@@ -377,9 +405,10 @@ body {
   line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--font-weight-book);
   text-align: start;
   white-space: pre;
+  margin-left: var(--spacing-8px);
   transition: color var(--duration-normal) var(--easing-smooth);
 }
 
@@ -398,22 +427,22 @@ body {
 .waiting-screen-cover::before {
   content: '';
   position: absolute;
-  top: -5%;
-  left: -5%;
-  width: 110%;
-  height: 110%;
+  top: var(--animation-overflow-top);
+  left: var(--animation-overflow-left);
+  width: var(--animation-overflow-width);
+  height: var(--animation-overflow-height);
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(0, 0, 0, 0.05) 60%,
-    rgba(0, 0, 0, 0.1) 100%
+    var(--gradient-overlay-white-start) 0%,
+    var(--gradient-overlay-white-end) 40%,
+    var(--gradient-overlay-black-mid) 60%,
+    var(--gradient-overlay-black-end) 100%
   );
-  background-size: 150% 150%;
+  background-size: var(--animation-background-size) var(--animation-background-size);
   border-radius: var(--radius-22px);
-  animation: gradient-shift 20s ease-in-out infinite;
+  animation: gradient-shift var(--duration-slower) ease-in-out infinite;
   opacity: 1;
-  z-index: 0;
+  z-index: var(--z-index-base);
   pointer-events: none;
   mix-blend-mode: overlay;
 }
@@ -450,7 +479,7 @@ body {
   top: var(--spacing-24px);
   width: var(--spacing-48px);
   height: var(--spacing-48px);
-  border: 1px solid var(--color-ink);
+  border: var(--border-width-1) solid var(--color-ink);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
@@ -463,7 +492,7 @@ body {
   background: var(--color-paper);
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 0;
+  z-index: var(--z-index-base);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -499,8 +528,8 @@ body {
   align-content: stretch;
   justify-content: start;
   gap: var(--spacing-1);
-  padding-left: var(--spacing-16px);
-  padding-right: var(--spacing-16px);
+  padding-left: var(--spacing-8px);
+  padding-right: var(--spacing-8px);
   flex-direction: column;
   flex-wrap: nowrap;
 }
@@ -508,7 +537,6 @@ body {
 .playing-screen-station-board {
   position: relative;
   width: 100%;
-  max-width: var(--max-width-341px);
   height: auto;
   display: flex;
   align-items: start;
@@ -544,7 +572,7 @@ body {
   transform: translate(-50%, -50%);
   width: var(--spacing-8px);
   height: var(--spacing-8px);
-  border: 1px solid var(--color-brand);
+  border: var(--border-width-1) solid var(--color-brand);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
@@ -568,19 +596,19 @@ body {
   mask-image: linear-gradient(
     to right,
     black 0,
-    black calc(100% - 8px),
+    black calc(100% - var(--blur-station-name)),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     black 0,
-    black calc(100% - 8px),
+    black calc(100% - var(--blur-station-name)),
     transparent 100%
   );
 }
 
-.playing-screen-station-name-bold {
-  font-weight: 700;
+.playing-screen-station-name-book {
+  font-weight: var(--font-weight-book);
 }
 
 .playing-screen-station-name-normal {
@@ -597,9 +625,11 @@ body {
   line-height: var(--line-height-m);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--font-weight-book);
   text-align: start;
   white-space: pre;
+  margin-left: var(--spacing-8px);
+  margin-right: var(--spacing-16px);
   transition: color var(--duration-normal) var(--easing-smooth);
 }
 
@@ -608,8 +638,8 @@ body {
   width: 100%;
   max-width: var(--max-width-374px);
   min-height: var(--min-height-400px);
-  height: calc(100vh - 240px); /* Altura dinámica que deja espacio para header y texto */
-  max-height: calc(100vh - 240px); /* Máximo que deja espacio para el texto */
+  height: calc(100vh - var(--cover-height-offset)); /* Altura dinámica que deja espacio para header y texto */
+  max-height: calc(100vh - var(--cover-height-offset)); /* Máximo que deja espacio para el texto */
   background: linear-gradient(to bottom, var(--gradient-default-start) 0%, var(--gradient-default-end) 100%);
   border-radius: var(--radius-22px);
   flex-shrink: 1;
@@ -621,22 +651,22 @@ body {
 .playing-screen-cover::before {
   content: '';
   position: absolute;
-  top: -5%;
-  left: -5%;
-  width: 110%;
-  height: 110%;
+  top: var(--animation-overflow-top);
+  left: var(--animation-overflow-left);
+  width: var(--animation-overflow-width);
+  height: var(--animation-overflow-height);
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(0, 0, 0, 0.05) 60%,
-    rgba(0, 0, 0, 0.1) 100%
+    var(--gradient-overlay-white-start) 0%,
+    var(--gradient-overlay-white-end) 40%,
+    var(--gradient-overlay-black-mid) 60%,
+    var(--gradient-overlay-black-end) 100%
   );
-  background-size: 150% 150%;
+  background-size: var(--animation-background-size) var(--animation-background-size);
   border-radius: var(--radius-22px);
-  animation: gradient-shift 20s ease-in-out infinite;
+  animation: gradient-shift var(--duration-slower) ease-in-out infinite;
   opacity: 1;
-  z-index: 0;
+  z-index: var(--z-index-base);
   pointer-events: none;
   mix-blend-mode: overlay;
 }
@@ -646,7 +676,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: var(--z-index-content);
 }
 
 /* Track Text Container */
@@ -666,7 +696,7 @@ body {
   transition: color var(--duration-normal) var(--easing-smooth);
   /* Asegurar que siempre sea visible */
   position: relative;
-  z-index: 10;
+  z-index: var(--z-index-content);
 }
 
 .playing-screen-text-container .marquee {
