@@ -261,6 +261,7 @@ body {
 .marquee {
   overflow: hidden;
   white-space: nowrap;
+  position: relative;
   mask-image: linear-gradient(
     to right,
     transparent 0,
@@ -277,19 +278,24 @@ body {
   );
 }
 
-.marquee span {
+.marquee > span {
   display: inline-block;
-  animation: marquee var(--duration-slower) var(--easing-gentle) infinite;
-  padding-left: 100%;
+  animation: marquee var(--duration-slower) var(--easing-gentle) infinite linear;
+  will-change: transform;
+  white-space: nowrap;
+}
+
+.marquee > span > span {
+  display: inline-block;
+  padding-right: 3em;
 }
 
 @keyframes marquee {
   0% {
     transform: translateX(0);
   }
-
   100% {
-    transform: translateX(-100%);
+    transform: translateX(calc(-50% - 1.5em));
   }
 }
 
@@ -503,6 +509,7 @@ body {
   align-items: center;
   transition: background-color var(--duration-normal) var(--easing-smooth);
   animation: fade-in var(--duration-fast) var(--easing-smooth);
+  touch-action: pan-y;
 }
 
 .playing-screen-board {
@@ -523,6 +530,18 @@ body {
   flex-wrap: nowrap;
   flex: 1 1 auto;
   animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.1s both;
+  will-change: transform;
+  touch-action: pan-y;
+}
+
+.playing-screen-board.swipe-transitioning {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.playing-screen-board.swipe-dragging {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Station Section */

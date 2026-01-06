@@ -16,12 +16,15 @@ export const NowPlaying = memo(({ title, artist, album, year, stationName, class
   if (title && artist) {
     // Formato: "Nombre de la canción. Nombre del grupo — Álbum (Año)"
     const albumYear = album ? (year ? ` — ${album} (${year})` : ` — ${album}`) : (year ? ` (${year})` : '');
+    const fullText = `${title}. ${artist}${albumYear}`;
     
     return (
       <div className={`w-full overflow-hidden text-ink ${className || ''}`}>
         <div className="marquee">
           <span className={`${fontSizeClass} font-normal inline-block whitespace-nowrap`}>
-            {title}. <span style={{ fontWeight: 'var(--font-weight-light)' }}>{artist}</span>{albumYear}
+            <span>{title}. <span style={{ fontWeight: 'var(--font-weight-light)' }}>{artist}</span>{albumYear}</span>
+            <span aria-hidden="true"> — </span>
+            <span>{title}. <span style={{ fontWeight: 'var(--font-weight-light)' }}>{artist}</span>{albumYear}</span>
           </span>
         </div>
       </div>
@@ -52,7 +55,11 @@ export const NowPlaying = memo(({ title, artist, album, year, stationName, class
   return (
     <div className={`w-full overflow-hidden text-ink ${className || ''}`}>
       <div className="marquee">
-        <span className={`${fontSizeClass} font-normal inline-block whitespace-nowrap`}>{text}</span>
+        <span className={`${fontSizeClass} font-normal inline-block whitespace-nowrap`}>
+          <span>{text}</span>
+          <span aria-hidden="true"> — </span>
+          <span>{text}</span>
+        </span>
       </div>
     </div>
   );

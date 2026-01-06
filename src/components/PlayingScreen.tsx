@@ -1,4 +1,4 @@
-import { memo, KeyboardEvent, TouchEvent, useRef, ReactNode, useMemo } from 'react';
+import { memo, KeyboardEvent, TouchEvent, useRef, ReactNode, useMemo, useState, useEffect } from 'react';
 import { useCurrentTime } from '../hooks/useCurrentTime';
 import { formatTime } from '../utils/formatTime';
 import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../constants';
@@ -39,17 +39,123 @@ export const PlayingScreen = memo(({
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
+  const isDragging = useRef(false);
+  const [translateX, setTranslateX] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const containerWidth = useRef(0);
   
   // Hora de la ciudad de la estación
   const stationTime = useMemo(() => formatTime(time, timezone), [time, timezone]);
+
+  // Reset translate cuando cambia la estación
+  useEffect(() => {
+    setTranslateX(0);
+    setIsTransitioning(false);
+    isDragging.current = false;
+  }, [stationName]);
+
+  // Actualizar el ancho del contenedor
+  useEffect(() => {
+    const updateWidth = () => {
+      if (boardRef.current) {
+        containerWidth.current = boardRef.current.offsetWidth || window.innerWidth;
+      }
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", normal para "— London")
   const stationText = stationName;
   const locationText = stationLocation ? ` — ${stationLocation}` : '';
 
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    startX.current = touch.clientX;
+    startY.current = touch.clientY;
+    swiped.current = false;
+    isDragging.current = false;
+    setIsTransitioning(false);
+  };
+
+  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    if (swiped.current || !onSwipe) return;
+    
+    const touch = e.touches[0];
+    const dx = touch.clientX - startX.current;
+    const dy = touch.clientY - startY.current;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    
+    // Solo procesar si el movimiento es principalmente horizontal
+    if (absDx > 10 && absDx > absDy) {
+      e.preventDefault();
+      e.stopPropagation();
+      isDragging.current = true;
+      
+      // Limitar el desplazamiento a la mitad del ancho del contenedor
+      const maxTranslate = containerWidth.current * 0.5;
+      const clampedDx = Math.max(-maxTranslate, Math.min(maxTranslate, dx));
+      setTranslateX(clampedDx);
+    }
+    
+    // Detectar swipe completo
+    if (absDx > SWIPE_THRESHOLD && absDx > absDy) {
+      swiped.current = true;
+      setIsTransitioning(true);
+      
+      // Animar hasta el final
+      const direction = dx > 0 ? 1 : -1;
+      const finalTranslate = direction * containerWidth.current;
+      setTranslateX(finalTranslate);
+      
+      // Llamar al callback después de un pequeño delay para permitir la animación
+      setTimeout(() => {
+        onSwipe(dx > 0 ? 'right' : 'left');
+      }, 100);
+    }
+  };
+
+  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+    if (swiped.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    
+    // Si no se completó el swipe, volver a la posición original
+    if (isDragging.current && Math.abs(translateX) < SWIPE_THRESHOLD) {
+      setIsTransitioning(true);
+      setTranslateX(0);
+      setTimeout(() => {
+        setIsTransitioning(false);
+        isDragging.current = false;
+      }, 300);
+    } else {
+      isDragging.current = false;
+    }
+  };
+
   return (
-    <div className="playing-screen-container">
-      <div className="playing-screen-board">
+    <div 
+      className="playing-screen-container"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div 
+        ref={boardRef}
+        className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning' : ''} ${isDragging.current ? 'swipe-dragging' : ''}`}
+        style={{
+          transform: `translateX(${translateX}px) rotateY(${translateX * 0.05}deg)`,
+          opacity: isDragging.current && containerWidth.current > 0 
+            ? Math.max(0.7, 1 - Math.abs(translateX) / (containerWidth.current * 0.5)) 
+            : 1,
+          transition: isTransitioning ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+        }}
+      >
         {/* Station Section */}
         <div className="playing-screen-station">
           {/* Onda Logo */}
@@ -89,28 +195,6 @@ export const PlayingScreen = memo(({
             }
           }}
           onClick={onToggle}
-          onTouchStart={(e: TouchEvent<HTMLDivElement>) => {
-            const touch = e.touches[0];
-            startX.current = touch.clientX;
-            startY.current = touch.clientY;
-            swiped.current = false;
-          }}
-          onTouchMove={(e: TouchEvent<HTMLDivElement>) => {
-            if (swiped.current || !onSwipe) return;
-            const touch = e.touches[0];
-            const dx = touch.clientX - startX.current;
-            const dy = Math.abs(touch.clientY - startY.current);
-            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > dy) {
-              swiped.current = true;
-              onSwipe(dx > 0 ? 'right' : 'left');
-            }
-          }}
-          onTouchEnd={(e: TouchEvent<HTMLDivElement>) => {
-            if (swiped.current) {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
           className="playing-screen-cover cursor-pointer"
           style={{
             background: coverGradient || DEFAULT_GRADIENTS.PLAYING,
