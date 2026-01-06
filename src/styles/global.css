@@ -111,6 +111,10 @@ body {
   flex-shrink: 0;
 }
 
+.max-h-full {
+  max-height: 100%;
+}
+
 /* Spacing */
 .gap-2 {
   gap: var(--spacing-2);
@@ -150,10 +154,12 @@ body {
 
 .h-screen {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height para iOS Safari */
 }
 
 .min-h-screen {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height para iOS Safari */
 }
 
 .min-h-0 {
