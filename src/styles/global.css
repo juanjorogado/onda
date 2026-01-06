@@ -33,7 +33,6 @@
   --max-width-md: 28rem;
   --header-height: 3rem;
   --marquee-height: 4rem;
-  --now-playing-height: 4rem; /* 40px * 1.2 line-height + 1rem padding (0.5rem * 2) = 48px + 16px = 64px = 4rem */
 
   /* Opacity */
   --opacity-80: 0.8;
@@ -347,18 +346,6 @@ body {
   to {
     opacity: 1;
   }
-}
-
-.cover-height {
-  width: 100%;
-  height: calc(100vh - var(--header-height) - var(--marquee-height));
-  min-height: 0;
-}
-
-.cover-height-with-trackinfo {
-  width: 100%;
-  height: calc(100vh - var(--header-height) - var(--now-playing-height));
-  min-height: 0;
 }
 
 /* Clocks Component - Diseño mejorado */
