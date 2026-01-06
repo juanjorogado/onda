@@ -105,7 +105,7 @@ export const CoverArt = memo(({ cover, stationCover: _stationCover, stationLocat
           e.stopPropagation();
         }
       }}
-      className="w-full rounded-card overflow-hidden relative cursor-pointer cover-height cover-art-container"
+      className="w-full rounded-card overflow-hidden relative cursor-pointer flex-1 min-h-0 cover-art-container"
     >
       {/* Fondo con gradiente basado en la hora del día */}
       <div 
