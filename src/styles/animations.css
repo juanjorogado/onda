@@ -41,21 +41,27 @@
   left: 50%;
   transform: translate(-50%, -50%);
   animation: none;
+  /* Asegurar que ambos círculos estén perfectamente centrados */
+  margin: 0;
+  padding: 0;
 }
 
-.wave-container.playing .wave-circle:nth-child(2) {
-  width: 0.625rem; /* 10px */
-  height: 0.625rem; /* 10px */
-  border: 1px solid var(--color-brand);
+.wave-container.playing .wave-circle {
+  /* Ambos círculos empiezan desde el mismo tamaño para ser concéntricos */
+  width: 0.375rem; /* 6px */
+  height: 0.375rem; /* 6px */
   background-color: transparent;
-  opacity: var(--opacity-60);
 }
 
 .wave-container.playing .wave-circle:nth-child(1) {
+  border: 1px solid var(--color-brand);
+  background-color: var(--color-brand);
   animation: water-wave-1 var(--duration-very-slow) var(--easing-wave) infinite;
 }
 
 .wave-container.playing .wave-circle:nth-child(2) {
+  border: 1px solid var(--color-brand);
+  opacity: var(--opacity-60);
   animation: water-wave-2 var(--duration-very-slow) var(--easing-wave) infinite var(--duration-normal);
 }
 
@@ -77,11 +83,11 @@
 @keyframes water-wave-2 {
   0% {
     transform: translate(-50%, -50%) scale(0);
-    opacity: 1;
+    opacity: 0.6;
   }
   40% {
     transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.5;
+    opacity: 0.3;
   }
   100% {
     transform: translate(-50%, -50%) scale(2.2);
