@@ -39,7 +39,8 @@ export function useRadioPlayer() {
 
   // Memoizar valores derivados
   const headerName = useMemo(() => currentStation?.name ?? 'ONDA', [currentStation?.name]);
-  const headerLocation = useMemo(() => currentStation?.location ?? '', [currentStation?.location]);
+  // El location debe ser siempre el de la estación cargada actualmente
+  const headerLocation = useMemo(() => currentStation?.location ?? '', [currentStation]);
   const coverArt = useMemo(() => track.cover || '', [track.cover]);
 
   return {

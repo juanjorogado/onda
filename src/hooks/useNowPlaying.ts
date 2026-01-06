@@ -44,11 +44,12 @@ export function useNowPlaying(station?: Station | null) {
         if (item) {
           const title = item?.song || undefined;
           const artist = item?.artist || undefined;
+          const album = item?.album || undefined;
           const cover = item?.image_uri || item?.thumbnail_uri || undefined;
           const releaseDate = item?.release_date || item?.album_release_date;
           const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
           
-          trackInfo = { title, artist, cover, year };
+          trackInfo = { title, artist, album, cover, year };
           
           // Si tenemos título y artista pero no cover, buscar en servicios externos
           if (title && artist && !cover && !signal.aborted) {
@@ -56,6 +57,7 @@ export function useNowPlaying(station?: Station | null) {
             if (additionalInfo && !signal.aborted) {
               trackInfo = {
                 ...trackInfo,
+                album: trackInfo.album || additionalInfo.album,
                 cover: trackInfo.cover || additionalInfo.cover,
                 year: trackInfo.year || additionalInfo.year,
               };

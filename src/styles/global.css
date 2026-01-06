@@ -57,14 +57,26 @@
     --color-background: #1E1E1E;
     --color-text-primary: var(--color-white);
   }
+  
+  /* Ajustar opacidad de bordes en dark mode */
+  .waiting-screen-indicator-ellipse-outer {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .playing-screen-ellipse-outer {
+    border-color: rgba(237, 63, 28, 0.6);
+  }
 }
 
 html {
   font-size: 16px;
   background-color: var(--color-background);
+  color-scheme: light dark;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background-color: var(--color-background);
   color: var(--color-text-primary);
   overscroll-behavior: none;
@@ -72,6 +84,8 @@ body {
   text-rendering: optimizeLegibility;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   transition: background-color var(--duration-normal) var(--easing-smooth), color var(--duration-normal) var(--easing-smooth);
+  min-height: 100vh;
+  width: 100%;
 }
 
 .safe-area {
@@ -396,4 +410,379 @@ body {
 
 .min-w-0 {
   min-width: 0;
+}
+
+/* Waiting Screen - Diseño exacto de Penpot */
+.waiting-screen-container {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  min-height: 844px;
+  background: var(--color-paper);
+  overflow: hidden;
+  z-index: 0;
+  margin: 0 auto;
+  transition: background-color var(--duration-normal) var(--easing-smooth);
+}
+
+.waiting-screen-board {
+  position: absolute;
+  left: 8px;
+  top: 26px;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  row-gap: 24px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+/* Station Section */
+.waiting-screen-station {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  gap: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.waiting-screen-station-board {
+  position: relative;
+  width: 100%;
+  max-width: 341px;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: space-between;
+  row-gap: 4px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+/* Onda Logo */
+.waiting-screen-onda {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  align-self: start;
+}
+
+.waiting-screen-ellipse-outer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(237, 63, 28, 0.6);
+  border-radius: 50%;
+  display: none;
+}
+
+.waiting-screen-ellipse-inner {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--color-brand);
+  border-radius: 50%;
+  transition: border-color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Madrid Text */
+.waiting-screen-madrid {
+  height: 24px;
+  flex-shrink: 0;
+  align-self: start;
+  color: var(--color-ink);
+  font-size: 20px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-align: start;
+  white-space: pre;
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Time Text */
+.waiting-screen-time {
+  height: 24px;
+  flex-shrink: 0;
+  align-self: start;
+  color: var(--color-ink);
+  font-size: 20px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-align: start;
+  white-space: pre;
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Cover */
+.waiting-screen-cover {
+  width: 100%;
+  max-width: 374px;
+  height: 652px;
+  background: linear-gradient(to bottom, rgba(182, 214, 194, 1) 0%, rgba(74, 96, 162, 0) 100%);
+  border-radius: 22px;
+  flex-shrink: 0;
+}
+
+/* Text "Pulsa para escuchar" */
+.waiting-screen-text {
+  width: 100%;
+  max-width: 374px;
+  flex-shrink: 0;
+  color: var(--color-ink);
+  font-size: 32px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  text-align: left;
+  white-space: break-spaces;
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Waiting Indicator */
+.waiting-screen-indicator {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 96px;
+  height: 96px;
+}
+
+.waiting-screen-indicator-ellipse-outer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--color-ink);
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: border-color var(--duration-normal) var(--easing-smooth), opacity var(--duration-normal) var(--easing-smooth);
+}
+
+.waiting-screen-indicator-ellipse-inner {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-ink);
+  border-radius: 50%;
+  transition: border-color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Playing Screen - Diseño exacto de Penpot */
+.playing-screen-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--color-paper);
+  overflow: hidden;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background-color var(--duration-normal) var(--easing-smooth);
+}
+
+.playing-screen-board {
+  position: relative;
+  width: calc(100% - 16px);
+  max-width: 374px;
+  margin: 26px 8px 0 8px;
+  padding-left: 0;
+  padding-right: 0;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  row-gap: 24px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+/* Station Section */
+.playing-screen-station {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  gap: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.playing-screen-station-board {
+  position: relative;
+  width: 100%;
+  max-width: 341px;
+  height: auto;
+  display: flex;
+  align-items: start;
+  align-content: stretch;
+  justify-content: space-between;
+  row-gap: 4px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+/* Onda Logo - Visible cuando está playing */
+.playing-screen-onda {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  align-self: start;
+}
+
+.playing-screen-ellipse-outer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(237, 63, 28, 0.6);
+  border-radius: 50%;
+  transition: border-color var(--duration-normal) var(--easing-smooth);
+}
+
+.playing-screen-ellipse-inner {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--color-brand);
+  border-radius: 50%;
+  transition: border-color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Station Name */
+.playing-screen-station-name {
+  height: 24px;
+  flex-shrink: 0;
+  align-self: start;
+  color: var(--color-ink);
+  font-size: 20px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  text-align: start;
+  white-space: pre;
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+.playing-screen-station-name-bold {
+  font-weight: 700;
+}
+
+.playing-screen-station-name-normal {
+  font-weight: 400;
+}
+
+/* Time Text */
+.playing-screen-time {
+  height: 24px;
+  flex-shrink: 0;
+  align-self: start;
+  color: var(--color-ink);
+  font-size: 20px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-align: start;
+  white-space: pre;
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Cover */
+.playing-screen-cover {
+  width: 100%;
+  max-width: 374px;
+  min-height: 400px;
+  height: 60vh;
+  max-height: 652px;
+  background: linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%);
+  border-radius: 22px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.playing-screen-cover-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* Track Text Container */
+.playing-screen-text-container {
+  width: 100%;
+  max-width: 374px;
+  flex-shrink: 0;
+  color: var(--color-ink);
+  font-size: 32px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+.playing-screen-text-container .marquee {
+  height: auto;
+  min-height: 38.4px; /* 32px * 1.2 line-height */
+}
+
+.playing-screen-text-container .marquee span {
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 400;
+  color: var(--color-ink);
+  transition: color var(--duration-normal) var(--easing-smooth);
+}
+
+/* Track Text - Mantener para compatibilidad si se usa directamente */
+.playing-screen-text {
+  width: 100%;
+  max-width: 374px;
+  flex-shrink: 0;
+  color: var(--color-ink);
+  font-size: 32px;
+  line-height: 1.2;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  text-align: left;
+  white-space: break-spaces;
+  transition: color var(--duration-normal) var(--easing-smooth);
 }

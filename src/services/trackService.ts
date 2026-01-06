@@ -32,6 +32,7 @@ export async function searchTrackLastFM(artist: string, title: string): Promise<
       return {
         title: track.name || title,
         artist: track.artist?.name || artist,
+        album: track.album?.title,
         cover: track.album?.image?.find((img: any) => img.size === 'large')?.['#text'] || 
                track.album?.image?.find((img: any) => img.size === 'medium')?.['#text'],
         year,

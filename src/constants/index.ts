@@ -10,7 +10,6 @@ export const GRADIENT_UPDATE_INTERVAL = 60000; // 1 minuto para actualización d
 
 // Umbrales
 export const SWIPE_THRESHOLD = 50; // Píxeles para detectar swipe
-export const BRIGHTNESS_THRESHOLD = 0.5; // Umbral para cambiar color de texto
 
 // Valores de brillo según hora del día
 export const BRIGHTNESS_VALUES = {
@@ -41,4 +40,5 @@ export const AUDIO_CONFIG = {
   DEFAULT_VOLUME: 1.0,
   PRELOAD: 'none' as const,
 } as const;
+
 
