@@ -1,11 +1,10 @@
-/* Animations */
+/* Animations - Consistent, smooth, elegant, evident, with personality */
 
-
-/* Water wave animation */
+/* Water wave animation - Suave y orgánica como ondas de sonido */
 .wave-container {
   position: relative;
-  width: 0.375rem;
-  height: 0.375rem;
+  width: var(--wave-size);
+  height: var(--wave-size);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,50 +12,57 @@
 
 .wave-circle {
   position: absolute;
-  width: 0.375rem; /* 6px */
-  height: 0.375rem; /* 6px */
+  width: var(--wave-size);
+  height: var(--wave-size);
   border-radius: 50%;
-  border: 1px solid var(--color-brand);
+  border: var(--border-width-1) solid var(--color-brand);
   background-color: transparent;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   animation: none;
-  /* Asegurar que ambos círculos estén perfectamente centrados */
   margin: 0;
   padding: 0;
 }
 
 .wave-container.playing .wave-circle {
-  /* Ambos círculos empiezan desde el mismo tamaño para ser concéntricos */
-  width: 0.375rem; /* 6px */
-  height: 0.375rem; /* 6px */
+  width: var(--wave-size);
+  height: var(--wave-size);
   background-color: transparent;
 }
 
 .wave-container.playing .wave-circle:nth-child(1) {
-  border: 1px solid var(--color-brand);
+  border: var(--border-width-1) solid var(--color-brand);
   background-color: transparent;
-  animation: water-wave-1 var(--duration-very-slow) var(--easing-wave) infinite;
+  animation: water-wave-1 var(--duration-very-slow) cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 }
 
 .wave-container.playing .wave-circle:nth-child(2) {
-  border: 1px solid var(--color-brand);
+  border: var(--border-width-1) solid var(--color-brand);
   opacity: var(--opacity-60);
-  animation: water-wave-2 var(--duration-very-slow) var(--easing-wave) infinite var(--duration-normal);
+  animation: water-wave-2 var(--duration-very-slow) cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite var(--duration-normal);
 }
 
+/* Onda más suave con transición elegante - Personalidad orgánica */
 @keyframes water-wave-1 {
   0% {
     transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-50%, -50%) scale(0.6);
     opacity: 0.8;
   }
-  40% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.5;
+  50% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(-50%, -50%) scale(var(--animation-scale-wave-mid));
+    opacity: 0.4;
   }
   100% {
-    transform: translate(-50%, -50%) scale(2.2);
+    transform: translate(-50%, -50%) scale(var(--animation-scale-wave-end));
     opacity: 0;
   }
 }
@@ -64,43 +70,43 @@
 @keyframes water-wave-2 {
   0% {
     transform: translate(-50%, -50%) scale(0);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate(-50%, -50%) scale(0.6);
     opacity: 0.6;
   }
-  40% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.3;
+  50% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(-50%, -50%) scale(var(--animation-scale-wave-mid));
+    opacity: 0.25;
   }
   100% {
-    transform: translate(-50%, -50%) scale(2.2);
+    transform: translate(-50%, -50%) scale(var(--animation-scale-wave-end));
     opacity: 0;
   }
 }
 
-/* Gradient animation */
+/* Gradient animation - Movimiento sutil y respirable */
 @keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
+  33% {
+    background-position: 50% 45%;
+  }
+  66% {
+    background-position: 100% 55%;
   }
   100% {
     background-position: 0% 50%;
   }
 }
 
-@keyframes gradient-breathe {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.95;
-  }
-}
-
-/* Screen transitions */
+/* Screen transitions - Entrada elegante y suave */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -110,64 +116,11 @@
   }
 }
 
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-out-right {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-}
-
-@keyframes slide-out-left {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-}
-
-/* Element entrance animations */
+/* Element entrance animations - Personalidad distintiva con movimiento suave */
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(var(--animation-scale-start));
   }
   to {
     opacity: 1;
@@ -175,10 +128,11 @@
   }
 }
 
+/* Fade in up - Más evidente con movimiento más pronunciado */
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(calc(var(--animation-translate-y) * 1.5));
   }
   to {
     opacity: 1;
@@ -186,10 +140,11 @@
   }
 }
 
+/* Fade in down - Entrada desde arriba con personalidad */
 @keyframes fade-in-down {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(calc(var(--animation-translate-y) * -1.5));
   }
   to {
     opacity: 1;
@@ -197,64 +152,44 @@
   }
 }
 
-/* Cover image transition */
+/* Cover image transition - Revelación suave y elegante */
 @keyframes cover-fade-in {
   from {
     opacity: 0;
+    transform: scale(1.02);
   }
   to {
     opacity: 1;
+    transform: scale(1);
   }
 }
 
-/* Pulse animation for interactive feedback */
+/* Pulse animation - Feedback interactivo más evidente y elegante */
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(0.98);
+    transform: scale(var(--animation-scale-pulse));
   }
 }
 
-/* Station change animation */
+/* Station change animation - Transición distintiva con personalidad */
 @keyframes station-change {
   0% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
   50% {
-    opacity: 0.5;
-    transform: scale(0.98);
+    opacity: var(--opacity-60);
+    transform: scale(0.97) translateY(2px);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
-/* Instagram-style swipe up animation */
-@keyframes slide-up-out {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-}
-
-@keyframes slide-up-in {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 
 

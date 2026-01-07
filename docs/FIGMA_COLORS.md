@@ -23,31 +23,39 @@
 ### Color de Fondo (Canvas Oscuro)
 - **HEX**: `#1E1E1E`
 - **RGB**: `rgb(30, 30, 30)`
-- **Uso**: Fondo del canvas/escenario en Figma
-- **Estado actual en el proyecto**: ⚠️ Actualmente `--color-background: #0f0f0f` (más oscuro)
+- **Uso**: Fondo oscuro en modo dark
+- **Estado actual en el proyecto**: ✅ `--color-dark-bg: #1E1E1E` (usa `--color-background` que es `#FFFFFF` en modo light)
 
-### Color de Fondo del Cover (Beige)
-- **HEX**: `#F3F0E6`
-- **RGB**: `rgb(243, 240, 230)`
-- **Uso**: Fondo del cover cuando no hay imagen
-- **Estado actual en el proyecto**: ⚠️ Actualmente usa `--color-gray-100: #f3f4f6` y `--color-gray-200: #e5e7eb` (grises azulados)
+### Colores Semánticos
+- **--color-ink**: `#000000` (texto principal) → `#FFFFFF` en dark mode
+- **--color-paper**: `#FFFFFF` (fondos) → `#1E1E1E` en dark mode
+- **--color-background**: `#FFFFFF` (fondo general) → `#1E1E1E` en dark mode
+- **--color-text-primary**: `#000000` (texto) → `#FFFFFF` en dark mode
+
+### Gradientes
+- **Default gradient**: `rgba(74, 96, 162, 1)` → `rgba(74, 96, 162, 0)`
+- **Waiting gradient**: `rgba(182, 214, 194, 1)` → `rgba(74, 96, 162, 0)`
+- Los gradientes se generan dinámicamente según la hora y ubicación de la estación
 
 ## Comparación con el Proyecto Actual
 
 | Color | Figma | Proyecto Actual | Estado |
 |-------|-------|-----------------|--------|
-| Marca | `#ED3F1C` | `#ED3F1C` | ✅ Coincide |
-| Papel | `#FFFFFF` | `#FFFFFF` | ✅ Coincide |
-| Tinta | `#000000` | `#000000` | ✅ Coincide |
-| Fondo | `#1E1E1E` | `#1E1E1E` | ✅ Actualizado |
-| Cover | `#F3F0E6` | `#F3F0E6` | ✅ Actualizado |
+| Marca | `#ED3F1C` | `--color-brand: #ED3F1C` | ✅ Coincide |
+| Papel (Light) | `#FFFFFF` | `--color-paper: #FFFFFF` | ✅ Coincide |
+| Tinta (Light) | `#000000` | `--color-ink: #000000` | ✅ Coincide |
+| Fondo (Dark) | `#1E1E1E` | `--color-dark-bg: #1E1E1E` | ✅ Coincide |
 
-## Estado de Actualización
+## Sistema de Colores Actual
 
-✅ **Todos los colores han sido actualizados para coincidir con el diseño de Figma**
+El proyecto usa un sistema de colores semántico que se adapta automáticamente al modo dark:
 
-1. **Color de fondo**: Actualizado de `#0f0f0f` a `#1E1E1E` (gris medio del diseño)
-2. **Color del cover**: Actualizado de grises azulados a beige cálido `#F3F0E6`
+- **Light mode** (por defecto): Fondo blanco, texto negro
+- **Dark mode** (automático): Fondo oscuro (`#1E1E1E`), texto blanco
+
+Los gradientes se generan dinámicamente usando `imageService.ts` basándose en:
+- Hora del día en la ubicación de la estación
+- Ubicación geográfica de la estación
 
 ## Archivo de Figma
 - **URL**: https://www.figma.com/design/9fZXgJrzSndGEdhp4z6xaZ/onda

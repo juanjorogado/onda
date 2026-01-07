@@ -7,7 +7,6 @@ interface NowPlayingProps {
   year?: number;
   stationName?: string;
   className?: string;
-  fontSize?: 'm' | 'xl';
 }
 
 // Separador para el marquee (4 espacios no separables)
@@ -64,11 +63,8 @@ export const NowPlaying = memo(({
   album, 
   year, 
   stationName, 
-  className = '', 
-  fontSize = 'xl' 
+  className = '' 
 }: NowPlayingProps) => {
-  const fontSizeClass = fontSize === 'm' ? 'text-m' : 'text-xl';
-  
   const text = useMemo(
     () => formatTrackInfo(title, artist, album, year, stationName),
     [title, artist, album, year, stationName]
@@ -82,7 +78,7 @@ export const NowPlaying = memo(({
   return (
     <div className={`overflow-hidden text-ink ${className}`}>
       <div className="marquee">
-        <span className={`${fontSizeClass} font-normal`}>
+        <span className="text-xl font-normal">
           {marqueeText}
         </span>
       </div>

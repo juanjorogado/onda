@@ -13,7 +13,7 @@ export const stations: Station[] = [
   {
     id: 'wfmujazz',
     name: 'WFMU',
-    url: 'https://wfmu.org/wfmu.pls',
+    url: 'https://wfmu.streamguys1.com/wfmu-high',
     genre: 'Freeform / Eclectic',
     location: 'New Jersey',
     timezone: 'America/New_York',

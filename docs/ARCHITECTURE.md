@@ -31,13 +31,15 @@ src/
 │   └── trackService.ts
 │
 ├── utils/           # Funciones utilitarias puras
-│   └── formatTime.ts
+│   ├── formatTime.ts
+│   └── getLocalCityName.ts
 │
 ├── constants/       # Constantes centralizadas
 │   └── index.ts
 │
 ├── data/            # Datos estáticos y configuración
-│   └── stations.ts
+│   ├── stations.ts
+│   └── timezoneToCity.json
 │
 ├── types/           # Tipos TypeScript compartidos
 │   ├── station.ts
@@ -69,12 +71,12 @@ src/
 ### Utilidades
 - **Formato**: camelCase
 - **Extensión**: `.ts`
-- **Ejemplo**: `formatTime.ts`
+- **Ejemplo**: `formatTime.ts`, `getLocalCityName.ts`
 
 ### Datos
-- **Formato**: camelCase
-- **Extensión**: `.ts`
-- **Ejemplo**: `stations.ts`
+- **Formato**: camelCase para TypeScript, kebab-case para JSON
+- **Extensión**: `.ts` o `.json`
+- **Ejemplo**: `stations.ts`, `timezoneToCity.json`
 
 ### Tipos
 - **Formato**: camelCase
@@ -101,3 +103,16 @@ src/
 - **Services vs Utils**: Los servicios manejan APIs externas y lógica asíncrona. Las utilidades son funciones puras y síncronas.
 - **Types**: Todos los tipos compartidos deben estar en `types/` para facilitar la importación y evitar duplicación.
 - **Data**: Solo datos estáticos. La lógica de obtención de datos dinámicos va en `services/` o `hooks/`.
+
+## Sistema de Diseño CSS
+
+El proyecto usa CSS Custom Properties (variables CSS) organizadas en `global.css`:
+
+- **Colores**: Sistema semántico con base, semánticas y con opacidad
+- **Tipografía**: Tamaños base (16px), medio (24px) y grande (40px)
+- **Spacing**: Sistema base en rem (0.25rem - 2rem) y valores específicos
+- **Layout**: Anchuras de contenedor, alturas, y border radius
+- **Animaciones**: Timing, easing, escalas, traducciones y opacidades
+- **Dark mode**: Automático usando `@media (prefers-color-scheme: dark)`
+
+Todas las variables están organizadas lógicamente y sin duplicados. Ver `src/styles/global.css` para más detalles.

@@ -1,110 +1,167 @@
 :root {
-  /* Colors */
+  /* ==========================================================================
+     Colors - Base
+     ========================================================================== */
   --color-brand: #ED3F1C;
-  --color-ink: #000000;
-  --color-paper: #FFFFFF;
-  --color-background: #FFFFFF;
-  --color-text-primary: #000000;
   --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-dark-bg: #1E1E1E;
 
-  /* Spacing */
+  /* Colors - Semantic */
+  --color-ink: var(--color-black);
+  --color-paper: var(--color-white);
+  --color-background: var(--color-white);
+  --color-text-primary: var(--color-black);
+
+  /* Colors - With opacity */
+  --color-brand-60: rgba(237, 63, 28, 0.6);
+  --color-white-60: rgba(255, 255, 255, 0.6);
+
+  /* ==========================================================================
+     Typography
+     ========================================================================== */
+  --font-family-base: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  
+  /* Font sizes */
+  --font-size-base: 16px; /* Root font size for rem calculations */
+  --font-size-m: 24px; /* Medium text (headers, labels) */
+  --font-size-xl: 40px; /* Large text (titles, display) */
+  
+  /* Font weights */
+  --font-weight-light: 300;
+  --font-weight-book: 400;
+  
+  /* Line height */
+  --line-height-base: 1.2;
+
+  /* ==========================================================================
+     Spacing - Base system
+     ========================================================================== */
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
   --spacing-3: 0.75rem;
   --spacing-4: 1rem;
   --spacing-8: 2rem;
 
-  /* Typography */
-  --font-size-m: 24px;
-  --font-size-xl: 40px;
-  
-  --line-height-m: 1.2;
-  --line-height-xl: 1.2;
-
-  --font-weight-light: 300;
-  --font-weight-book: 400;
-
-  /* Layout */
-  --radius-card: var(--spacing-4);
-  --max-width-md: 28rem;
-
-  /* Opacity */
-  --opacity-60: 0.6;
-
-  /* Colors with opacity */
-  --color-brand-60: rgba(237, 63, 28, 0.6);
-  --color-white-60: rgba(255, 255, 255, 0.6);
-  --color-dark-bg: #1E1E1E;
-
-  /* Additional Spacing */
-  --spacing-8px: 0.5rem; /* 8px */
+  /* Spacing - Specific values */
   --spacing-14px: 0.875rem; /* 14px */
-  --spacing-16px: 1rem; /* 16px */
   --spacing-24px: 1.5rem; /* 24px */
   --spacing-26px: 1.625rem; /* 26px */
   --spacing-48px: 3rem; /* 48px */
   --spacing-96px: 6rem; /* 96px */
-  --max-width-341px: 21.3125rem; /* 341px */
-  --max-width-374px: 23.375rem; /* 374px */
-  --max-width-390px: 24.375rem; /* 390px */
-  --min-height-400px: 25rem; /* 400px */
-  --height-652px: 40.75rem; /* 652px */
-  --min-height-844px: 52.75rem; /* 844px */
 
-  /* Typography - Additional sizes */
-  --font-size-base: 16px;
-  --font-size-32px: 2rem; /* 32px */
+  /* ==========================================================================
+     Layout - Container widths
+     ========================================================================== */
+  --container-width-sm: 21.3125rem; /* 341px */
+  --container-width-base: 23.375rem; /* 374px */
+  --container-width-lg: 24.375rem; /* 390px */
+  --container-width-md: 28rem;
 
-  /* Border radius */
-  --radius-22px: 1.375rem; /* 22px */
+  /* Layout - Heights */
+  --cover-height-min: 25rem; /* 400px */
+  --cover-height-waiting: 40.75rem; /* 652px */
+  --cover-height-offset: 15rem; /* 240px */
+  --screen-height-min: 52.75rem; /* 844px */
 
-  /* Gradient fallbacks */
+  /* Layout - Border radius */
+  --radius-card: var(--spacing-4);
+  --radius-cover: 1.375rem; /* 22px */
+
+  /* Layout - Border width */
+  --border-width-1: 1px;
+
+  /* ==========================================================================
+     Viewport
+     ========================================================================== */
+  --viewport-height: 100vh;
+  --viewport-height-dynamic: 100dvh;
+
+  /* ==========================================================================
+     Opacity
+     ========================================================================== */
+  --opacity-60: 0.6;
+
+  /* ==========================================================================
+     Z-index layers
+     ========================================================================== */
+  --z-index-base: 0;
+  --z-index-content: 10;
+
+  /* ==========================================================================
+     Gradients - Base
+     ========================================================================== */
   --gradient-default-start: rgba(74, 96, 162, 1);
   --gradient-default-end: rgba(74, 96, 162, 0);
   --gradient-waiting-start: rgba(182, 214, 194, 1);
   --gradient-waiting-end: rgba(74, 96, 162, 0);
 
-  /* Animation */
+  /* Gradients - Overlay opacity */
+  --gradient-overlay-white-start: rgba(255, 255, 255, 0.1);
+  --gradient-overlay-white-end: rgba(255, 255, 255, 0);
+  --gradient-overlay-black-mid: rgba(0, 0, 0, 0.05);
+  --gradient-overlay-black-end: rgba(0, 0, 0, 0.1);
+
+  /* ==========================================================================
+     Animation - Timing
+     ========================================================================== */
+  --duration-normal: 1s;
+  --duration-fast: 0.3s;
+  --duration-faster: 0.2s;
+  --duration-slow: 3s;
+  --duration-slower: 20s;
+  --duration-very-slow: 4s;
+
+  /* Animation - Delays */
+  --delay-fast: 0.1s;
+  --delay-normal: 0.15s;
+  --delay-medium: var(--duration-faster); /* 0.2s */
+  --delay-slow: var(--duration-fast); /* 0.3s */
+
+  /* Animation - Easing */
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --easing-wave: cubic-bezier(0.42, 0, 0.58, 1);
 
-  --duration-normal: 1s;
-  --duration-slow: 3s;
-  --duration-slower: 20s;
-  --duration-very-slow: 4s;
-  --duration-fast: 0.3s;
-  --duration-faster: 0.2s;
+  /* ==========================================================================
+     Animation - Blur and mask
+     ========================================================================== */
+  --blur-edge: 0.5rem; /* 8px */
 
-  /* Blur and mask values */
-  --blur-marquee: 8px;
-  --blur-station-name: 8px;
-
-  /* Cover height calculation */
-  --cover-height-offset: 240px;
-
-  /* Animation percentages */
+  /* ==========================================================================
+     Animation - Overflow and size
+     ========================================================================== */
   --animation-overflow-top: -5%;
   --animation-overflow-left: -5%;
   --animation-overflow-width: 110%;
   --animation-overflow-height: 110%;
   --animation-background-size: 150%;
 
-  /* Gradient animation opacity values */
-  --gradient-overlay-white-start: rgba(255, 255, 255, 0.1);
-  --gradient-overlay-white-end: rgba(255, 255, 255, 0);
-  --gradient-overlay-black-mid: rgba(0, 0, 0, 0.05);
-  --gradient-overlay-black-end: rgba(0, 0, 0, 0.1);
+  /* ==========================================================================
+     Animation - Wave sizes
+     ========================================================================== */
+  --wave-size: 0.375rem; /* 6px */
 
-  /* Z-index layers */
-  --z-index-base: 0;
-  --z-index-content: 10;
+  /* Animation - Scales */
+  --animation-scale-start: 0.95;
+  --animation-scale-pulse: 0.98;
+  --animation-scale-wave-mid: 1.2;
+  --animation-scale-wave-end: 2.2;
 
-  /* Border width */
-  --border-width-1: 1px;
+  /* Animation - Translations */
+  --animation-translate-x: 1.25rem; /* 20px */
+  --animation-translate-y: 0.625rem; /* 10px */
+
+  /* Animation - Opacity values */
+  --animation-opacity-wave-1-start: 0.8;
+  --animation-opacity-wave-1-mid: 0.5;
+  --animation-opacity-wave-2-start: 0.6;
+  --animation-opacity-wave-2-mid: 0.3;
 }
 
-/* Dark theme */
+/* ==========================================================================
+   Dark theme
+   ========================================================================== */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-ink: var(--color-white);
@@ -112,9 +169,11 @@
     --color-background: var(--color-dark-bg);
     --color-text-primary: var(--color-white);
   }
-  
 }
 
+/* ==========================================================================
+   Base elements
+   ========================================================================== */
 html {
   font-size: var(--font-size-base);
   background-color: var(--color-background);
@@ -129,21 +188,15 @@ body {
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   transition: background-color var(--duration-normal) var(--easing-smooth), color var(--duration-normal) var(--easing-smooth);
-  min-height: 100vh;
+  min-height: var(--viewport-height);
   width: 100%;
 }
 
-.safe-area {
-  padding-top: env(safe-area-inset-top);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-}
-
-
-/* Layout utilities */
+/* ==========================================================================
+   Layout Utilities
+   ========================================================================== */
 .flex {
   display: flex;
 }
@@ -164,23 +217,12 @@ body {
   flex: 1 1 0%;
 }
 
-.flex-shrink-0 {
-  flex-shrink: 0;
-}
-
-/* Spacing */
-.px-4 {
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
-
-/* Sizing */
 .w-full {
   width: 100%;
 }
 
 .max-w-md {
-  max-width: var(--max-width-md);
+  max-width: var(--container-width-md);
 }
 
 .mx-auto {
@@ -189,29 +231,25 @@ body {
 }
 
 .h-screen {
-  height: 100vh;
-  height: 100dvh; /* Dynamic viewport height para iOS Safari */
+  height: var(--viewport-height);
+  height: var(--viewport-height-dynamic);
 }
 
 .min-h-screen {
-  min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height para iOS Safari */
+  min-height: var(--viewport-height);
+  min-height: var(--viewport-height-dynamic);
 }
 
 .min-h-0 {
   min-height: 0;
 }
 
-
-/* Typography */
-.text-m {
-  font-size: var(--font-size-m);
-  line-height: var(--line-height-m);
-}
-
+/* ==========================================================================
+   Typography Utilities
+   ========================================================================== */
 .text-xl {
   font-size: var(--font-size-xl);
-  line-height: var(--line-height-xl);
+  line-height: var(--line-height-base);
 }
 
 .font-normal {
@@ -219,10 +257,12 @@ body {
 }
 
 .font-sans {
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family-base);
 }
 
-/* Colors */
+/* ==========================================================================
+   Color Utilities
+   ========================================================================== */
 .text-ink {
   color: var(--color-ink);
 }
@@ -231,7 +271,9 @@ body {
   background-color: var(--color-paper);
 }
 
-/* Display */
+/* ==========================================================================
+   Display Utilities
+   ========================================================================== */
 .overflow-hidden {
   overflow: hidden;
 }
@@ -240,23 +282,26 @@ body {
   user-select: none;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Cursor */
+/* ==========================================================================
+   Interactive Utilities
+   ========================================================================== */
 .cursor-pointer {
   cursor: pointer;
 }
 
+/* ==========================================================================
+   Safe Area
+   ========================================================================== */
+.safe-area {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
 
-/* Marquee animation */
+/* ==========================================================================
+   Marquee animation
+   ========================================================================== */
 .marquee {
   overflow: hidden;
   white-space: nowrap;
@@ -265,15 +310,15 @@ body {
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    black var(--blur-marquee),
-    black calc(100% - var(--blur-marquee)),
+    black var(--blur-edge),
+    black calc(100% - var(--blur-edge)),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
-    black var(--blur-marquee),
-    black calc(100% - var(--blur-marquee)),
+    black var(--blur-edge),
+    black calc(100% - var(--blur-edge)),
     transparent 100%
   );
 }
@@ -296,17 +341,14 @@ body {
   }
 }
 
-.whitespace-nowrap {
-  white-space: nowrap;
-}
-
-
-/* Waiting Screen - Diseño exacto de Penpot */
+/* ==========================================================================
+   Waiting Screen
+   ========================================================================== */
 .waiting-screen-container {
   position: relative;
   width: 100%;
-  max-width: var(--max-width-390px);
-  min-height: var(--min-height-844px);
+  max-width: var(--container-width-lg);
+  min-height: var(--screen-height-min);
   background: var(--color-paper);
   overflow: hidden;
   z-index: var(--z-index-base);
@@ -316,7 +358,7 @@ body {
 
 .waiting-screen-board {
   position: absolute;
-  left: var(--spacing-8px);
+  left: var(--spacing-2);
   top: var(--spacing-26px);
   width: auto;
   height: auto;
@@ -327,10 +369,9 @@ body {
   row-gap: var(--spacing-24px);
   flex-direction: column;
   flex-wrap: nowrap;
-  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.1s both;
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-fast) both;
 }
 
-/* Station Section */
 .waiting-screen-station {
   position: relative;
   width: 100%;
@@ -340,8 +381,8 @@ body {
   align-content: stretch;
   justify-content: start;
   gap: var(--spacing-1);
-  padding-left: var(--spacing-16px);
-  padding-right: var(--spacing-16px);
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
   flex-direction: column;
   flex-wrap: nowrap;
 }
@@ -349,7 +390,7 @@ body {
 .waiting-screen-station-board {
   position: relative;
   width: 100%;
-  max-width: var(--max-width-341px);
+  max-width: var(--container-width-sm);
   height: auto;
   display: flex;
   align-items: start;
@@ -360,7 +401,6 @@ body {
   flex-wrap: nowrap;
 }
 
-/* Onda Logo */
 .waiting-screen-onda {
   position: relative;
   width: var(--spacing-14px);
@@ -372,28 +412,26 @@ body {
   justify-content: center;
 }
 
-
 .waiting-screen-ellipse-inner {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: var(--spacing-8px);
-  height: var(--spacing-8px);
+  width: var(--spacing-2);
+  height: var(--spacing-2);
   border: var(--border-width-1) solid var(--color-brand);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
 
-/* City Text */
 .waiting-screen-city {
   height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
   font-size: var(--font-size-m);
-  line-height: var(--line-height-m);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: var(--line-height-base);
+  font-family: var(--font-family-base);
   font-style: normal;
   font-weight: var(--font-weight-book);
   text-align: start;
@@ -401,34 +439,32 @@ body {
   transition: color var(--duration-normal) var(--easing-smooth);
 }
 
-/* Time Text */
 .waiting-screen-time {
   height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
   font-size: var(--font-size-m);
-  line-height: var(--line-height-m);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: var(--line-height-base);
+  font-family: var(--font-family-base);
   font-style: normal;
   font-weight: var(--font-weight-book);
   text-align: start;
   white-space: pre;
-  margin-left: var(--spacing-8px);
+  margin-left: var(--spacing-2);
   transition: color var(--duration-normal) var(--easing-smooth);
 }
 
-/* Cover */
 .waiting-screen-cover {
   width: 100%;
-  max-width: var(--max-width-374px);
-  height: var(--height-652px);
+  max-width: var(--container-width-base);
+  height: var(--cover-height-waiting);
   background: linear-gradient(to bottom, var(--gradient-waiting-start) 0%, var(--gradient-waiting-end) 100%);
-  border-radius: var(--radius-22px);
+  border-radius: var(--radius-cover);
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
-  animation: scale-in var(--duration-normal) var(--easing-smooth) 0.2s both;
+  animation: scale-in var(--duration-normal) var(--easing-smooth) var(--delay-medium) both;
 }
 
 .waiting-screen-cover::before {
@@ -446,32 +482,30 @@ body {
     var(--gradient-overlay-black-end) 100%
   );
   background-size: var(--animation-background-size) var(--animation-background-size);
-  border-radius: var(--radius-22px);
-  animation: gradient-shift var(--duration-slower) ease-in-out infinite;
+  border-radius: var(--radius-cover);
+  animation: gradient-shift var(--duration-slower) var(--easing-gentle) infinite;
   opacity: 1;
   z-index: var(--z-index-base);
   pointer-events: none;
   mix-blend-mode: overlay;
 }
 
-/* Text "Pulsa para escuchar" */
 .waiting-screen-text {
   width: 100%;
-  max-width: var(--max-width-374px);
+  max-width: var(--container-width-base);
   flex-shrink: 0;
   color: var(--color-ink);
-  font-size: var(--font-size-32px);
-  line-height: var(--line-height-xl);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 2rem; /* 32px - waiting screen text */
+  line-height: var(--line-height-base);
+  font-family: var(--font-family-base);
   font-style: normal;
   font-weight: var(--font-weight-book);
   text-align: left;
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);
-  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.3s both;
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both;
 }
 
-/* Waiting Indicator */
 .waiting-screen-indicator {
   position: absolute;
   left: 50%;
@@ -492,7 +526,9 @@ body {
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
 
-/* Playing Screen - Diseño exacto de Penpot */
+/* ==========================================================================
+   Playing Screen
+   ========================================================================== */
 .playing-screen-container {
   position: relative;
   width: 100%;
@@ -507,7 +543,6 @@ body {
   transition: background-color var(--duration-normal) var(--easing-smooth);
   animation: fade-in var(--duration-fast) var(--easing-smooth);
   touch-action: pan-y;
-  /* Permitir scroll vertical pero prevenir durante swipe vertical activo */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -519,9 +554,9 @@ body {
 
 .playing-screen-board {
   position: relative;
-  width: calc(100% - var(--spacing-16px));
-  max-width: var(--max-width-374px);
-  margin: var(--spacing-26px) var(--spacing-8px) var(--spacing-16px) var(--spacing-8px);
+  width: calc(100% - var(--spacing-4));
+  max-width: var(--container-width-base);
+  margin: var(--spacing-26px) var(--spacing-2) var(--spacing-4) var(--spacing-2);
   padding-left: 0;
   padding-right: 0;
   height: auto;
@@ -534,13 +569,13 @@ body {
   flex-direction: column;
   flex-wrap: nowrap;
   flex: 1 1 auto;
-  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.1s both;
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-fast) both;
   will-change: transform;
   touch-action: pan-y;
 }
 
 .playing-screen-board.swipe-transitioning {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--duration-fast) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
 }
 
 .playing-screen-board.swipe-dragging {
@@ -549,7 +584,6 @@ body {
   perspective: 1000px;
 }
 
-/* Station Section */
 .playing-screen-station {
   position: relative;
   width: 100%;
@@ -559,11 +593,11 @@ body {
   align-content: stretch;
   justify-content: start;
   gap: var(--spacing-1);
-  padding-left: var(--spacing-8px);
-  padding-right: var(--spacing-8px);
+  padding-left: var(--spacing-2);
+  padding-right: var(--spacing-2);
   flex-direction: column;
   flex-wrap: nowrap;
-  animation: fade-in-down var(--duration-normal) var(--easing-smooth) 0.15s both;
+  animation: fade-in-down var(--duration-normal) var(--easing-smooth) var(--delay-normal) both;
 }
 
 .playing-screen-station.station-changing {
@@ -583,7 +617,6 @@ body {
   flex-wrap: nowrap;
 }
 
-/* Onda Logo - Visible cuando está playing */
 .playing-screen-onda {
   position: relative;
   width: var(--spacing-14px);
@@ -600,20 +633,18 @@ body {
   height: var(--spacing-14px);
 }
 
-
 .playing-screen-ellipse-inner {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: var(--spacing-8px);
-  height: var(--spacing-8px);
+  width: var(--spacing-2);
+  height: var(--spacing-2);
   border: var(--border-width-1) solid var(--color-brand);
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
 
-/* Station Name */
 .playing-screen-station-name {
   height: var(--spacing-26px);
   flex-shrink: 1;
@@ -622,8 +653,8 @@ body {
   align-self: start;
   color: var(--color-ink);
   font-size: var(--font-size-m);
-  line-height: var(--line-height-m);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: var(--line-height-base);
+  font-family: var(--font-family-base);
   font-style: normal;
   text-align: start;
   white-space: pre;
@@ -632,13 +663,13 @@ body {
   mask-image: linear-gradient(
     to right,
     black 0,
-    black calc(100% - var(--blur-station-name)),
+    black calc(100% - var(--blur-edge)),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     black 0,
-    black calc(100% - var(--blur-station-name)),
+    black calc(100% - var(--blur-edge)),
     transparent 100%
   );
 }
@@ -647,45 +678,46 @@ body {
   font-weight: var(--font-weight-book);
 }
 
+.playing-screen-station-name-light {
+  font-weight: var(--font-weight-light);
+}
 
-/* Time Text */
 .playing-screen-time {
   height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
   font-size: var(--font-size-m);
-  line-height: var(--line-height-m);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: var(--line-height-base);
+  font-family: var(--font-family-base);
   font-style: normal;
   font-weight: var(--font-weight-book);
   text-align: start;
   white-space: pre;
-  margin-left: var(--spacing-8px);
-  margin-right: var(--spacing-16px);
+  margin-left: var(--spacing-2);
+  margin-right: var(--spacing-4);
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
 }
 
-/* Cover */
 .playing-screen-cover {
   width: 100%;
-  max-width: var(--max-width-374px);
-  min-height: var(--min-height-400px);
-  height: calc(100vh - var(--cover-height-offset)); /* Altura dinámica que deja espacio para header y texto */
-  max-height: calc(100vh - var(--cover-height-offset)); /* Máximo que deja espacio para el texto */
+  max-width: var(--container-width-base);
+  min-height: var(--cover-height-min);
+  height: calc(var(--viewport-height) - var(--cover-height-offset));
+  max-height: calc(var(--viewport-height) - var(--cover-height-offset));
   background: linear-gradient(to bottom, var(--gradient-default-start) 0%, var(--gradient-default-end) 100%);
-  border-radius: var(--radius-22px);
+  border-radius: var(--radius-cover);
   flex-shrink: 1;
   flex-grow: 0;
   position: relative;
   overflow: hidden;
-  animation: scale-in var(--duration-normal) var(--easing-smooth) 0.2s both;
+  animation: scale-in var(--duration-normal) var(--easing-smooth) var(--delay-medium) both;
   transition: transform var(--duration-faster) var(--easing-smooth), background var(--duration-fast) var(--easing-smooth);
 }
 
 .playing-screen-cover:active {
   animation: pulse var(--duration-faster) var(--easing-smooth);
-  transform: scale(0.98);
+  transform: scale(var(--animation-scale-pulse));
 }
 
 .playing-screen-cover::before {
@@ -703,8 +735,8 @@ body {
     var(--gradient-overlay-black-end) 100%
   );
   background-size: var(--animation-background-size) var(--animation-background-size);
-  border-radius: var(--radius-22px);
-  animation: gradient-shift var(--duration-slower) ease-in-out infinite;
+  border-radius: var(--radius-cover);
+  animation: gradient-shift var(--duration-slower) var(--easing-gentle) infinite;
   opacity: 1;
   z-index: var(--z-index-base);
   pointer-events: none;
@@ -725,16 +757,14 @@ body {
   z-index: var(--z-index-content);
 }
 
-/* Track Text Container */
 .playing-screen-text-container {
   width: 100%;
-  max-width: var(--max-width-374px);
+  max-width: var(--container-width-base);
   flex-shrink: 0;
   flex-grow: 0;
   padding-top: var(--spacing-4);
   padding-bottom: var(--spacing-8);
   position: relative;
   z-index: var(--z-index-content);
-  animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.3s both;
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both;
 }
-
