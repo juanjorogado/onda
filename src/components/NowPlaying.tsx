@@ -13,26 +13,12 @@ interface NowPlayingProps {
 export const NowPlaying = memo(({ title, artist, album, year, stationName, className, fontSize = 'xl' }: NowPlayingProps) => {
   const fontSizeClass = fontSize === 'm' ? 'text-m' : 'text-xl';
   
-  if (title && artist) {
-    // Formato: "Nombre de la canción. Nombre del grupo — Álbum (Año)"
-    const albumYear = album ? (year ? ` — ${album} (${year})` : ` — ${album}`) : (year ? ` (${year})` : '');
-    const fullText = `${title}. ${artist}${albumYear}`;
-    
-    return (
-      <div className={`w-full overflow-hidden text-ink ${className || ''}`}>
-        <div className="marquee">
-          <span className={`${fontSizeClass} font-normal inline-block whitespace-nowrap`}>
-            <span>{title}. <span style={{ fontWeight: 'var(--font-weight-light)' }}>{artist}</span>{albumYear}</span>
-            <span aria-hidden="true"> — </span>
-            <span>{title}. <span style={{ fontWeight: 'var(--font-weight-light)' }}>{artist}</span>{albumYear}</span>
-          </span>
-        </div>
-      </div>
-    );
-  }
-  
   const text = useMemo(() => {
-    if (title) {
+    if (title && artist) {
+      // Formato: "Nombre de la canción. Nombre del grupo — Álbum (Año)"
+      const albumYear = album ? (year ? ` — ${album} (${year})` : ` — ${album}`) : (year ? ` (${year})` : '');
+      return `${title}. ${artist}${albumYear}`;
+    } else if (title) {
       // Solo título
       if (album) {
         return year ? `${title} — ${album} (${year})` : `${title} — ${album}`;
@@ -52,13 +38,14 @@ export const NowPlaying = memo(({ title, artist, album, year, stationName, class
   
   if (!text) return null;
   
+  // Duplicar el texto para el efecto continuo del marquee
+  const marqueeText = `${text} — ${text}`;
+  
   return (
     <div className={`w-full overflow-hidden text-ink ${className || ''}`}>
       <div className="marquee">
         <span className={`${fontSizeClass} font-normal inline-block whitespace-nowrap`}>
-          <span>{text}</span>
-          <span aria-hidden="true"> — </span>
-          <span>{text}</span>
+          {marqueeText}
         </span>
       </div>
     </div>

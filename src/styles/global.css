@@ -280,14 +280,9 @@ body {
 
 .marquee > span {
   display: inline-block;
-  animation: marquee var(--duration-slower) var(--easing-gentle) infinite linear;
+  animation: marquee var(--duration-slower) linear infinite;
   will-change: transform;
   white-space: nowrap;
-}
-
-.marquee > span > span {
-  display: inline-block;
-  padding-right: 3em;
 }
 
 @keyframes marquee {
@@ -295,7 +290,7 @@ body {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-50% - 1.5em));
+    transform: translateX(-50%);
   }
 }
 
