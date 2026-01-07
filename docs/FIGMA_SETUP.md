@@ -19,7 +19,7 @@
    - Copia el token generado (solo se muestra una vez)
 
 3. **Agrega el Token a mcp.json**:
-   - Abre `/Users/juanjo/.cursor/mcp.json`
+   - Abre tu archivo de configuración MCP (normalmente en `~/.cursor/mcp.json` o `~/.config/cursor/mcp.json`)
    - Reemplaza `""` en `FIGMA_ACCESS_TOKEN` con tu token
    - El token debería verse como: `figd_xxxxxxxxxxxxxxxxxxxxx`
 

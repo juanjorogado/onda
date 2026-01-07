@@ -20,7 +20,6 @@ export default defineConfig({
         // Code splitting optimizado
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
-          'services': ['./src/services/trackService', './src/services/imageService'],
         },
         // Optimizar nombres de chunks
         chunkFileNames: 'assets/js/[name]-[hash].js',

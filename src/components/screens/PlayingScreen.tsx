@@ -1,8 +1,8 @@
-import { memo, KeyboardEvent, TouchEvent, useRef, ReactNode, useMemo, useState, useEffect } from 'react';
-import { useCurrentTime } from '../hooks/useCurrentTime';
-import { formatTime } from '../utils/formatTime';
-import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../constants';
-import { NowPlaying } from './NowPlaying';
+import { memo, KeyboardEvent, useRef, ReactNode, useMemo, useState, useEffect } from 'react';
+import { useCurrentTime } from '../../hooks/time/useCurrentTime';
+import { formatTime } from '../../utils/formatTime';
+import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
+import { NowPlaying } from '../ui/NowPlaying';
 
 interface PlayingScreenProps {
   stationName: string;
@@ -44,6 +44,7 @@ export const PlayingScreen = memo(({
   const [translateY, setTranslateY] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState<'horizontal' | 'vertical' | null>(null);
+  const swipeDirectionRef = useRef<'horizontal' | 'vertical' | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef(0);
   const containerHeight = useRef(0);
@@ -58,7 +59,13 @@ export const PlayingScreen = memo(({
     setIsTransitioning(false);
     isDragging.current = false;
     setSwipeDirection(null);
+    swipeDirectionRef.current = null;
   }, [stationName]);
+  
+  // Sincronizar ref con state
+  useEffect(() => {
+    swipeDirectionRef.current = swipeDirection;
+  }, [swipeDirection]);
 
   // Actualizar el ancho y alto del contenedor
   useEffect(() => {
@@ -73,134 +80,151 @@ export const PlayingScreen = memo(({
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
-  // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", normal para "— London")
+  // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;
   const locationText = stationLocation ? ` — ${stationLocation}` : '';
 
-  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    const touch = e.touches[0];
-    startX.current = touch.clientX;
-    startY.current = touch.clientY;
-    swiped.current = false;
-    isDragging.current = false;
-    setIsTransitioning(false);
-    setSwipeDirection(null);
-  };
+  // Event handlers con preventDefault usando listeners nativos (no pasivos)
+  useEffect(() => {
+    const element = boardRef.current;
+    if (!element || !onSwipe) return;
 
-  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
-    if (swiped.current || !onSwipe) return;
-    
-    const touch = e.touches[0];
-    const dx = touch.clientX - startX.current;
-    const dy = touch.clientY - startY.current;
-    const absDx = Math.abs(dx);
-    const absDy = Math.abs(dy);
-    
-    // Determinar la dirección del swipe (horizontal o vertical)
-    if (!swipeDirection && (absDx > 10 || absDy > 10)) {
-      if (absDy > absDx) {
-        setSwipeDirection('vertical');
-      } else if (absDx > absDy) {
-        setSwipeDirection('horizontal');
-      }
-    }
-    
-    // Procesar swipe horizontal
-    if (swipeDirection === 'horizontal' && absDx > 10 && absDx > absDy) {
-      e.preventDefault();
-      e.stopPropagation();
-      isDragging.current = true;
-      
-      // Limitar el desplazamiento a la mitad del ancho del contenedor
-      const maxTranslate = containerWidth.current * 0.5;
-      const clampedDx = Math.max(-maxTranslate, Math.min(maxTranslate, dx));
-      setTranslateX(clampedDx);
-      setTranslateY(0);
-      
-      // Detectar swipe horizontal completo
-      if (absDx > SWIPE_THRESHOLD && absDx > absDy) {
-        swiped.current = true;
-        setIsTransitioning(true);
-        
-        // Animar hasta el final
-        const direction = dx > 0 ? 1 : -1;
-        const finalTranslate = direction * containerWidth.current;
-        setTranslateX(finalTranslate);
-        
-        // Llamar al callback después de un pequeño delay para permitir la animación
-        setTimeout(() => {
-          onSwipe(dx > 0 ? 'right' : 'left');
-        }, 100);
-      }
-    }
-    
-    // Procesar swipe vertical hacia arriba
-    if (swipeDirection === 'vertical' && absDy > 10 && absDy > absDx && dy < 0) {
-      e.preventDefault();
-      e.stopPropagation();
-      isDragging.current = true;
-      
-      // Limitar el desplazamiento vertical hacia arriba
-      const maxTranslate = containerHeight.current * 0.5;
-      const clampedDy = Math.max(-maxTranslate, Math.min(0, dy));
-      setTranslateY(clampedDy);
-      setTranslateX(0);
-      
-      // Detectar swipe vertical completo hacia arriba
-      if (absDy > SWIPE_THRESHOLD && absDy > absDx && dy < 0) {
-        swiped.current = true;
-        setIsTransitioning(true);
-        
-        // Animar hasta el final (hacia arriba)
-        const finalTranslate = -containerHeight.current;
-        setTranslateY(finalTranslate);
-        
-        // Llamar al callback después de un pequeño delay para permitir la animación
-        setTimeout(() => {
-          onSwipe('up');
-        }, 100);
-      }
-    }
-  };
+    const handleTouchStart = (e: globalThis.TouchEvent) => {
+      const touch = e.touches[0];
+      startX.current = touch.clientX;
+      startY.current = touch.clientY;
+      swiped.current = false;
+      isDragging.current = false;
+      setIsTransitioning(false);
+      setSwipeDirection(null);
+    };
 
-  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
-    if (swiped.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    
-    // Si no se completó el swipe, volver a la posición original
-    if (isDragging.current) {
-      if (swipeDirection === 'horizontal' && Math.abs(translateX) < SWIPE_THRESHOLD) {
-        setIsTransitioning(true);
-        setTranslateX(0);
-        setTimeout(() => {
-          setIsTransitioning(false);
-          isDragging.current = false;
-          setSwipeDirection(null);
-        }, 300);
-      } else if (swipeDirection === 'vertical' && Math.abs(translateY) < SWIPE_THRESHOLD) {
-        setIsTransitioning(true);
+    const handleTouchMove = (e: globalThis.TouchEvent) => {
+      if (swiped.current || !onSwipe) return;
+      
+      const touch = e.touches[0];
+      const dx = touch.clientX - startX.current;
+      const dy = touch.clientY - startY.current;
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      
+      const currentDirection = swipeDirectionRef.current;
+      
+      // Determinar la dirección del swipe (horizontal o vertical) solo una vez
+      if (!currentDirection && (absDx > 10 || absDy > 10)) {
+        if (absDy > absDx * 1.2) {
+          setSwipeDirection('vertical');
+          swipeDirectionRef.current = 'vertical';
+          e.preventDefault();
+          e.stopPropagation();
+        } else if (absDx > absDy * 1.2) {
+          setSwipeDirection('horizontal');
+          swipeDirectionRef.current = 'horizontal';
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+      
+      // Procesar swipe horizontal
+      if (currentDirection === 'horizontal' && absDx > 10) {
+        e.preventDefault();
+        e.stopPropagation();
+        isDragging.current = true;
+        
+        const maxTranslate = containerWidth.current * 0.5;
+        const clampedDx = Math.max(-maxTranslate, Math.min(maxTranslate, dx));
+        setTranslateX(clampedDx);
         setTranslateY(0);
-        setTimeout(() => {
-          setIsTransitioning(false);
+        
+        if (absDx > SWIPE_THRESHOLD) {
+          swiped.current = true;
+          setIsTransitioning(true);
+          
+          const direction = dx > 0 ? 1 : -1;
+          const finalTranslate = direction * containerWidth.current;
+          setTranslateX(finalTranslate);
+          
+          setTimeout(() => {
+            onSwipe(dx > 0 ? 'right' : 'left');
+          }, 100);
+        }
+      }
+      
+      // Procesar swipe vertical hacia arriba
+      if (currentDirection === 'vertical' && absDy > 10 && dy < 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        isDragging.current = true;
+        
+        const maxTranslate = containerHeight.current * 0.5;
+        const clampedDy = Math.max(-maxTranslate, Math.min(0, dy));
+        setTranslateY(clampedDy);
+        setTranslateX(0);
+        
+        if (absDy > SWIPE_THRESHOLD && dy < 0) {
+          swiped.current = true;
+          setIsTransitioning(true);
+          
+          const finalTranslate = -containerHeight.current;
+          setTranslateY(finalTranslate);
+          
+          setTimeout(() => {
+            onSwipe('up');
+          }, 100);
+        }
+      }
+    };
+
+    const handleTouchEnd = (e: globalThis.TouchEvent) => {
+      if (swiped.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      
+      const currentDirection = swipeDirectionRef.current;
+      const currentTranslateX = translateX;
+      const currentTranslateY = translateY;
+      
+      if (isDragging.current) {
+        if (currentDirection === 'horizontal' && Math.abs(currentTranslateX) < SWIPE_THRESHOLD) {
+          setIsTransitioning(true);
+          setTranslateX(0);
+          setTimeout(() => {
+            setIsTransitioning(false);
+            isDragging.current = false;
+            setSwipeDirection(null);
+          }, 300);
+        } else if (currentDirection === 'vertical' && Math.abs(currentTranslateY) < SWIPE_THRESHOLD) {
+          setIsTransitioning(true);
+          setTranslateY(0);
+          setTimeout(() => {
+            setIsTransitioning(false);
+            isDragging.current = false;
+            setSwipeDirection(null);
+          }, 300);
+        } else {
           isDragging.current = false;
           setSwipeDirection(null);
-        }, 300);
-      } else {
-        isDragging.current = false;
-        setSwipeDirection(null);
+        }
       }
-    }
-  };
+    };
+
+    // Agregar listeners con { passive: false } para permitir preventDefault
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: false });
+    element.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [onSwipe]);
 
   return (
     <div 
       className={`playing-screen-container ${swipeDirection === 'vertical' && isDragging.current ? 'swiping-vertical' : ''}`}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       <div 
         ref={boardRef}
@@ -230,7 +254,6 @@ export const PlayingScreen = memo(({
               </div>
             ) : (
               <>
-
                 <div className="playing-screen-ellipse-inner"></div>
               </>
             )}
@@ -240,7 +263,7 @@ export const PlayingScreen = memo(({
           <div className="playing-screen-station-board">
             <div className="playing-screen-station-name">
               <span className="playing-screen-station-name-book">{stationText}</span>
-              {locationText && <span className="playing-screen-station-name-normal">{locationText}</span>}
+              {locationText && <span className="playing-screen-station-name-light">{locationText}</span>}
             </div>
             <div className="playing-screen-time">{stationTime}</div>
           </div>
@@ -301,7 +324,6 @@ export const PlayingScreen = memo(({
             album={trackAlbum}
             year={trackYear}
             stationName={stationName}
-            fontSize="m"
           />
         </div>
       </div>

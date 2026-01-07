@@ -55,8 +55,14 @@ Toda la documentación del proyecto está en la carpeta [`docs/`](docs/):
 
 ```
 src/
+├── app/            # Aplicación principal (App.tsx, main.tsx)
 ├── components/     # Componentes React
-├── hooks/          # Custom hooks
+│   ├── screens/    # Pantallas completas
+│   └── ui/         # Componentes UI reutilizables
+├── hooks/          # Custom hooks organizados por dominio
+│   ├── audio/      # Hooks de audio
+│   ├── media/      # Hooks de media/metadatos
+│   └── time/       # Hooks de tiempo
 ├── services/       # Servicios de API
 ├── utils/          # Utilidades
 ├── types/          # Tipos TypeScript
@@ -68,13 +74,22 @@ Para más detalles, consulta [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## 🔧 Configuración
 
-1. Copia `.env.example` a `.env` (si existe)
-2. Configura las variables de entorno necesarias
+1. Crea un archivo `.env` en la raíz del proyecto
+2. Configura las variables de entorno necesarias (todas son opcionales)
 3. Consulta [docs/ENV_SETUP.md](docs/ENV_SETUP.md) para más información
+
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas! Por favor lee [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre nuestro código de conducta y el proceso para enviar pull requests.
 
 ## 📄 Licencia
 
-Este proyecto es privado.
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 🙏 Agradecimientos
+
+- Todas las estaciones de radio que proporcionan streams públicos
+- Las APIs de Last.fm, MusicBrainz, Apple Music y Cover Art Archive por proporcionar metadatos de música
 
 
 

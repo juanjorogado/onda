@@ -19,7 +19,7 @@ Abre: https://vercel.com/dashboard
 3. Selecciona los repositorios que quieres conectar (o todos)
 
 ### 4. Seleccionar el Repositorio
-1. Busca y selecciona: **`juanjorogado/onda`**
+1. Busca y selecciona tu repositorio de GitHub
 2. Haz clic en **"Import"**
 
 ### 5. Configuración Automática

@@ -1,245 +1,210 @@
 import { TrackInfo } from '../types/track';
 
+// Headers comunes para requests a MusicBrainz
+const MUSICBRAINZ_HEADERS = {
+  'User-Agent': 'ONDA Radio App/1.0',
+};
+
 /**
- * Busca información de un track usando Last.fm API
- * @param artist - Nombre del artista
- * @param title - Título de la canción
- * @returns Información del track o undefined
+ * Helper para hacer fetch con manejo de errores unificado
  */
-export async function searchTrackLastFM(artist: string, title: string): Promise<TrackInfo | null> {
+async function safeFetch<T>(url: string, options?: RequestInit): Promise<T | null> {
   try {
-    const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
-    
-    // Si no hay API key, saltar Last.fm y usar solo MusicBrainz
-    if (!API_KEY) {
-      return null;
-    }
-    
-    const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(title)}&format=json`;
-    
-    const response = await fetch(url);
+    const response = await fetch(url, options);
     if (!response.ok) return null;
-    
-    const data = await response.json();
-    if (data.track && !data.error) {
-      const track = data.track;
-      const year = track.album?.wiki?.published 
-        ? new Date(track.album.wiki.published).getFullYear()
-        : track.album?.releasedate 
-        ? new Date(track.album.releasedate).getFullYear()
-        : undefined;
-      
-      return {
-        title: track.name || title,
-        artist: track.artist?.name || artist,
-        album: track.album?.title,
-        cover: track.album?.image?.find((img: any) => img.size === 'large')?.['#text'] || 
-               track.album?.image?.find((img: any) => img.size === 'medium')?.['#text'],
-        year,
-      };
-    }
-    return null;
+    return await response.json();
   } catch {
     return null;
   }
+}
+
+/**
+ * Busca un recording en MusicBrainz
+ */
+async function findRecording(query: string): Promise<any | null> {
+  const encodedQuery = encodeURIComponent(query);
+  const url = `https://musicbrainz.org/ws/2/recording/?query=${encodedQuery}&limit=1&fmt=json`;
+  const data = await safeFetch<any>(url, { headers: MUSICBRAINZ_HEADERS });
+  
+  if (!data?.recordings || data.recordings.length === 0) return null;
+  return data.recordings[0];
+}
+
+/**
+ * Obtiene los releases de un recording desde MusicBrainz
+ */
+async function getRecordingReleases(recordingId: string): Promise<any[] | null> {
+  const url = `https://musicbrainz.org/ws/2/recording/${recordingId}?inc=releases&fmt=json`;
+  const data = await safeFetch<any>(url, { headers: MUSICBRAINZ_HEADERS });
+  
+  return data?.releases && data.releases.length > 0 ? data.releases : null;
+}
+
+/**
+ * Busca un artista en MusicBrainz y retorna su ID
+ */
+async function findArtistId(artist: string): Promise<string | null> {
+  const artistUrl = `https://musicbrainz.org/ws/2/artist/?query=artist:${encodeURIComponent(artist)}&limit=1&fmt=json`;
+  const artistData = await safeFetch<any>(artistUrl, { headers: MUSICBRAINZ_HEADERS });
+  
+  if (!artistData?.artists || artistData.artists.length === 0) return null;
+  return artistData.artists[0].id;
+}
+
+/**
+ * Busca un recording y sus releases para un artista y título
+ */
+async function findRecordingWithReleases(
+  artistId: string | null,
+  artist: string,
+  title: string
+): Promise<{ recording: any; releases: any[] } | null> {
+  const finalArtistId = artistId || await findArtistId(artist);
+  if (!finalArtistId) return null;
+  
+  const recording = await findRecording(`artist:${finalArtistId} AND recording:${title}`);
+  if (!recording) return null;
+  
+  const releases = await getRecordingReleases(recording.id);
+  if (!releases || releases.length === 0) return null;
+  
+  return { recording, releases };
+}
+
+/**
+ * Busca información de un track usando Last.fm API
+ */
+export async function searchTrackLastFM(artist: string, title: string): Promise<TrackInfo | null> {
+  const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
+  
+  // Si no hay API key, saltar Last.fm
+  if (!API_KEY) return null;
+  
+  const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(title)}&format=json`;
+  const data = await safeFetch<any>(url);
+  
+  // Verificar que no haya error en la respuesta
+  if (!data?.track || data.error) return null;
+  
+  const track = data.track;
+  
+  const year = track.album?.wiki?.published 
+    ? new Date(track.album.wiki.published).getFullYear()
+    : track.album?.releasedate 
+    ? new Date(track.album.releasedate).getFullYear()
+    : undefined;
+  
+  const cover = track.album?.image?.find((img: any) => img.size === 'large')?.['#text'] || 
+                track.album?.image?.find((img: any) => img.size === 'medium')?.['#text'] ||
+                undefined;
+  
+  return {
+    title: track.name || title,
+    artist: track.artist?.name || artist,
+    album: track.album?.title,
+    cover,
+    year,
+  };
 }
 
 /**
  * Busca información de un track usando MusicBrainz API
- * @param artist - Nombre del artista
- * @param title - Título de la canción
- * @returns Información del track o undefined
  */
 export async function searchTrackMusicBrainz(artist: string, title: string): Promise<TrackInfo | null> {
-  try {
-    // Primero buscar el artista
-    const artistUrl = `https://musicbrainz.org/ws/2/artist/?query=artist:${encodeURIComponent(artist)}&limit=1&fmt=json`;
-    const artistResponse = await fetch(artistUrl, {
-      headers: {
-        'User-Agent': 'ONDA Radio App/1.0 (https://github.com/juanjorogado/onda)',
-      },
-    });
-    
-    if (!artistResponse.ok) return null;
-    const artistData = await artistResponse.json();
-    if (!artistData.artists || artistData.artists.length === 0) return null;
-    
-    const artistId = artistData.artists[0].id;
-    
-    // Buscar el track
-    const trackUrl = `https://musicbrainz.org/ws/2/recording/?query=artist:${artistId} AND recording:${encodeURIComponent(title)}&limit=1&fmt=json`;
-    const trackResponse = await fetch(trackUrl, {
-      headers: {
-        'User-Agent': 'ONDA Radio App/1.0 (https://github.com/juanjorogado/onda)',
-      },
-    });
-    
-    if (!trackResponse.ok) return null;
-    const trackData = await trackResponse.json();
-    if (!trackData.recordings || trackData.recordings.length === 0) return null;
-    
-    const recording = trackData.recordings[0];
-    
-    // Buscar releases para obtener el año
-    const releaseUrl = `https://musicbrainz.org/ws/2/recording/${recording.id}?inc=releases&fmt=json`;
-    const releaseResponse = await fetch(releaseUrl, {
-      headers: {
-        'User-Agent': 'ONDA Radio App/1.0 (https://github.com/juanjorogado/onda)',
-      },
-    });
-    
-    let year: number | undefined;
-    if (releaseResponse.ok) {
-      const releaseData = await releaseResponse.json();
-      if (releaseData.releases && releaseData.releases.length > 0) {
-        const release = releaseData.releases[0];
-        if (release.date) {
-          year = new Date(release.date).getFullYear();
-        }
-      }
-    }
-    
-    return {
-      title: recording.title || title,
-      artist: artist,
-      year,
-    };
-  } catch {
-    return null;
-  }
+  const result = await findRecordingWithReleases(null, artist, title);
+  if (!result) return null;
+  
+  const { recording, releases } = result;
+  
+  const year = releases[0]?.date ? new Date(releases[0].date).getFullYear() : undefined;
+  
+  return {
+    title: recording.title || title,
+    artist: artist,
+    year,
+  };
 }
 
 /**
  * Busca el cover de un track usando Apple Music API (iTunes Search)
- * @param artist - Nombre del artista
- * @param title - Título de la canción
- * @returns URL del cover o null
  */
 async function searchTrackAppleMusic(artist: string, title: string): Promise<string | null> {
-  try {
-    const query = `${encodeURIComponent(artist)} ${encodeURIComponent(title)}`;
-    const url = `https://itunes.apple.com/search?term=${query}&media=music&limit=1`;
-    
-    const response = await fetch(url);
-    if (!response.ok) return null;
-    
-    const data = await response.json();
-    if (data.results && data.results.length > 0) {
-      const track = data.results[0];
-      // Obtener la imagen más grande disponible (reemplazar 100x100 por 600x600)
-      return track.artworkUrl100?.replace('100x100', '600x600') || 
-             track.artworkUrl100 || 
-             null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
+  const query = `${encodeURIComponent(artist)} ${encodeURIComponent(title)}`;
+  const url = `https://itunes.apple.com/search?term=${query}&media=music&limit=1`;
+  const data = await safeFetch<any>(url);
+  
+  if (!data?.results || data.results.length === 0) return null;
+  
+  const track = data.results[0];
+  return track.artworkUrl100?.replace('100x100', '600x600') || track.artworkUrl100 || null;
 }
 
 /**
  * Busca el cover de un track usando MusicBrainz con Cover Art Archive
- * @param artist - Nombre del artista
- * @param title - Título de la canción
- * @returns URL del cover o null
  */
 async function searchTrackCoverArt(artist: string, title: string): Promise<string | null> {
-  try {
-    // Buscar el release group usando MusicBrainz
-    const searchUrl = `https://musicbrainz.org/ws/2/recording/?query=artist:${encodeURIComponent(artist)} AND recording:${encodeURIComponent(title)}&limit=1&fmt=json`;
-    const searchResponse = await fetch(searchUrl, {
-      headers: {
-        'User-Agent': 'ONDA Radio App/1.0 (https://github.com/juanjorogado/onda)',
-      },
-    });
-    
-    if (!searchResponse.ok) return null;
-    const searchData = await searchResponse.json();
-    
-    if (!searchData.recordings || searchData.recordings.length === 0) return null;
-    const recording = searchData.recordings[0];
-    
-    // Obtener releases del recording
-    const releaseUrl = `https://musicbrainz.org/ws/2/recording/${recording.id}?inc=releases&fmt=json`;
-    const releaseResponse = await fetch(releaseUrl, {
-      headers: {
-        'User-Agent': 'ONDA Radio App/1.0 (https://github.com/juanjorogado/onda)',
-      },
-    });
-    
-    if (!releaseResponse.ok) return null;
-    const releaseData = await releaseResponse.json();
-    
-    if (!releaseData.releases || releaseData.releases.length === 0) return null;
-    const release = releaseData.releases[0];
-    
-    // Buscar cover art en Cover Art Archive
-    const coverArtUrl = `https://coverartarchive.org/release/${release.id}`;
-    const coverArtResponse = await fetch(coverArtUrl);
-    
-    if (!coverArtResponse.ok) return null;
-    const coverArtData = await coverArtResponse.json();
-    
-    if (coverArtData.images && coverArtData.images.length > 0) {
-      // Buscar imagen frontal (front) o usar la primera
-      const frontImage = coverArtData.images.find((img: any) => img.front) || coverArtData.images[0];
-      return frontImage?.image || frontImage?.thumbnails?.large || null;
-    }
-    
-    return null;
-  } catch {
-    return null;
-  }
+  const result = await findRecordingWithReleases(null, artist, title);
+  if (!result) return null;
+  
+  const coverArtUrl = `https://coverartarchive.org/release/${result.releases[0].id}`;
+  const coverArtData = await safeFetch<any>(coverArtUrl);
+  
+  if (!coverArtData?.images || coverArtData.images.length === 0) return null;
+  
+  const frontImage = coverArtData.images.find((img: any) => img.front) || coverArtData.images[0];
+  return frontImage?.image || frontImage?.thumbnails?.large || null;
 }
 
 /**
- * Busca información de un track usando múltiples servicios como fallback
- * Prioriza obtener el cover de la canción
- * @param artist - Nombre del artista
- * @param title - Título de la canción
- * @returns Información del track o null
+ * Construye un objeto TrackInfo con los datos proporcionados
+ */
+function buildTrackInfo(
+  title: string,
+  artist: string,
+  cover?: string,
+  year?: number,
+  album?: string
+): TrackInfo {
+  return {
+    title,
+    artist,
+    ...(cover && { cover }),
+    ...(year && { year }),
+    ...(album && { album }),
+  };
+}
+
+/**
+ * Busca información de un track usando múltiples servicios como fallback.
+ * Prioriza obtener el cover de la canción.
  */
 export async function searchTrackInfo(artist: string, title: string): Promise<TrackInfo | null> {
   if (!artist || !title) return null;
   
-  // Intentar Last.fm primero (más rápido y con covers)
   const lastFMResult = await searchTrackLastFM(artist, title);
-  if (lastFMResult && lastFMResult.cover) {
-    return lastFMResult;
-  }
+  if (lastFMResult?.cover) return lastFMResult;
   
-  // Si Last.fm no tiene cover, intentar Apple Music (iTunes)
   const appleMusicCover = await searchTrackAppleMusic(artist, title);
   if (appleMusicCover) {
-    return {
-      title,
-      artist,
-      cover: appleMusicCover,
-      year: lastFMResult?.year,
-    };
+    return buildTrackInfo(title, artist, appleMusicCover, lastFMResult?.year, lastFMResult?.album);
   }
   
-  // Si Apple Music falla, intentar Cover Art Archive
   const coverArtCover = await searchTrackCoverArt(artist, title);
   if (coverArtCover) {
-    return {
-      title,
-      artist,
-      cover: coverArtCover,
-      year: lastFMResult?.year,
-    };
+    return buildTrackInfo(title, artist, coverArtCover, lastFMResult?.year, lastFMResult?.album);
   }
   
-  // Si no hay covers, intentar MusicBrainz para obtener año
   const musicBrainzResult = await searchTrackMusicBrainz(artist, title);
   if (musicBrainzResult) {
-    return {
-      ...musicBrainzResult,
-      cover: lastFMResult?.cover || undefined,
-    };
+    return buildTrackInfo(
+      musicBrainzResult.title || title,
+      musicBrainzResult.artist || artist,
+      lastFMResult?.cover,
+      musicBrainzResult.year,
+      lastFMResult?.album
+    );
   }
   
-  // Retornar lo que tengamos de Last.fm aunque no tenga cover
   return lastFMResult;
 }
 

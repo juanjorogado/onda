@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { TIME_UPDATE_INTERVAL } from '../constants';
+import { TIME_UPDATE_INTERVAL } from '../../constants';
 
 /**
  * Hook optimizado para obtener la hora actual

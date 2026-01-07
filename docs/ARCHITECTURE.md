@@ -4,18 +4,27 @@
 
 ```
 src/
-├── components/     # Componentes React reutilizables
-│   ├── NowPlaying.tsx
-│   ├── PlayingScreen.tsx
-│   └── WaitingScreen.tsx
+├── app/             # Aplicación principal
+│   ├── App.tsx      # Componente raíz de la aplicación
+│   └── main.tsx     # Punto de entrada (bootstrap)
 │
-├── hooks/          # Custom React hooks
-│   ├── useAudioPlayer.ts
-│   ├── useCurrentTime.ts
-│   ├── useMediaSession.ts
-│   ├── useNowPlaying.ts
-│   ├── useRadioPlayer.ts
-│   └── useWakeLock.ts
+├── components/      # Componentes React organizados por tipo
+│   ├── screens/     # Pantallas completas (vistas principales)
+│   │   ├── PlayingScreen.tsx
+│   │   └── WaitingScreen.tsx
+│   └── ui/          # Componentes de interfaz reutilizables
+│       └── NowPlaying.tsx
+│
+├── hooks/           # Custom React hooks organizados por dominio
+│   ├── audio/       # Hooks relacionados con audio
+│   │   ├── useAudioPlayer.ts
+│   │   ├── useRadioPlayer.ts
+│   │   └── useWakeLock.ts
+│   ├── media/       # Hooks relacionados con media/metadatos
+│   │   ├── useMediaSession.ts
+│   │   └── useNowPlaying.ts
+│   └── time/        # Hooks relacionados con tiempo
+│       └── useCurrentTime.ts
 │
 ├── services/        # Servicios de API y lógica externa
 │   ├── imageService.ts
@@ -35,12 +44,9 @@ src/
 │   ├── track.ts
 │   └── vite-env.d.ts
 │
-├── styles/          # Estilos globales
-│   ├── animations.css
-│   └── global.css
-│
-├── App.tsx          # Componente principal
-└── main.tsx         # Punto de entrada
+└── styles/          # Estilos globales
+    ├── animations.css
+    └── global.css
 ```
 
 ## Convenciones de Nomenclatura

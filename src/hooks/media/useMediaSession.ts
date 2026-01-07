@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { TrackInfo } from '../types/track';
+import { TrackInfo } from '../../types/track';
 
 interface MediaSessionProps {
   track?: TrackInfo;

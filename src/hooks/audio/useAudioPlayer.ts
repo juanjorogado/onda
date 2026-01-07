@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AUDIO_CONFIG } from '../constants';
+import { AUDIO_CONFIG } from '../../constants';
 
 interface Options {
   volume?: number;

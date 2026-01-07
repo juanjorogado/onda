@@ -7,7 +7,7 @@
 1. Ve a [vercel.com/dashboard](https://vercel.com/dashboard)
 2. Busca el proyecto `onda` o `onda-radio`
 3. Verifica que el repositorio esté conectado:
-   - Debe mostrar: `juanjorogado/onda`
+   - Debe mostrar tu repositorio conectado
    - Debe tener el icono de GitHub conectado
 
 ### 2. Si el proyecto NO está en Vercel
@@ -16,7 +16,7 @@
 1. Ve a [vercel.com/new](https://vercel.com/new)
 2. Selecciona "Import Git Repository"
 3. Conecta tu cuenta de GitHub si no está conectada
-4. Selecciona el repositorio `juanjorogado/onda`
+4. Selecciona tu repositorio de GitHub
 5. Vercel detectará automáticamente:
    - Framework: Vite
    - Build Command: `npm run build`

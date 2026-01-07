@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { useWakeLock } from './hooks/useWakeLock';
-import { useRadioPlayer } from './hooks/useRadioPlayer';
-import { useMediaSession } from './hooks/useMediaSession';
-import { WaitingScreen } from './components/WaitingScreen';
-import { PlayingScreen } from './components/PlayingScreen';
-import { getCityGradientFallback } from './services/imageService';
+import { useWakeLock } from '../hooks/audio/useWakeLock';
+import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
+import { useMediaSession } from '../hooks/media/useMediaSession';
+import { WaitingScreen } from '../components/screens/WaitingScreen';
+import { PlayingScreen } from '../components/screens/PlayingScreen';
+import { getCityGradientFallback } from '../services/imageService';
 
 function App() {
   useWakeLock();

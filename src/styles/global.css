@@ -22,7 +22,6 @@
   --line-height-xl: 1.2;
 
   --font-weight-light: 300;
-  --font-weight-normal: 400;
   --font-weight-book: 400;
 
   /* Layout */
@@ -216,7 +215,7 @@ body {
 }
 
 .font-normal {
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-book);
 }
 
 .font-sans {
@@ -262,6 +261,7 @@ body {
   overflow: hidden;
   white-space: nowrap;
   position: relative;
+  width: 100%;
   mask-image: linear-gradient(
     to right,
     transparent 0,
@@ -283,6 +283,8 @@ body {
   animation: marquee var(--duration-slower) linear infinite;
   will-change: transform;
   white-space: nowrap;
+  padding-left: 100%;
+  letter-spacing: normal;
 }
 
 @keyframes marquee {
@@ -383,8 +385,8 @@ body {
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }
 
-/* Madrid Text */
-.waiting-screen-madrid {
+/* City Text */
+.waiting-screen-city {
   height: var(--spacing-24px);
   flex-shrink: 0;
   align-self: start;
@@ -462,7 +464,7 @@ body {
   line-height: var(--line-height-xl);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-book);
   text-align: left;
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);
@@ -506,11 +508,13 @@ body {
   animation: fade-in var(--duration-fast) var(--easing-smooth);
   touch-action: pan-y;
   /* Permitir scroll vertical pero prevenir durante swipe vertical activo */
+  -webkit-overflow-scrolling: touch;
 }
 
 .playing-screen-container.swiping-vertical {
   overflow-y: hidden;
   touch-action: none;
+  -webkit-overflow-scrolling: none;
 }
 
 .playing-screen-board {
@@ -643,9 +647,6 @@ body {
   font-weight: var(--font-weight-book);
 }
 
-.playing-screen-station-name-normal {
-  font-weight: var(--font-weight-normal);
-}
 
 /* Time Text */
 .playing-screen-time {
@@ -732,29 +733,8 @@ body {
   flex-grow: 0;
   padding-top: var(--spacing-4);
   padding-bottom: var(--spacing-8);
-  color: var(--color-ink);
-  font-size: var(--font-size-32px);
-  line-height: var(--line-height-xl);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-style: normal;
-  font-weight: var(--font-weight-normal);
-  transition: color var(--duration-normal) var(--easing-smooth);
-  /* Asegurar que siempre sea visible */
   position: relative;
   z-index: var(--z-index-content);
   animation: fade-in-up var(--duration-normal) var(--easing-smooth) 0.3s both;
-}
-
-.playing-screen-text-container .marquee {
-  height: auto;
-  min-height: calc(var(--font-size-32px) * var(--line-height-xl));
-}
-
-.playing-screen-text-container .marquee span {
-  font-size: var(--font-size-32px);
-  line-height: var(--line-height-xl);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-ink);
-  transition: color var(--duration-normal) var(--easing-smooth);
 }
 

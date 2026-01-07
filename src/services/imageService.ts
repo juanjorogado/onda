@@ -108,31 +108,15 @@ function getTimeBasedColors(timeOfDay: 'dawn' | 'day' | 'dusk' | 'night', city: 
 /**
  * Genera un gradiente dinámico basado en la hora del día en la ciudad
  * @param city - Nombre de la ciudad
- * @param timezone - Zona horaria de la ciudad
- * @returns String de gradiente CSS
- */
-function generateTimeBasedGradient(city: string, timezone: string): string {
-  const hour = getHourInTimezone(timezone);
-  const timeOfDay = getTimeOfDay(hour);
-  const colors = getTimeBasedColors(timeOfDay, city);
-  
-  return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
-}
-
-/**
- * Genera un gradiente CSS basado en la hora del día en la ciudad
- * @param city - Nombre de la ciudad
- * @param timezone - Zona horaria de la ciudad
+ * @param timezone - Zona horaria de la ciudad (opcional, usa hora local si no se proporciona)
  * @returns String de gradiente CSS
  */
 export function getCityGradientFallback(city: string, timezone?: string): string {
-  if (timezone) {
-    return generateTimeBasedGradient(city, timezone);
-  }
-  // Fallback sin timezone (usar hora local)
-  const hour = new Date().getHours();
+  // Obtener la hora según timezone o usar hora local como fallback
+  const hour = timezone ? getHourInTimezone(timezone) : new Date().getHours();
   const timeOfDay = getTimeOfDay(hour);
   const colors = getTimeBasedColors(timeOfDay, city);
+  
   return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
 }
 

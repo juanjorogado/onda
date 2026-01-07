@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { stations } from '../data/stations';
+import { stations } from '../../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
-import { useNowPlaying } from './useNowPlaying';
+import { useNowPlaying } from '../media/useNowPlaying';
 
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
