@@ -25,9 +25,10 @@ function App() {
   } = useRadioPlayer();
 
   // Memoizar callbacks para evitar re-renders innecesarios
-  const handleSwipe = useCallback((direction: 'left' | 'right') => {
+  const handleSwipe = useCallback((direction: 'left' | 'right' | 'up') => {
     if (direction === 'left') nextStation();
     else if (direction === 'right') prevStation();
+    else if (direction === 'up') nextStation();
   }, [nextStation, prevStation]);
 
   // Configurar Media Session API para controles en pantalla de bloqueo (iOS/Android)

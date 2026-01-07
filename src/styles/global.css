@@ -510,6 +510,12 @@ body {
   transition: background-color var(--duration-normal) var(--easing-smooth);
   animation: fade-in var(--duration-fast) var(--easing-smooth);
   touch-action: pan-y;
+  /* Permitir scroll vertical pero prevenir durante swipe vertical activo */
+}
+
+.playing-screen-container.swiping-vertical {
+  overflow-y: hidden;
+  touch-action: none;
 }
 
 .playing-screen-board {
@@ -610,7 +616,7 @@ body {
 
 /* Station Name */
 .playing-screen-station-name {
-  height: var(--spacing-24px);
+  height: var(--spacing-26px);
   flex-shrink: 1;
   flex-grow: 1;
   min-width: 0;
