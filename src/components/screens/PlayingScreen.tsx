@@ -213,7 +213,7 @@ export const PlayingScreen = memo(({
     // Agregar listeners con { passive: false } para permitir preventDefault
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
     element.addEventListener('touchmove', handleTouchMove, { passive: false });
-    element.addEventListener('touchend', handleTouchEnd, { passive: true });
+    element.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     return () => {
       element.removeEventListener('touchstart', handleTouchStart);
