@@ -23,3 +23,4 @@ export function getLocalCityName(): string {
     return 'Local';
   }
 }
+
