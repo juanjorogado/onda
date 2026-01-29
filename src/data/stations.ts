@@ -92,5 +92,14 @@ export const stations: Station[] = [
     location: 'Germany',
     timezone: 'Europe/Berlin',
     cover: ''
+  },
+  {
+    id: 'walmradio-classic',
+    name: '',
+    url: 'https://icecast.walmradio.com:8443/classic',
+    genre: 'Jazz',
+    location: 'USA',
+    timezone: 'USA/NY',
+    cover: ''
   }
 ];
