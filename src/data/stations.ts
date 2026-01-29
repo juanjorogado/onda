@@ -29,7 +29,7 @@ export const stations: Station[] = [
     cover: 'https://media.npr.org/assets/img/2018/08/03/nprmusic_sq-7b1be9c5e3b0c0e0e0e0e0e0e0e0e0e0.png'
   },
   {
-    id: 'radiohead',
+    id: 'radioparadise',
     name: 'Radio Paradise',
     url: 'https://stream.radioparadise.com/mp3-128',
     genre: 'Eclectic',
@@ -46,7 +46,6 @@ export const stations: Station[] = [
     timezone: 'Europe/Paris',
     cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/FIP_logo_0.png'
   },
-  // Soul & R&B Stations - Alternative sources
   {
     id: '181fm-soul',
     name: '181.fm - Soul',
@@ -98,8 +97,17 @@ export const stations: Station[] = [
     name: '',
     url: 'https://icecast.walmradio.com:8443/classic',
     genre: 'Jazz',
-    location: 'USA',
+    location: 'NY',
     timezone: 'USA/NY',
+    cover: ''
+  },
+  {
+    id: 'jazzblues',
+    name: 'Jazz Radio Blues',
+    url: 'https://jazzblues.ice.infomaniak.ch/jazzblues-high.mp3',
+    genre: 'Jazz/Blues',
+    location: 'Paris',
+    timezone: 'Europe/Paris',
     cover: ''
   }
 ];
