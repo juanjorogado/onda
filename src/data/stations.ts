@@ -1,113 +1,105 @@
 import { Station } from '../types/station';
 
 export const stations: Station[] = [
+  // --- JAPÓN: LA EXQUISITEZ ---
   {
-    id: 'kexp',
-    name: 'KEXP',
-    url: 'https://kexp.streamguys1.com/kexp128.mp3',
-    genre: 'Alternative',
-    location: 'Seattle',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://cdn-profiles.tunein.com/s24996/images/logog.png?t=163001'
+    id: 'ottava',
+    name: 'OTTAVA',
+    url: 'https://ottava.stream.ne.jp/live/ottava.mp3',
+    genre: 'Classical / Contemporary / Zen',
+    location: 'Tokyo, Japan',
+    timezone: 'Asia/Tokyo',
+    cover: 'https://ottava.jp/assets/img/logo.png'
   },
   {
-    id: 'wfmujazz',
+    id: 'jazz-sakura',
+    name: 'Jazz Sakura',
+    url: 'https://music.vdfm.ru:8000/sakura',
+    genre: 'Japanese Jazz / Piano / Chill',
+    location: 'Kyoto, Japan',
+    timezone: 'Asia/Tokyo',
+    cover: 'https://cdn.webradiocontrol.com/stations/jazz-sakura/logo.png'
+  },
+
+  // --- MADRID VANGUARDIA ---
+  {
+    id: 'radio-relativa',
+    name: 'Radio Relativa',
+    url: 'https://stream.radiorelativa.eu/relativa.mp3',
+    genre: 'Experimental / Community / Eclectic',
+    location: 'Madrid, Spain',
+    timezone: 'Europe/Madrid',
+    cover: 'https://radiorelativa.eu/wp-content/uploads/2020/05/cropped-logo-relativa-192x192.png'
+  },
+
+  // --- EL TRIDENTE FREEFORM (Estilo WFMU) ---
+  {
+    id: 'wfmu-fixed',
     name: 'WFMU',
-    url: 'https://wfmu.streamguys1.com/wfmu-high',
-    genre: 'Freeform / Eclectic',
-    location: 'New Jersey',
+    url: 'https://ichibanrock.com/wfmu-high.mp3',
+    genre: 'Freeform / Eclectic / Cult',
+    location: 'Jersey City, USA',
     timezone: 'America/New_York',
     cover: 'https://wfmu.org/images/wfmu-logo.png'
   },
   {
-    id: 'nprmusic',
-    name: 'NPR Music',
-    url: 'https://npr-ice.streamguys1.com/live.mp3',
-    genre: 'Eclectic',
-    location: 'Washington DC',
-    timezone: 'America/New_York',
-    cover: 'https://media.npr.org/assets/img/2018/08/03/nprmusic_sq-7b1be9c5e3b0c0e0e0e0e0e0e0e0e0e0.png'
-  },
-  {
-    id: 'radioparadise',
-    name: 'Radio Paradise',
-    url: 'https://stream.radioparadise.com/mp3-128',
-    genre: 'Eclectic',
-    location: 'California',
+    id: 'dublab',
+    name: 'Dublab',
+    url: 'https://dublab.out.airtime.pro/dublab_a',
+    genre: 'Freeform / Future Roots',
+    location: 'Los Angeles, USA',
     timezone: 'America/Los_Angeles',
-    cover: 'https://www.radioparadise.com/graphics/rp_logo.png'
+    cover: 'https://upload.wikimedia.org/wikipedia/commons/4/42/Dublab_logo.png'
   },
+
+  // --- EUROPA BOUTIQUE ---
   {
-    id: 'fip',
-    name: 'FIP Radio',
-    url: 'https://icecast.radiofrance.fr/fip-midfi.mp3',
-    genre: 'Eclectic',
-    location: 'Paris',
+    id: 'radio-nova',
+    name: 'Radio Nova',
+    url: 'https://icecast.radiofrance.fr/nova-midfi.mp3',
+    genre: 'The Grand Mix / Eclectic',
+    location: 'Paris, France',
     timezone: 'Europe/Paris',
-    cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/FIP_logo_0.png'
+    cover: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Radio_Nova_logo.svg/1200px-Radio_Nova_logo.svg.png'
   },
   {
-    id: '181fm-soul',
-    name: '181.fm - Soul',
-    url: 'https://listen.181fm.com/181-soul_128k.mp3',
-    genre: 'Soul / R&B',
-    location: 'United States',
-    timezone: 'America/New_York',
-    cover: ''
+    id: 'radio-raheem',
+    name: 'Radio Raheem',
+    url: 'https://sprock.io/radio/8010/radio.mp3',
+    genre: 'Electronic / Cosmic / Jazz',
+    location: 'Milan, Italy',
+    timezone: 'Europe/Rome',
+    cover: 'https://www.radioraheem.it/wp-content/uploads/2017/03/RR_logo_black.png'
   },
   {
-    id: 'nts1',
-    name: 'NTS Radio',
-    url: 'https://stream-relay-geo.ntslive.net/stream',
-    genre: 'Eclectic / Independent',
-    location: 'London',
+    id: 'tsf-jazz',
+    name: 'TSF Jazz',
+    url: 'http://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3',
+    genre: 'Jazz / Rare Groove / Soul',
+    location: 'Paris, France',
+    timezone: 'Europe/Paris',
+    cover: 'https://www.tsfjazz.com/wp-content/themes/tsfjazz/img/logo.png'
+  },
+
+  // --- CLÁSICA & NEOCLÁSICA ---
+  {
+    id: 'calm-neoclassical',
+    name: 'Calm Radio Neoclassical',
+    url: 'https://streams.calmradio.com:443/api/366/128/stream',
+    genre: 'Neoclassical / Minimalist',
+    location: 'Toronto, Canada',
+    timezone: 'America/Toronto',
+    cover: 'https://calmradio.com/img/neoclassical.jpg'
+  },
+
+  // --- CURADURÍA GLOBAL ---
+  {
+    id: 'worldwide-fm',
+    name: 'Worldwide FM',
+    url: 'https://worldwidefm.out.airtime.pro/worldwidefm_a',
+    genre: 'Global Jazz / Beats',
+    location: 'London, UK',
     timezone: 'Europe/London',
-    cover: 'https://nts.live/static/img/nts-logo.png'
-  },
-  {
-    id: 'franceinter',
-    name: 'France Inter',
-    url: 'https://icecast.radiofrance.fr/franceinter-hifi.aac',
-    genre: 'Eclectic / Cultural',
-    location: 'Paris',
-    timezone: 'Europe/Paris',
-    cover: 'https://www.radiofrance.fr/sites/default/files/styles/visuel_principal/public/2021-06/France-Inter_logo_0.png'
-  },
-  // Soul & R&B Stations from OpenTune
-  {
-    id: 'jazzradio-soul',
-    name: 'Jazz Radio Soul',
-    url: 'https://jazz-wr09.ice.infomaniak.ch/jazz-wr09-128.mp3',
-    genre: 'Soul / Jazz',
-    location: 'Paris',
-    timezone: 'Europe/Paris',
-    cover: 'https://www.jazzradio.fr/img/logo-jazz-radio.png'
-  },
-  {
-    id: '54-funk-soul',
-    name: '54 Funk Soul Dance',
-    url: 'https://stream.laut.fm/54-funk-soul-dance',
-    genre: 'Funk / Soul / Dance',
-    location: 'Germany',
-    timezone: 'Europe/Berlin',
-    cover: ''
-  },
-  {
-    id: 'walmradio-classic',
-    name: '',
-    url: 'https://icecast.walmradio.com:8443/classic',
-    genre: 'Jazz',
-    location: 'NY',
-    timezone: 'USA/NY',
-    cover: ''
-  },
-  {
-    id: 'jazzblues',
-    name: 'Jazz Radio Blues',
-    url: 'https://jazzblues.ice.infomaniak.ch/jazzblues-high.mp3',
-    genre: 'Jazz/Blues',
-    location: 'Paris',
-    timezone: 'Europe/Paris',
-    cover: ''
+    cover: 'https://m.media-amazon.com/images/I/41-l3D4p3pL.png'
   }
 ];
