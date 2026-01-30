@@ -116,7 +116,7 @@ export function getCityGradientFallback(city: string, timezone?: string): string
   const hour = timezone ? getHourInTimezone(timezone) : new Date().getHours();
   const timeOfDay = getTimeOfDay(hour);
   const colors = getTimeBasedColors(timeOfDay, city);
-  
+
   return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
 }
 

@@ -90,19 +90,22 @@
   }
 }
 
-/* Gradient animation - Movimiento sutil y respirable */
+/* Gradient animation - Movimiento más visible y dinámico */
 @keyframes gradient-shift {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
-  33% {
-    background-position: 50% 45%;
+  25% {
+    background-position: 100% 0%;
   }
-  66% {
-    background-position: 100% 55%;
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
 }
 

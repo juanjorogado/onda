@@ -5,5 +5,6 @@ export interface Station {
   location: string;
   timezone: string;
   cover: string;
+  genre?: string;
 }
 

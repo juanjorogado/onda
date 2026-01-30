@@ -9,8 +9,8 @@ interface NowPlayingProps {
   className?: string;
 }
 
-// Separador para el marquee (4 espacios no separables)
-const MARQUEE_SEPARATOR = '\u00A0\u00A0\u00A0\u00A0';
+// Separador para el marquee (espacios no separables amplios)
+const MARQUEE_SEPARATOR = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
 
 /**
  * Formatea la información del track según el formato:
