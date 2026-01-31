@@ -307,18 +307,23 @@ body {
   white-space: nowrap;
   position: relative;
   width: 100%;
+  /* Gradient mask más amplio para suavizar los bordes */
   mask-image: linear-gradient(
     to right,
-    transparent 0,
-    black var(--blur-edge),
-    black calc(100% - var(--blur-edge)),
+    transparent 0%,
+    transparent 2%,
+    black 12%,
+    black 88%,
+    transparent 98%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
-    transparent 0,
-    black var(--blur-edge),
-    black calc(100% - var(--blur-edge)),
+    transparent 0%,
+    transparent 2%,
+    black 12%,
+    black 88%,
+    transparent 98%,
     transparent 100%
   );
 }
@@ -326,6 +331,7 @@ body {
 .marquee > span {
   display: inline-block;
   animation: marquee-scroll var(--duration-slower) linear infinite;
+  animation-play-state: var(--marquee-play-state, running);
   will-change: transform;
   white-space: nowrap;
   padding-left: 100%;
@@ -333,6 +339,16 @@ body {
   /* Prevenir saltos con transformación GPU */
   transform: translateZ(0);
   backface-visibility: hidden;
+  /* Asegurar que hay suficiente espacio después del texto */
+  padding-right: 2rem;
+}
+
+/* Clase para pausar la animación cuando el texto cabe completo */
+.marquee > span.marquee-paused {
+  animation-play-state: paused;
+  /* Cuando está pausado, centrar el texto */
+  padding-left: 0;
+  padding-right: 0;
 }
 
 @keyframes marquee-scroll {
@@ -344,12 +360,8 @@ body {
   }
 }
 
-/* Pausar animación cuando el texto cabe completamente */
-.marquee > span:not(:hover) {
-  animation-play-state: running;
-}
-
-.marquee > span:hover {
+/* Pausar animación al hacer hover (solo cuando está corriendo) */
+.marquee > span:not(.marquee-paused):hover {
   animation-play-state: paused;
 }
 
