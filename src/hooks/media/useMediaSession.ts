@@ -11,6 +11,25 @@ interface MediaSessionProps {
   onNextTrack?: () => void;
 }
 
+interface MediaImage {
+  src: string;
+  sizes?: string;
+  type?: string;
+}
+
+interface MediaMetadataInit {
+  title?: string;
+  artist?: string;
+  album?: string;
+  artwork?: MediaImage[];
+}
+
+declare global {
+  interface Window {
+    MediaMetadata: new (init: MediaMetadataInit) => MediaMetadata;
+  }
+}
+
 /**
  * Hook para configurar Media Session API
  * Permite controles en la pantalla de bloqueo y notificaciones de iOS/Android
@@ -27,10 +46,10 @@ export function useMediaSession({
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
 
-    const mediaSession = (navigator as any).mediaSession;
+    const mediaSession = navigator.mediaSession;
 
     // Configurar metadatos
-    mediaSession.metadata = new (window as any).MediaMetadata({
+    mediaSession.metadata = new window.MediaMetadata({
       title: track?.title || stationName || 'ONDA Radio',
       artist: track?.artist || stationName || 'Radio en vivo',
       album: stationName || 'ONDA Radio',
@@ -69,7 +88,7 @@ export function useMediaSession({
         mediaSession.setActionHandler('pause', null);
         mediaSession.setActionHandler('previoustrack', null);
         mediaSession.setActionHandler('nexttrack', null);
-      } catch (err) {
+      } catch {
         // Ignorar errores al limpiar
       }
     };

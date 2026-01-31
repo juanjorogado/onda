@@ -220,7 +220,7 @@ export const PlayingScreen = memo(({
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [onSwipe]);
+  }, [onSwipe, translateX, translateY]);
 
   return (
     <div 
