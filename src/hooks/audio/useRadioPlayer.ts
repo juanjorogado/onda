@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { stations } from '../../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from '../media/useNowPlaying';
+import { useHapticFeedback } from '../useHapticFeedback';
 
 const TRANSITION_DURATION = 400; // ms
 
@@ -9,6 +10,9 @@ export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Hook de feedback háptico para mejor UX en coche
+  const { stationChange } = useHapticFeedback();
 
   useEffect(() => {
     if (stations.length > 0) {
@@ -37,9 +41,12 @@ export function useRadioPlayer() {
 
   const changeStation = useCallback((newIndex: number) => {
     if (stations.length <= 1 || isTransitioning) return;
-    
+
     setIsTransitioning(true);
-    
+
+    // Feedback háptico y sonoro al cambiar de estación
+    stationChange();
+
     // Cambiar estación después de iniciar la transición
     transitionTimeoutRef.current = setTimeout(() => {
       setCurrentIndex(newIndex);
@@ -50,7 +57,7 @@ export function useRadioPlayer() {
         setIsTransitioning(false);
       }, TRANSITION_DURATION);
     }, TRANSITION_DURATION / 2);
-  }, [isTransitioning, setIsPlaying]);
+  }, [isTransitioning, setIsPlaying, stationChange]);
 
   const nextStation = useCallback(() => {
     const newIndex = (currentIndex + 1) % stations.length;

@@ -1,7 +1,9 @@
 import { memo, KeyboardEvent, useRef, ReactNode, useMemo, useState, useEffect } from 'react';
 import { useCurrentTime } from '../../hooks/time/useCurrentTime';
 import { formatTime } from '../../utils/formatTime';
+import { extractCity } from '../../utils/extractCity';
 import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
 
 interface PlayingScreenProps {
@@ -48,7 +50,10 @@ export const PlayingScreen = memo(({
   const boardRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef(0);
   const containerHeight = useRef(0);
-  
+
+  // Hook de feedback háptico para mejor UX en coche
+  const { play, pause, swipe } = useHapticFeedback();
+
   // Hora de la ciudad de la estación
   const stationTime = useMemo(() => formatTime(time, timezone), [time, timezone]);
 
@@ -82,7 +87,8 @@ export const PlayingScreen = memo(({
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;
-  const locationText = stationLocation ? ` — ${stationLocation}` : '';
+  const city = extractCity(stationLocation);
+  const locationText = city ? ` — ${city}` : '';
 
   // Event handlers con preventDefault usando listeners nativos (no pasivos)
   useEffect(() => {
@@ -139,11 +145,14 @@ export const PlayingScreen = memo(({
         if (absDx > SWIPE_THRESHOLD) {
           swiped.current = true;
           setIsTransitioning(true);
-          
+
+          // Feedback háptico al completar swipe
+          swipe();
+
           const direction = dx > 0 ? 1 : -1;
           const finalTranslate = direction * containerWidth.current;
           setTranslateX(finalTranslate);
-          
+
           setTimeout(() => {
             onSwipe(dx > 0 ? 'right' : 'left');
           }, 100);
@@ -164,10 +173,13 @@ export const PlayingScreen = memo(({
         if (absDy > SWIPE_THRESHOLD && dy < 0) {
           swiped.current = true;
           setIsTransitioning(true);
-          
+
+          // Feedback háptico al completar swipe vertical
+          swipe();
+
           const finalTranslate = -containerHeight.current;
           setTranslateY(finalTranslate);
-          
+
           setTimeout(() => {
             onSwipe('up');
           }, 100);
@@ -220,7 +232,7 @@ export const PlayingScreen = memo(({
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [onSwipe, translateX, translateY]);
+  }, [onSwipe, swipe, translateX, translateY]);
 
   return (
     <div 
@@ -277,10 +289,24 @@ export const PlayingScreen = memo(({
           onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
+              // Feedback háptico y sonoro según la acción
+              if (isPlaying) {
+                pause();
+              } else {
+                play();
+              }
               onToggle();
             }
           }}
-          onClick={onToggle}
+          onClick={() => {
+            // Feedback háptico y sonoro según la acción
+            if (isPlaying) {
+              pause();
+            } else {
+              play();
+            }
+            onToggle();
+          }}
           className="playing-screen-cover cursor-pointer"
           style={{
             background: coverGradient || DEFAULT_GRADIENTS.PLAYING,
