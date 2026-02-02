@@ -18,7 +18,7 @@ interface PlayingScreenProps {
   timezone?: string;
   isPlaying: boolean;
   onToggle: () => void;
-  onSwipe?: (direction: 'left' | 'right' | 'up') => void;
+  onSwipe?: (direction: 'left' | 'right') => void;
   children?: ReactNode;
 }
 
@@ -116,14 +116,9 @@ export const PlayingScreen = memo(({
       
       const currentDirection = swipeDirectionRef.current;
       
-      // Determinar la dirección del swipe (horizontal o vertical) solo una vez
+      // Determinar la dirección del swipe - solo horizontal
       if (!currentDirection && (absDx > 10 || absDy > 10)) {
-        if (absDy > absDx * 1.2) {
-          setSwipeDirection('vertical');
-          swipeDirectionRef.current = 'vertical';
-          e.preventDefault();
-          e.stopPropagation();
-        } else if (absDx > absDy * 1.2) {
+        if (absDx > absDy * 1.2) {
           setSwipeDirection('horizontal');
           swipeDirectionRef.current = 'horizontal';
           e.preventDefault();
@@ -159,32 +154,7 @@ export const PlayingScreen = memo(({
         }
       }
       
-      // Procesar swipe vertical hacia arriba
-      if (currentDirection === 'vertical' && absDy > 10 && dy < 0) {
-        e.preventDefault();
-        e.stopPropagation();
-        isDragging.current = true;
-        
-        const maxTranslate = containerHeight.current * 0.5;
-        const clampedDy = Math.max(-maxTranslate, Math.min(0, dy));
-        setTranslateY(clampedDy);
-        setTranslateX(0);
-        
-        if (absDy > SWIPE_THRESHOLD && dy < 0) {
-          swiped.current = true;
-          setIsTransitioning(true);
 
-          // Feedback háptico al completar swipe vertical
-          swipe();
-
-          const finalTranslate = -containerHeight.current;
-          setTranslateY(finalTranslate);
-
-          setTimeout(() => {
-            onSwipe('up');
-          }, 100);
-        }
-      }
     };
 
     const handleTouchEnd = (e: globalThis.TouchEvent) => {
@@ -196,20 +166,11 @@ export const PlayingScreen = memo(({
       
       const currentDirection = swipeDirectionRef.current;
       const currentTranslateX = translateX;
-      const currentTranslateY = translateY;
       
       if (isDragging.current) {
         if (currentDirection === 'horizontal' && Math.abs(currentTranslateX) < SWIPE_THRESHOLD) {
           setIsTransitioning(true);
           setTranslateX(0);
-          setTimeout(() => {
-            setIsTransitioning(false);
-            isDragging.current = false;
-            setSwipeDirection(null);
-          }, 300);
-        } else if (currentDirection === 'vertical' && Math.abs(currentTranslateY) < SWIPE_THRESHOLD) {
-          setIsTransitioning(true);
-          setTranslateY(0);
           setTimeout(() => {
             setIsTransitioning(false);
             isDragging.current = false;

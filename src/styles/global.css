@@ -670,7 +670,7 @@ body {
 }
 
 .playing-screen-station-name {
-  height: var(--spacing-26px);
+  height: auto;
   flex-shrink: 1;
   flex-grow: 1;
   min-width: 0;
@@ -707,7 +707,7 @@ body {
 }
 
 .playing-screen-time {
-  height: var(--spacing-24px);
+  height: auto;
   flex-shrink: 0;
   align-self: start;
   color: var(--color-ink);
