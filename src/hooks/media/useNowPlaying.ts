@@ -256,16 +256,25 @@ const STATION_PROVIDERS: Record<string, StationProvider> = {
   kexp: kexpProvider,
   wfmu: wfmuProvider,
   dublab: dublabProvider,
-  'radio-nova': radioNovaProvider,
   'tsf-jazz': tsfJazzProvider,
+  'radio-nova': radioNovaProvider,
   'worldwide-fm': worldwideFmProvider,
   ottava: ottavaProvider,
 
   // Providers genéricos para estaciones sin API específica
+  // (usan metadata del stream o fallback a búsqueda Last.fm)
   'jazz-sakura': icecastMetadataProvider,
-  'radio-relativa': icecastMetadataProvider,
+  'listen-moe': icecastMetadataProvider,
+  'cashmere-radio': icecastMetadataProvider,
   'radio-raheem': icecastMetadataProvider,
-  'calm-neoclassical': icecastMetadataProvider,
+  'bbc-6music': icecastMetadataProvider,
+  'resonance-fm': icecastMetadataProvider,
+  'fip': icecastMetadataProvider,
+  'france-musique': icecastMetadataProvider,
+  'france-culture': icecastMetadataProvider,
+  'radio-paradise': icecastMetadataProvider,
+  'nts-radio': icecastMetadataProvider,
+  'whisperings-piano': icecastMetadataProvider,
 };
 
 /**
