@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 import { useWakeLock } from '../hooks/audio/useWakeLock';
 import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
+import { useWeatherGradient } from '../hooks/useWeatherGradient';
 import { WaitingScreen } from '../components/screens/WaitingScreen';
 import { PlayingScreen } from '../components/screens/PlayingScreen';
-import { getCityGradientFallback } from '../services/imageService';
 
 function App() {
   useWakeLock();
@@ -23,6 +23,9 @@ function App() {
     coverArt,
     track,
   } = useRadioPlayer();
+
+  // Obtener gradiente influenciado por el clima real
+  const { gradient: weatherGradient, weatherDescription } = useWeatherGradient(currentStation);
 
   // Memoizar callbacks para evitar re-renders innecesarios
   const handleSwipe = useCallback((direction: 'left' | 'right') => {
@@ -65,12 +68,13 @@ function App() {
               trackArtist={track.artist}
               trackAlbum={track.album}
               trackYear={track.year}
-              coverGradient={getCityGradientFallback(currentStation.location, currentStation.timezone)}
+              coverGradient={weatherGradient}
               coverImage={coverArt}
               timezone={currentStation.timezone}
               isPlaying={isPlaying}
               onToggle={togglePlay}
               onSwipe={handleSwipe}
+              weatherDescription={weatherDescription}
             >
             </PlayingScreen>
           ) : (

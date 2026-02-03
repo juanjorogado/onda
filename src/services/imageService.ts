@@ -120,4 +120,45 @@ export function getCityGradientFallback(city: string, timezone?: string): string
   return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
 }
 
+/**
+ * Genera un gradiente influenciado por el clima actual
+ * @param city - Nombre de la ciudad
+ * @param timezone - Zona horaria
+ * @param weatherParams - Parámetros del clima (desde weatherService)
+ * @returns String de gradiente CSS
+ */
+export function getWeatherInfluencedGradient(
+  city: string,
+  timezone: string,
+  weatherParams: {
+    saturation: number;
+    lightness: number;
+    warmth: number;
+    blueShift: number;
+  }
+): string {
+  // Obtener hora y colores base
+  const hour = getHourInTimezone(timezone);
+  const timeOfDay = getTimeOfDay(hour);
+  const baseColors = getTimeBasedColors(timeOfDay, city);
+
+  // Aplicar efectos del clima
+  const adjustedColors = {
+    hue1: baseColors.hue1 + weatherParams.warmth,
+    hue2: baseColors.hue2 + weatherParams.warmth,
+    sat: Math.min(100, baseColors.sat * weatherParams.saturation),
+    light1: Math.min(90, baseColors.light1 * weatherParams.lightness),
+    light2: Math.min(90, baseColors.light2 * weatherParams.lightness),
+  };
+
+  // Aplicar desplazamiento hacia azul si es necesario
+  if (weatherParams.blueShift > 0) {
+    const blue = 240;
+    adjustedColors.hue1 = adjustedColors.hue1 + ((blue - adjustedColors.hue1) * weatherParams.blueShift / 100);
+    adjustedColors.hue2 = adjustedColors.hue2 + ((blue - adjustedColors.hue2) * weatherParams.blueShift / 100);
+  }
+
+  return `linear-gradient(135deg, hsl(${Math.round(adjustedColors.hue1)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light1)}%) 0%, hsl(${Math.round(adjustedColors.hue2)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light2)}%) 100%)`;
+}
+
 
