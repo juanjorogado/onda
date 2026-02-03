@@ -54,7 +54,7 @@ const formatTrackInfo = (
   }
   
   // Fallback: nombre de la estación
-  return stationName ? `Sonando la radio ${stationName}` : '';
+  return stationName ? `Sonando ${stationName}` : '';
 };
 
 export const NowPlaying = memo(({ 
