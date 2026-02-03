@@ -19,7 +19,6 @@ interface PlayingScreenProps {
   isPlaying: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
-  weatherDescription?: string | null;
   children?: ReactNode;
 }
 
@@ -36,7 +35,6 @@ export const PlayingScreen = memo(({
   isPlaying,
   onToggle,
   onSwipe,
-  weatherDescription,
   children
 }: PlayingScreenProps) => {
   const time = useCurrentTime();
@@ -278,28 +276,6 @@ export const PlayingScreen = memo(({
             backgroundRepeat: 'no-repeat'
           }}
         >
-          {/* Indicador de clima (esquina superior derecha) */}
-          {weatherDescription && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '12px',
-                right: '12px',
-                padding: '4px 8px',
-                borderRadius: 'var(--radius-10px)',
-                background: 'rgba(0, 0, 0, 0.3)',
-                backdropFilter: 'blur(8px)',
-                fontSize: '10px',
-                color: 'rgba(255, 255, 255, 0.8)',
-                zIndex: 10,
-                textTransform: 'capitalize',
-                letterSpacing: '0.5px'
-              }}
-            >
-              {weatherDescription}
-            </div>
-          )}
-
           {/* Cover del álbum si está disponible */}
           {coverImage && (
             <div 
