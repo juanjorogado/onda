@@ -230,6 +230,17 @@ body {
   margin-right: auto;
 }
 
+@media (orientation: landscape) {
+  .max-w-md {
+    max-width: 100%;
+  }
+
+  .mx-auto {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .h-screen {
   height: var(--viewport-height);
   height: var(--viewport-height-dynamic);
@@ -791,4 +802,40 @@ body {
   position: relative;
   z-index: var(--z-index-content);
   animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both;
+}
+
+@media (orientation: landscape) {
+  .playing-screen-board {
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: var(--spacing-4);
+    row-gap: var(--spacing-6);
+    align-items: stretch;
+  }
+
+  .playing-screen-station {
+    grid-column: 1;
+    grid-row: 1;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .playing-screen-cover {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    max-width: 100%;
+    min-height: calc(var(--viewport-height-dynamic) - var(--spacing-26px) - var(--spacing-4));
+    height: calc(var(--viewport-height-dynamic) - var(--spacing-26px) - var(--spacing-4));
+    max-height: calc(var(--viewport-height-dynamic) - var(--spacing-26px) - var(--spacing-4));
+  }
+
+  .playing-screen-text-container {
+    grid-column: 1;
+    grid-row: 3;
+    padding-top: var(--spacing-2);
+    padding-bottom: 0;
+    align-self: end;
+  }
 }
