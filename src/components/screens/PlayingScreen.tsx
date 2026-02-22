@@ -311,6 +311,7 @@ export const PlayingScreen = memo(({
             album={trackAlbum}
             year={trackYear}
             stationName={stationName}
+            isPlaying={isPlaying}
           />
         </div>
       </div>
@@ -319,4 +320,3 @@ export const PlayingScreen = memo(({
 });
 
 PlayingScreen.displayName = 'PlayingScreen';
-

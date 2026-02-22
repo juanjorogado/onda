@@ -6,27 +6,28 @@ interface NowPlayingProps {
   album?: string;
   year?: number;
   stationName?: string;
+  isPlaying?: boolean;
   className?: string;
 }
 
 // Separador para el marquee (espacios entre repeticiones)
 const MARQUEE_SEPARATOR = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'; // 20 espacios no separables
 
-/**
- * Formatea la información del track según el formato:
- * "Nombre de la canción. Nombre del grupo — Álbum (Año)"
- */
 const formatTrackInfo = (
   title?: string,
   artist?: string,
   album?: string,
   year?: number,
-  stationName?: string
+  stationName?: string,
+  isPlaying?: boolean
 ): string => {
-  // Caso principal: título + artista
+  if (!isPlaying) {
+    return stationName ? `Pulsa para escuchar ${stationName}` : '';
+  }
+
   if (title && artist) {
     const parts = [title, artist];
-    
+
     if (album && year) {
       parts.push(`${album} (${year})`);
     } else if (album) {
@@ -34,43 +35,41 @@ const formatTrackInfo = (
     } else if (year) {
       parts.push(`(${year})`);
     }
-    
-    // Formato: "Título. Artista — Álbum (Año)"
-    return parts.length === 2 
+
+    return parts.length === 2
       ? `${parts[0]}. ${parts[1]}`
       : `${parts[0]}. ${parts[1]} — ${parts[2]}`;
   }
-  
-  // Solo título o solo artista
+
   const mainText = title || artist;
   if (mainText) {
     const metadata = [];
     if (album) metadata.push(album);
     if (year) metadata.push(`(${year})`);
-    
-    return metadata.length > 0 
+
+    return metadata.length > 0
       ? `${mainText} — ${metadata.join(' ')}`
       : mainText;
   }
-  
-  // Fallback: nombre de la estación
+
   return stationName ? `Sonando ${stationName}` : '';
 };
 
 export const NowPlaying = memo(({ 
-  title, 
-  artist, 
-  album, 
-  year, 
-  stationName, 
+  title,
+  artist,
+  album,
+  year,
+  stationName,
+  isPlaying,
   className = '' 
 }: NowPlayingProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [shouldScroll, setShouldScroll] = useState(true);
   
   const text = useMemo(
-    () => formatTrackInfo(title, artist, album, year, stationName),
-    [title, artist, album, year, stationName]
+    () => formatTrackInfo(title, artist, album, year, stationName, isPlaying),
+    [title, artist, album, year, stationName, isPlaying]
   );
   
   // Detectar si el texto es más ancho que el contenedor
