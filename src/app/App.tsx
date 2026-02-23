@@ -4,7 +4,6 @@ import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
 import { useWeatherGradient } from '../hooks/useWeatherGradient';
 import { WaitingScreen } from '../components/screens/WaitingScreen';
-import { WeatherDemo } from '../components/screens/WeatherDemo';
 import { PlayingScreen } from '../components/screens/PlayingScreen';
 
 function App() {
@@ -25,8 +24,8 @@ function App() {
     track,
   } = useRadioPlayer();
 
-  // Obtener gradiente influenciado por el clima real
-  const { gradient: weatherGradient, weatherType, weatherIntensity } = useWeatherGradient(currentStation);
+  // Obtener gradiente (solo hora/ciudad, sin clima)
+  const { gradient: weatherGradient } = useWeatherGradient(currentStation);
 
   // Memoizar callbacks para evitar re-renders innecesarios
   const handleSwipe = useCallback((direction: 'left' | 'right') => {
@@ -46,18 +45,7 @@ function App() {
     onNextTrack: nextStation,
   });
 
-  const isWeatherDemo =
-    typeof window !== 'undefined' &&
-    (window.location.hash.includes('weather-demo') ||
-      (window.location.search && new URLSearchParams(window.location.search).get('demo') === 'weather'));
-
-  if (isWeatherDemo) {
-    return (
-      <div className="min-h-screen bg-paper font-sans safe-area">
-        <WeatherDemo />
-      </div>
-    );
-  }
+  
 
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
@@ -74,9 +62,7 @@ function App() {
         />
 
         <div className="flex-1 w-full flex flex-col items-start overflow-hidden min-h-0">
-          {isWeatherDemo ? (
-            <WeatherDemo />
-          ) : currentStation ? (
+          {currentStation ? (
             <PlayingScreen
               key={currentStation.id || currentStation.name}
               stationName={headerName}
@@ -89,8 +75,6 @@ function App() {
               coverImage={coverArt}
               timezone={currentStation.timezone}
               isPlaying={isPlaying}
-              weatherType={weatherType || undefined}
-              weatherIntensity={weatherIntensity}
               onToggle={togglePlay}
               onSwipe={handleSwipe}
             >

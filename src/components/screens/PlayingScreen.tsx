@@ -16,8 +16,6 @@ interface PlayingScreenProps {
   coverGradient?: string;
   coverImage?: string;
   timezone?: string;
-  weatherType?: 'sunny' | 'cloudy' | 'rainy' | 'foggy' | 'stormy' | 'snowy';
-  weatherIntensity?: number;
   isPlaying: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
@@ -34,8 +32,6 @@ export const PlayingScreen = memo(({
   coverGradient,
   coverImage,
   timezone,
-  weatherType,
-  weatherIntensity,
   isPlaying,
   onToggle,
   onSwipe,
@@ -272,9 +268,7 @@ export const PlayingScreen = memo(({
             }
             onToggle();
           }}
-          className={`playing-screen-cover cursor-pointer ${weatherType ? `weather-${weatherType}` : ''} ${
-            (weatherIntensity ?? 0.5) < 0.4 ? 'intensity-low' : (weatherIntensity ?? 0.5) < 0.7 ? 'intensity-mid' : 'intensity-high'
-          }`}
+          className="playing-screen-cover cursor-pointer"
           style={{
             background: coverGradient || DEFAULT_GRADIENTS.PLAYING,
             backgroundSize: '100% 100%',
