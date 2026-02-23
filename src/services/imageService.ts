@@ -31,6 +31,24 @@ function getTimeOfDay(hour: number): 'dawn' | 'day' | 'dusk' | 'night' {
   return 'night';                               // 8 PM-5 AM: Noche
 }
 
+function getAngleForTimeOfDay(time: 'dawn' | 'day' | 'dusk' | 'night'): number {
+  switch (time) {
+    case 'dawn': return 120;
+    case 'day': return 135;
+    case 'dusk': return 150;
+    case 'night': return 160;
+  }
+}
+
+function getMidStopForTimeOfDay(time: 'dawn' | 'day' | 'dusk' | 'night'): number {
+  switch (time) {
+    case 'dawn': return 40;
+    case 'day': return 50;
+    case 'dusk': return 60;
+    case 'night': return 50;
+  }
+}
+
 /**
  * Detecta si el sistema está en modo oscuro
  * @returns true si está en dark mode
@@ -116,12 +134,14 @@ export function getCityGradientFallback(city: string, timezone?: string): string
   const hour = timezone ? getHourInTimezone(timezone) : new Date().getHours();
   const timeOfDay = getTimeOfDay(hour);
   const colors = getTimeBasedColors(timeOfDay, city);
+  const angle = getAngleForTimeOfDay(timeOfDay);
+  const midStop = getMidStopForTimeOfDay(timeOfDay);
 
   // Color intermedio para representar mejor la transición de la hora
   const midHue = Math.round((colors.hue1 + colors.hue2) / 2);
   const midLight = Math.round((colors.light1 + colors.light2) / 2);
 
-  return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${midHue}, ${colors.sat}%, ${midLight}%) 50%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
+  return `linear-gradient(${angle}deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${midHue}, ${colors.sat}%, ${midLight}%) ${midStop}%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
 }
 
 /**
@@ -145,6 +165,8 @@ export function getWeatherInfluencedGradient(
   const hour = getHourInTimezone(timezone);
   const timeOfDay = getTimeOfDay(hour);
   const baseColors = getTimeBasedColors(timeOfDay, city);
+  const angle = getAngleForTimeOfDay(timeOfDay);
+  const midStop = getMidStopForTimeOfDay(timeOfDay);
 
   // Aplicar efectos del clima
   const adjustedColors = {
@@ -166,6 +188,5 @@ export function getWeatherInfluencedGradient(
   const midHue = Math.round((adjustedColors.hue1 + adjustedColors.hue2) / 2);
   const midLight = Math.round((adjustedColors.light1 + adjustedColors.light2) / 2);
 
-  return `linear-gradient(135deg, hsl(${Math.round(adjustedColors.hue1)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light1)}%) 0%, hsl(${midHue}, ${Math.round(adjustedColors.sat)}%, ${midLight}%) 50%, hsl(${Math.round(adjustedColors.hue2)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light2)}%) 100%)`;
+  return `linear-gradient(${angle}deg, hsl(${Math.round(adjustedColors.hue1)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light1)}%) 0%, hsl(${midHue}, ${Math.round(adjustedColors.sat)}%, ${midLight}%) ${midStop}%, hsl(${Math.round(adjustedColors.hue2)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light2)}%) 100%)`;
 }
-
