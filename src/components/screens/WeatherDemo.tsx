@@ -2,9 +2,9 @@ import { memo, useMemo } from 'react';
 import { weatherToGradientParams } from '../../services/weatherService';
 import { getWeatherInfluencedGradient } from '../../services/imageService';
 
-type WeatherType = 'sunny' | 'cloudy' | 'rainy' | 'foggy' | 'stormy' | 'snowy';
+type WeatherType = 'sunny' | 'cloudy' | 'rainy' | 'foggy' | 'stormy' | 'snowy' | 'windy';
 
-const TYPES: WeatherType[] = ['sunny', 'cloudy', 'rainy', 'foggy', 'stormy', 'snowy'];
+const TYPES: WeatherType[] = ['sunny', 'cloudy', 'rainy', 'foggy', 'stormy', 'snowy', 'windy'];
 const INTENSITIES = [0.3, 0.6, 0.9];
 
 export const WeatherDemo = memo(() => {

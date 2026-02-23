@@ -51,6 +51,14 @@ function App() {
     (window.location.hash.includes('weather-demo') ||
       (window.location.search && new URLSearchParams(window.location.search).get('demo') === 'weather'));
 
+  if (isWeatherDemo) {
+    return (
+      <div className="min-h-screen bg-paper font-sans safe-area">
+        <WeatherDemo />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
       <div

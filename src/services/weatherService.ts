@@ -17,7 +17,7 @@ const CITY_COORDINATES: Record<string, { lat: number; lon: number }> = {
 
 // Mapeo de códigos WMO a condiciones simplificadas
 interface WeatherCondition {
-  type: 'sunny' | 'cloudy' | 'rainy' | 'foggy' | 'stormy' | 'snowy';
+  type: 'sunny' | 'cloudy' | 'rainy' | 'foggy' | 'stormy' | 'snowy' | 'windy';
   description: string;
   intensity: number; // 0-1
 }
@@ -111,6 +111,7 @@ export async function getCurrentWeather(location: string): Promise<WeatherCondit
     const weatherCode = data.current_weather.weathercode;
     const isDay = data.current_weather.is_day === 1;
     const temp = data.current_weather.temperature;
+    const windspeed = data.current_weather.windspeed;
 
     // Determinar condición base
     const condition = WMO_WEATHER_CODES[weatherCode] || { type: 'cloudy', desc: 'Unknown' };
@@ -123,6 +124,12 @@ export async function getCurrentWeather(location: string): Promise<WeatherCondit
     if (!isDay && type === 'sunny') {
       type = 'cloudy'; // Cielo despejado nocturno (menos saturado)
       intensity = 0.3;
+    }
+
+    // Detectar viento fuerte
+    if (windspeed >= 35) {
+      type = 'windy';
+      intensity = Math.min(1, Math.max(0.3, windspeed / 100 + 0.2));
     }
 
     // Ajustar intensidad según temperatura
@@ -169,6 +176,7 @@ export function weatherToGradientParams(condition: WeatherCondition): {
     foggy: { saturation: 0.6, lightness: 1.0, warmth: -10, blueShift: 5 },
     stormy: { saturation: 1.3, lightness: 0.7, warmth: -20, blueShift: 10 },
     snowy: { saturation: 0.5, lightness: 1.3, warmth: -25, blueShift: 15 },
+    windy: { saturation: 1.0, lightness: 0.95, warmth: -5, blueShift: 5 },
   };
 
   const base = baseParams[condition.type];
