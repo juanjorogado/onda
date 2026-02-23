@@ -37,6 +37,7 @@ function App() {
   useMediaSession({
     track,
     stationName: headerName,
+    fallbackGradient: weatherGradient || undefined,
     isPlaying,
     onPlay: togglePlay,
     onPause: togglePlay,

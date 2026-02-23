@@ -117,7 +117,11 @@ export function getCityGradientFallback(city: string, timezone?: string): string
   const timeOfDay = getTimeOfDay(hour);
   const colors = getTimeBasedColors(timeOfDay, city);
 
-  return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
+  // Color intermedio para representar mejor la transición de la hora
+  const midHue = Math.round((colors.hue1 + colors.hue2) / 2);
+  const midLight = Math.round((colors.light1 + colors.light2) / 2);
+
+  return `linear-gradient(135deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${midHue}, ${colors.sat}%, ${midLight}%) 50%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
 }
 
 /**
@@ -158,7 +162,10 @@ export function getWeatherInfluencedGradient(
     adjustedColors.hue2 = adjustedColors.hue2 + ((blue - adjustedColors.hue2) * weatherParams.blueShift / 100);
   }
 
-  return `linear-gradient(135deg, hsl(${Math.round(adjustedColors.hue1)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light1)}%) 0%, hsl(${Math.round(adjustedColors.hue2)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light2)}%) 100%)`;
-}
+  // Color intermedio influenciado por el clima
+  const midHue = Math.round((adjustedColors.hue1 + adjustedColors.hue2) / 2);
+  const midLight = Math.round((adjustedColors.light1 + adjustedColors.light2) / 2);
 
+  return `linear-gradient(135deg, hsl(${Math.round(adjustedColors.hue1)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light1)}%) 0%, hsl(${midHue}, ${Math.round(adjustedColors.sat)}%, ${midLight}%) 50%, hsl(${Math.round(adjustedColors.hue2)}, ${Math.round(adjustedColors.sat)}%, ${Math.round(adjustedColors.light2)}%) 100%)`;
+}
 
