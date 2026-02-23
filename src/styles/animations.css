@@ -193,6 +193,45 @@
   }
 }
 
+/* Weather overlays */
+@keyframes rain-move {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
 
+@keyframes snow-fall {
+  0% {
+    background-position: 0% -100%;
+  }
+  100% {
+    background-position: 0% 200%;
+  }
+}
+
+@keyframes wind-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes lightning-flicker {
+  0%, 100% { opacity: 0; }
+  45% { opacity: 0; }
+  50% { opacity: 0.9; }
+  55% { opacity: 0; }
+  70% { opacity: 0; }
+  75% { opacity: 0.6; }
+  80% { opacity: 0; }
+}
 
 

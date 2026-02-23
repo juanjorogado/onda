@@ -25,7 +25,7 @@ function App() {
   } = useRadioPlayer();
 
   // Obtener gradiente influenciado por el clima real
-  const { gradient: weatherGradient } = useWeatherGradient(currentStation);
+  const { gradient: weatherGradient, weatherType, weatherIntensity } = useWeatherGradient(currentStation);
 
   // Memoizar callbacks para evitar re-renders innecesarios
   const handleSwipe = useCallback((direction: 'left' | 'right') => {
@@ -73,6 +73,8 @@ function App() {
               coverImage={coverArt}
               timezone={currentStation.timezone}
               isPlaying={isPlaying}
+              weatherType={weatherType || undefined}
+              weatherIntensity={weatherIntensity}
               onToggle={togglePlay}
               onSwipe={handleSwipe}
             >

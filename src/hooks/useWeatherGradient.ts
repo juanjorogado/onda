@@ -6,6 +6,8 @@ import { getCityGradientFallback, getWeatherInfluencedGradient } from '../servic
 interface WeatherGradientState {
   gradient: string;
   weatherDescription: string | null;
+  weatherType: 'sunny' | 'cloudy' | 'rainy' | 'foggy' | 'stormy' | 'snowy' | null;
+  weatherIntensity: number; // 0-1
   isLoading: boolean;
 }
 
@@ -18,12 +20,14 @@ export function useWeatherGradient(station: Station | null): WeatherGradientStat
   const [state, setState] = useState<WeatherGradientState>({
     gradient: station ? getCityGradientFallback(station.location, station.timezone) : '',
     weatherDescription: null,
+    weatherType: null,
+    weatherIntensity: 0.5,
     isLoading: false,
   });
 
   const updateGradient = useCallback(async () => {
     if (!station) {
-      setState({ gradient: '', weatherDescription: null, isLoading: false });
+      setState({ gradient: '', weatherDescription: null, weatherType: null, weatherIntensity: 0.5, isLoading: false });
       return;
     }
 
@@ -45,6 +49,8 @@ export function useWeatherGradient(station: Station | null): WeatherGradientStat
         setState({
           gradient,
           weatherDescription: `${weather.description} (${weather.type})`,
+          weatherType: weather.type,
+          weatherIntensity: weather.intensity,
           isLoading: false,
         });
       } else {
@@ -53,6 +59,8 @@ export function useWeatherGradient(station: Station | null): WeatherGradientStat
         setState({
           gradient,
           weatherDescription: null,
+          weatherType: null,
+          weatherIntensity: 0.5,
           isLoading: false,
         });
       }
@@ -63,6 +71,8 @@ export function useWeatherGradient(station: Station | null): WeatherGradientStat
       setState({
         gradient,
         weatherDescription: null,
+        weatherType: null,
+        weatherIntensity: 0.5,
         isLoading: false,
       });
     }
