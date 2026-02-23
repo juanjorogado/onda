@@ -4,6 +4,7 @@ import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
 import { useWeatherGradient } from '../hooks/useWeatherGradient';
 import { WaitingScreen } from '../components/screens/WaitingScreen';
+import { WeatherDemo } from '../components/screens/WeatherDemo';
 import { PlayingScreen } from '../components/screens/PlayingScreen';
 
 function App() {
@@ -45,6 +46,11 @@ function App() {
     onNextTrack: nextStation,
   });
 
+  const isWeatherDemo =
+    typeof window !== 'undefined' &&
+    (window.location.hash.includes('weather-demo') ||
+      (window.location.search && new URLSearchParams(window.location.search).get('demo') === 'weather'));
+
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
       <div
@@ -60,7 +66,9 @@ function App() {
         />
 
         <div className="flex-1 w-full flex flex-col items-start overflow-hidden min-h-0">
-          {currentStation ? (
+          {isWeatherDemo ? (
+            <WeatherDemo />
+          ) : currentStation ? (
             <PlayingScreen
               key={currentStation.id || currentStation.name}
               stationName={headerName}
