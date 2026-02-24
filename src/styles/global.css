@@ -903,11 +903,12 @@ body {
 
 @media (orientation: landscape) {
   .playing-screen-container {
-    background: transparent;
+    background-color: var(--color-dark-bg); /* Fallback oscuro por si el bg falla */
   }
 
   .playing-screen-landscape-bg {
     display: block;
+    background-color: var(--color-dark-bg); /* Fondo base para el blur */
   }
 
   .playing-screen-board {

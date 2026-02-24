@@ -89,22 +89,31 @@ export const PlayingScreen = memo(({
 
   // Calcular el brillo del fondo para el contraste de texto
   useEffect(() => {
+    let isMounted = true;
     const checkBrightness = async () => {
-      let brightness = 128; // Brillo medio por defecto
-      
-      if (coverImage) {
-        brightness = await getImageBrightness(coverImage);
-      } else if (coverGradient) {
-        brightness = getGradientBrightness(coverGradient);
-      } else {
-        brightness = getGradientBrightness(DEFAULT_GRADIENTS.PLAYING);
+      try {
+        let brightness = 128; // Brillo medio por defecto
+        
+        if (coverImage) {
+          brightness = await getImageBrightness(coverImage);
+        } else if (coverGradient) {
+          brightness = getGradientBrightness(coverGradient);
+        } else {
+          brightness = getGradientBrightness(DEFAULT_GRADIENTS.PLAYING);
+        }
+        
+        if (isMounted) {
+          // Brillo relativo > 128 se considera claro
+          setIsLight(brightness > 128);
+        }
+      } catch (error) {
+        console.error('[PlayingScreen] Error checking brightness:', error);
+        if (isMounted) setIsLight(false);
       }
-      
-      // Brillo relativo > 128 se considera claro
-      setIsLight(brightness > 128);
     };
     
     checkBrightness();
+    return () => { isMounted = false; };
   }, [coverImage, coverGradient]);
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
@@ -226,11 +235,9 @@ export const PlayingScreen = memo(({
       <div 
         className="playing-screen-landscape-bg"
         style={{
-          backgroundImage: coverImage ? `url(${coverImage})` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(60px) brightness(0.8)',
-          opacity: 0.4
+          background: coverImage ? `url(${coverImage}) center/cover no-repeat` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
+          filter: 'blur(60px) brightness(0.7)',
+          opacity: 0.6
         }}
       />
       <div 
