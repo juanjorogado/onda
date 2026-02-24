@@ -803,6 +803,7 @@ body {
   z-index: var(--z-index-base);
   pointer-events: none;
   mix-blend-mode: overlay;
+  overflow: hidden;
 }
 
 
@@ -880,6 +881,8 @@ body {
   animation: cover-fade-in var(--duration-normal) var(--easing-smooth);
   transition: opacity var(--duration-fast) var(--easing-smooth);
   will-change: opacity;
+  border-radius: var(--radius-cover);
+  overflow: hidden;
 }
 
 .playing-screen-cover-content {

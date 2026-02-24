@@ -9,6 +9,7 @@ const TRANSITION_DURATION = 400; // ms
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hasError, setHasError] = useState<boolean>(false);
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Hook de feedback háptico para mejor UX en coche
@@ -69,7 +70,14 @@ export function useRadioPlayer() {
     changeStation(newIndex);
   }, [currentIndex, changeStation]);
 
-  const handleAudioError = useCallback(() => nextStation(), [nextStation]);
+  const handleAudioError = useCallback(() => {
+    setHasError(true);
+    // Auto-skip después de 2 segundos si no se reintenta
+    setTimeout(() => {
+      setHasError(false);
+      nextStation();
+    }, 2000);
+  }, [nextStation]);
   const handleAudioEnded = useCallback(() => setIsPlaying(false), [setIsPlaying]);
 
   // Memoizar valores derivados
@@ -83,6 +91,7 @@ export function useRadioPlayer() {
     audioRef,
     isPlaying,
     isTransitioning,
+    hasError,
     togglePlay,
     nextStation,
     prevStation,

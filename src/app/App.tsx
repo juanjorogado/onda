@@ -3,6 +3,7 @@ import { useWakeLock } from '../hooks/audio/useWakeLock';
 import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
 import { useWeatherGradient } from '../hooks/useWeatherGradient';
+import { DEFAULT_GRADIENTS } from '../constants';
 import { WaitingScreen } from '../components/screens/WaitingScreen';
 import { PlayingScreen } from '../components/screens/PlayingScreen';
 
@@ -27,6 +28,8 @@ function App() {
   // Obtener gradiente (solo hora/ciudad, sin clima)
   const { gradient: weatherGradient } = useWeatherGradient(currentStation);
 
+  const coverGradient = weatherGradient || DEFAULT_GRADIENTS.PLAYING;
+
   // Memoizar callbacks para evitar re-renders innecesarios
   const handleSwipe = useCallback((direction: 'left' | 'right') => {
     if (direction === 'left') nextStation();
@@ -37,7 +40,7 @@ function App() {
   useMediaSession({
     track,
     stationName: headerName,
-    fallbackGradient: weatherGradient || undefined,
+    fallbackGradient: coverGradient,
     isPlaying,
     onPlay: togglePlay,
     onPause: togglePlay,
