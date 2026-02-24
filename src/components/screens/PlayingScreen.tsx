@@ -290,7 +290,7 @@ export const PlayingScreen = memo(({
                 left: 0,
                 right: 0,
                 bottom: 0,
-                borderRadius: 'var(--radius-22px)',
+                borderRadius: 'var(--radius-cover)',
                 zIndex: 1
               }}
               key={coverImage}
