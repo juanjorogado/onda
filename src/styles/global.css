@@ -231,8 +231,13 @@ body {
 }
 
 @media (orientation: landscape) {
+  .bg-paper {
+    background-color: transparent;
+  }
+
   .max-w-md {
     max-width: 100%;
+    background-color: transparent;
   }
 
   .mx-auto {
@@ -581,6 +586,27 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+.playing-screen-landscape-bg {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  transform: scale(1.1); /* Evitar bordes blancos por el blur */
+}
+
+/* Contraste dinámico de texto */
+.playing-screen-container[data-brightness="light"] {
+  --color-ink: var(--color-black);
+}
+
+.playing-screen-container[data-brightness="dark"] {
+  --color-ink: var(--color-white);
+}
+
 .playing-screen-container.swiping-vertical {
   overflow-y: hidden;
   touch-action: none;
@@ -876,6 +902,14 @@ body {
 }
 
 @media (orientation: landscape) {
+  .playing-screen-container {
+    background: transparent;
+  }
+
+  .playing-screen-landscape-bg {
+    display: block;
+  }
+
   .playing-screen-board {
     max-width: 100%;
     display: grid;
@@ -884,6 +918,7 @@ body {
     column-gap: var(--spacing-4);
     row-gap: var(--spacing-6);
     align-items: stretch;
+    z-index: 10;
   }
 
   .playing-screen-station {

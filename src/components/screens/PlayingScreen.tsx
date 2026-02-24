@@ -5,6 +5,7 @@ import { extractCity } from '../../utils/extractCity';
 import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
+import { getImageBrightness, getGradientBrightness } from '../../utils/getBrightness';
 
 interface PlayingScreenProps {
   stationName: string;
@@ -50,6 +51,7 @@ export const PlayingScreen = memo(({
   const boardRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef(0);
   const containerHeight = useRef(0);
+  const [isLight, setIsLight] = useState(false);
 
   // Hook de feedback háptico para mejor UX en coche
   const { play, pause, swipe } = useHapticFeedback();
@@ -84,6 +86,26 @@ export const PlayingScreen = memo(({
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
+
+  // Calcular el brillo del fondo para el contraste de texto
+  useEffect(() => {
+    const checkBrightness = async () => {
+      let brightness = 128; // Brillo medio por defecto
+      
+      if (coverImage) {
+        brightness = await getImageBrightness(coverImage);
+      } else if (coverGradient) {
+        brightness = getGradientBrightness(coverGradient);
+      } else {
+        brightness = getGradientBrightness(DEFAULT_GRADIENTS.PLAYING);
+      }
+      
+      // Brillo relativo > 128 se considera claro
+      setIsLight(brightness > 128);
+    };
+    
+    checkBrightness();
+  }, [coverImage, coverGradient]);
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;
@@ -198,7 +220,19 @@ export const PlayingScreen = memo(({
   return (
     <div 
       className={`playing-screen-container ${swipeDirection === 'vertical' && isDragging.current ? 'swiping-vertical' : ''}`}
+      data-brightness={isLight ? 'light' : 'dark'}
     >
+      {/* Fondo desenfocado para landscape */}
+      <div 
+        className="playing-screen-landscape-bg"
+        style={{
+          backgroundImage: coverImage ? `url(${coverImage})` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(60px) brightness(0.8)',
+          opacity: 0.4
+        }}
+      />
       <div 
         ref={boardRef}
         className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning' : ''} ${isDragging.current ? 'swipe-dragging' : ''}`}
