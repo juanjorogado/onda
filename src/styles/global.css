@@ -887,14 +887,14 @@ body {
   }
 
   .playing-screen-station {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 1;
     padding-left: 0;
     padding-right: 0;
   }
 
   .playing-screen-cover {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1 / 4;
     max-width: 100%;
     min-height: calc(var(--viewport-height-dynamic) - var(--spacing-26px) - var(--spacing-4));
@@ -903,7 +903,7 @@ body {
   }
 
   .playing-screen-text-container {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 3;
     padding-top: var(--spacing-2);
     padding-bottom: 0;
