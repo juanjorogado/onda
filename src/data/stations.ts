@@ -23,9 +23,27 @@ export const stations: Station[] = [
 
   // --- LONDRES: LA SCENE ALTERNATIVE ---
   {
+    id: 'worldwide-fm',
+    name: 'Worldwide FM',
+    url: 'https://worldwidefm.net/stream',
+    genre: 'Global / Jazz / Eclectic',
+    location: 'London, UK',
+    timezone: 'Europe/London',
+    cover: 'https://worldwidefm.net/assets/img/logo.png'
+  },
+  {
+    id: 'nts-2',
+    name: 'NTS Radio 2',
+    url: 'https://stream-relay-geo.ntslive.net/stream2',
+    genre: 'Experimental / Underground / Global',
+    location: 'London, UK',
+    timezone: 'Europe/London',
+    cover: 'https://www.nts.live/assets/logos/nts-logo-black.png'
+  },
+  {
     id: 'resonance-fm',
     name: 'Resonance FM',
-    url: 'https://stream.resonance.fm/resonance',
+    url: 'http://stream.resonance.fm:8000/resonance',
     genre: 'Experimental / Sound Art / Community',
     location: 'London, UK',
     timezone: 'Europe/London',
@@ -40,25 +58,14 @@ export const stations: Station[] = [
     timezone: 'Europe/London',
     cover: 'https://ichef.bbci.co.uk/images/ic/192x192/p0bq9rzs.jpg'
   },
-
-  // --- EL TRIDENTE FREEFORM (Estilo WFMU) ---
   {
     id: 'wfmu-fixed',
     name: 'WFMU',
-    url: 'http://stream0.wfmu.org/freeform-128k',
+    url: 'http://stream0.wfmu.org/freeform-128k.mp3',
     genre: 'Freeform / Eclectic / Cult',
     location: 'Jersey City, USA',
     timezone: 'America/New_York',
     cover: 'https://wfmu.org/images/wfmu-logo.png'
-  },
-  {
-    id: 'dublab',
-    name: 'Dublab',
-    url: 'https://dublab.out.airtime.pro/dublab_a',
-    genre: 'Freeform / Future Roots',
-    location: 'Los Angeles, USA',
-    timezone: 'America/Los_Angeles',
-    cover: 'https://upload.wikimedia.org/wikipedia/commons/4/42/Dublab_logo.png'
   },
   {
     id: 'kexp',
