@@ -236,11 +236,10 @@ export const PlayingScreen = memo(({
         className="playing-screen-landscape-bg"
         style={{
           background: coverImage ? `url(${coverImage}) center/cover no-repeat` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
-          filter: 'blur(100px) brightness(0.6)',
+          filter: 'blur(40px) brightness(0.6)',
           opacity: 0.8,
           position: 'fixed',
           inset: '-10%',
-          zIndex: -1,
         }}
       />
       <div 
