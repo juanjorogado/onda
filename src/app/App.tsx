@@ -4,6 +4,7 @@ import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
 import { useWeatherGradient } from '../hooks/useWeatherGradient';
 import { DEFAULT_GRADIENTS } from '../constants';
+import { getGradientBrightness } from '../utils/getBrightness';
 import { WaitingScreen } from '../components/screens/WaitingScreen';
 import { PlayingScreen } from '../components/screens/PlayingScreen';
 
@@ -30,6 +31,8 @@ function App() {
 
   const coverGradient = weatherGradient || DEFAULT_GRADIENTS.PLAYING;
 
+  const isLight = getGradientBrightness(coverGradient) > 128;
+
   // Memoizar callbacks para evitar re-renders innecesarios
   const handleSwipe = useCallback((direction: 'left' | 'right') => {
     if (direction === 'left') nextStation();
@@ -53,7 +56,12 @@ function App() {
   return (
     <div className="min-h-screen bg-paper font-sans safe-area">
       <div
-        className="bg-paper text-ink flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
+        className={`bg-paper flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen ${coverArt ? '' : ''}`}
+        style={{
+          background: coverArt ? undefined : coverGradient,
+          backgroundSize: '100% 100%',
+          color: isLight ? '#1a1a1a' : '#ffffff',
+        }}
       >
         <audio
           ref={audioRef}

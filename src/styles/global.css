@@ -772,23 +772,18 @@ body {
   flex-shrink: 1;
   flex-grow: 0;
   position: relative;
-  overflow: hidden;
+  overflow: hidden !important;
   animation: scale-in var(--duration-normal) var(--easing-smooth) var(--delay-medium) both;
   transition: transform var(--duration-faster) var(--easing-smooth), background var(--duration-fast) var(--easing-smooth);
-}
-
-.playing-screen-cover:active {
-  animation: pulse var(--duration-faster) var(--easing-smooth);
-  transform: scale(var(--animation-scale-pulse));
 }
 
 .playing-screen-cover::before {
   content: '';
   position: absolute;
-  top: var(--animation-overflow-top);
-  left: var(--animation-overflow-left);
-  width: var(--animation-overflow-width);
-  height: var(--animation-overflow-height);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: radial-gradient(
     ellipse at center,
     var(--gradient-overlay-white-start) 0%,
@@ -796,7 +791,7 @@ body {
     var(--gradient-overlay-black-mid) 60%,
     var(--gradient-overlay-black-end) 100%
   );
-  background-size: var(--animation-background-size) var(--animation-background-size);
+  background-size: 200% 200%;
   border-radius: var(--radius-cover);
   animation: gradient-shift var(--duration-slower) var(--easing-gentle) infinite;
   opacity: 1;
@@ -819,6 +814,7 @@ body {
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: var(--z-index-content);
+  border-radius: var(--radius-cover);
 }
 .playing-screen-cover.weather-windy.intensity-low::after { animation-duration: 14s; }
 .playing-screen-cover.weather-windy.intensity-mid::after { animation-duration: 10s; }
@@ -833,6 +829,7 @@ body {
   pointer-events: none;
   mix-blend-mode: screen;
   z-index: var(--z-index-content);
+  border-radius: var(--radius-cover);
 }
 .playing-screen-cover.weather-stormy.intensity-low::after { animation-duration: 8s; }
 .storm-flash {
