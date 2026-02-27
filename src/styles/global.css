@@ -160,7 +160,7 @@
 }
 
 /* ==========================================================================
-   Dark theme
+   Dark theme & Contrast
    ========================================================================== */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -169,6 +169,17 @@
     --color-background: var(--color-dark-bg);
     --color-text-primary: var(--color-white);
   }
+}
+
+/* Contrast based on background brightness */
+[data-brightness="light"] {
+  --color-ink: var(--color-black) !important;
+  --color-text-primary: var(--color-black) !important;
+}
+
+[data-brightness="dark"] {
+  --color-ink: var(--color-white) !important;
+  --color-text-primary: var(--color-white) !important;
 }
 
 /* ==========================================================================
@@ -738,10 +749,13 @@ body {
 
 .playing-screen-station-name-book {
   font-weight: var(--font-weight-book);
+  color: var(--color-ink);
 }
 
 .playing-screen-station-name-light {
   font-weight: var(--font-weight-light);
+  color: var(--color-ink);
+  opacity: 0.6;
 }
 
 .playing-screen-time {
