@@ -94,6 +94,8 @@ export const PlayingScreen = memo(({
       try {
         let brightness = 128; // Brillo medio por defecto
         
+        // Prioridad: el fondo real que ve el usuario.
+        // En modo portrait, el fondo es coverImage (desenfocado) si existe, o el gradiente.
         if (coverImage) {
           brightness = await getImageBrightness(coverImage);
         } else if (coverGradient) {
@@ -103,8 +105,11 @@ export const PlayingScreen = memo(({
         }
         
         if (isMounted) {
-          // Brillo relativo > 128 se considera claro
-          setIsLight(brightness > 128);
+          // El umbral de 128 (50% de brillo) suele ser demasiado bajo para blanco puro.
+          // Muchas veces el texto blanco se lee mal en colores pastel claros.
+          // Subimos el umbral a 160 para forzar texto negro antes en fondos claros.
+          const lightThreshold = 160;
+          setIsLight(brightness > lightThreshold);
         }
       } catch (error) {
         console.error('[PlayingScreen] Error checking brightness:', error);
@@ -241,7 +246,6 @@ export const PlayingScreen = memo(({
           position: 'fixed',
           inset: '-10%',
         }}
-        data-brightness={isLight ? 'light' : 'dark'}
       />
       <div 
         ref={boardRef}

@@ -172,34 +172,26 @@
 }
 
 /* Contrast based on background brightness */
-[data-brightness="light"],
-[data-brightness="light"] span,
-[data-brightness="light"] div,
-[data-brightness="light"] h1,
-[data-brightness="light"] h2,
-.playing-screen-container[data-brightness="light"] .text-ink,
-.playing-screen-container[data-brightness="light"] .playing-screen-time,
-.playing-screen-container[data-brightness="light"] .playing-screen-station-name-book,
-.playing-screen-container[data-brightness="light"] .playing-screen-station-name-light,
-.playing-screen-container[data-brightness="light"] .marquee span {
-  --color-ink: #000000 !important;
-  --color-text-primary: #000000 !important;
-  color: #000000 !important;
+[data-brightness="light"] {
+  --color-ink: #000000;
+  --color-text-primary: #000000;
 }
 
-[data-brightness="dark"],
-[data-brightness="dark"] span,
-[data-brightness="dark"] div,
-[data-brightness="dark"] h1,
-[data-brightness="dark"] h2,
-.playing-screen-container[data-brightness="dark"] .text-ink,
-.playing-screen-container[data-brightness="dark"] .playing-screen-time,
-.playing-screen-container[data-brightness="dark"] .playing-screen-station-name-book,
-.playing-screen-container[data-brightness="dark"] .playing-screen-station-name-light,
-.playing-screen-container[data-brightness="dark"] .marquee span {
-  --color-ink: #FFFFFF !important;
-  --color-text-primary: #FFFFFF !important;
-  color: #FFFFFF !important;
+[data-brightness="dark"] {
+  --color-ink: #FFFFFF;
+  --color-text-primary: #FFFFFF;
+}
+
+/* Force colors on specific elements to ensure contrast */
+[data-brightness] h1,
+[data-brightness] h2,
+[data-brightness] .text-ink,
+[data-brightness] .playing-screen-time,
+[data-brightness] .playing-screen-station-name,
+[data-brightness] .playing-screen-station-name-book,
+[data-brightness] .playing-screen-station-name-light,
+[data-brightness] .marquee span {
+  color: var(--color-ink) !important;
 }
 
 /* ==========================================================================
@@ -769,12 +761,10 @@ body {
 
 .playing-screen-station-name-book {
   font-weight: var(--font-weight-book);
-  color: var(--color-ink);
 }
 
 .playing-screen-station-name-light {
   font-weight: var(--font-weight-light);
-  color: var(--color-ink);
   opacity: 0.6;
 }
 

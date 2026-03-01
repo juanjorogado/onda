@@ -31,8 +31,6 @@ function App() {
 
   const coverGradient = weatherGradient || DEFAULT_GRADIENTS.PLAYING;
 
-  const isLight = getGradientBrightness(coverGradient) > 128;
-
   // Memoizar callbacks para evitar re-renders innecesarios
   const handleSwipe = useCallback((direction: 'left' | 'right') => {
     if (direction === 'left') nextStation();
@@ -61,7 +59,6 @@ function App() {
           background: coverArt ? undefined : coverGradient,
           backgroundSize: '100% 100%',
         }}
-        data-brightness={isLight ? 'light' : 'dark'}
       >
         <audio
           ref={audioRef}
