@@ -1,36 +1,8 @@
 import { Station } from '../types/station';
 
 export const stations: Station[] = [
-  // --- JAPÓN: LA EXQUISITEZ ---
-  {
-    id: 'listen-moe',
-    name: 'Listen.moe',
-    url: 'https://listen.moe/stream',
-    genre: 'Anime / J-Pop / J-Rock',
-    location: 'Tokyo, Japan',
-    timezone: 'Asia/Tokyo',
-    cover: 'https://listen.moe/assets/img/logo.png'
-  },
-  {
-    id: 'jazz-sakura',
-    name: 'Jazz Sakura',
-    url: 'https://music.vdfm.ru:8000/sakura',
-    genre: 'Japanese Jazz / Piano / Chill',
-    location: 'Kyoto, Japan',
-    timezone: 'Asia/Tokyo',
-    cover: 'https://cdn.webradiocontrol.com/stations/jazz-sakura/logo.png'
-  },
 
   // --- LONDRES: LA SCENE ALTERNATIVE ---
-  {
-    id: 'worldwide-fm',
-    name: 'Worldwide FM',
-    url: 'https://worldwidefm.net/stream',
-    genre: 'Global / Jazz / Eclectic',
-    location: 'London, UK',
-    timezone: 'Europe/London',
-    cover: 'https://worldwidefm.net/assets/img/logo.png'
-  },
   {
     id: 'nts-2',
     name: 'NTS Radio 2',
@@ -43,7 +15,7 @@ export const stations: Station[] = [
   {
     id: 'resonance-fm',
     name: 'Resonance FM',
-    url: 'http://stream.resonance.fm:8000/resonance',
+    url: 'https://stream.resonance.fm:8000/resonance',
     genre: 'Experimental / Sound Art / Community',
     location: 'London, UK',
     timezone: 'Europe/London',
@@ -61,7 +33,7 @@ export const stations: Station[] = [
   {
     id: 'wfmu-fixed',
     name: 'WFMU',
-    url: 'http://stream0.wfmu.org/freeform-128k.mp3',
+    url: 'https://stream0.wfmu.org/freeform-128k.mp3',
     genre: 'Freeform / Eclectic / Cult',
     location: 'Jersey City, USA',
     timezone: 'America/New_York',
@@ -106,15 +78,6 @@ export const stations: Station[] = [
     location: 'Paris, France',
     timezone: 'Europe/Paris',
     cover: 'https://www.radiofrance.fr/francemusique/sites/default/files/2021-11/logo-france-musique.svg'
-  },
-  {
-    id: 'france-culture',
-    name: 'France Culture',
-    url: 'http://icecast.radiofrance.fr/franceculture-midfi.mp3',
-    genre: 'Culture / Documentary / Ideas',
-    location: 'Paris, France',
-    timezone: 'Europe/Paris',
-    cover: 'https://www.radiofrance.fr/franceculture/sites/default/files/2021-11/logo-france-culture.svg'
   },
 
   // --- EUROPA BOUTIQUE ---

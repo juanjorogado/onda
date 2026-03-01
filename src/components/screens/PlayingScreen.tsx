@@ -5,7 +5,7 @@ import { extractCity } from '../../utils/extractCity';
 import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
-import { getImageBrightness, getGradientBrightness } from '../../utils/getBrightness';
+import { getImageBrightness } from '../../utils/getBrightness';
 
 interface PlayingScreenProps {
   stationName: string;
@@ -90,36 +90,59 @@ export const PlayingScreen = memo(({
   // Calcular el brillo del fondo para el contraste de texto
   useEffect(() => {
     let isMounted = true;
-    const checkBrightness = async () => {
-      try {
-        let brightness = 128; // Brillo medio por defecto
-        
-        // Prioridad: el fondo real que ve el usuario.
-        // En modo portrait, el fondo es coverImage (desenfocado) si existe, o el gradiente.
-        if (coverImage) {
-          brightness = await getImageBrightness(coverImage);
-        } else if (coverGradient) {
-          brightness = getGradientBrightness(coverGradient);
-        } else {
-          brightness = getGradientBrightness(DEFAULT_GRADIENTS.PLAYING);
+    let mediaQuery: MediaQueryList | null = null;
+    
+    const checkContrast = async () => {
+      // Por defecto: usar modo del sistema
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isLandscape = window.innerWidth > window.innerHeight;
+      
+      // Solo calcular brillo si hay cover Y está en landscape
+      if (coverImage && isLandscape) {
+        try {
+          const brightness = await getImageBrightness(coverImage);
+          if (isMounted) {
+            // Brillo > 128 = fondo claro → texto negro
+            // Brillo ≤ 128 = fondo oscuro → texto blanco
+            setIsLight(brightness <= 128);
+          }
+        } catch {
+          if (isMounted) {
+            setIsLight(!prefersDark);
+          }
         }
-        
+      } else {
+        // Sin cover o portrait: usar modo del sistema
         if (isMounted) {
-          // El umbral de 128 (50% de brillo) suele ser demasiado bajo para blanco puro.
-          // Muchas veces el texto blanco se lee mal en colores pastel claros.
-          // Subimos el umbral a 160 para forzar texto negro antes en fondos claros.
-          const lightThreshold = 160;
-          setIsLight(brightness > lightThreshold);
+          setIsLight(!prefersDark); // !prefersDark = light mode → true (texto negro)
         }
-      } catch (error) {
-        console.error('[PlayingScreen] Error checking brightness:', error);
-        if (isMounted) setIsLight(false);
       }
     };
     
-    checkBrightness();
-    return () => { isMounted = false; };
-  }, [coverImage, coverGradient]);
+    checkContrast();
+    
+    // Escuchar cambios en orientación
+    mediaQuery = window.matchMedia('(orientation: landscape)');
+    const handleOrientationChange = () => {
+      checkContrast();
+    };
+    mediaQuery.addEventListener('change', handleOrientationChange);
+    
+    // Escuchar cambios en modo del sistema
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleDarkModeChange = () => {
+      checkContrast();
+    };
+    darkModeQuery.addEventListener('change', handleDarkModeChange);
+    
+    return () => {
+      isMounted = false;
+      if (mediaQuery) {
+        mediaQuery.removeEventListener('change', handleOrientationChange);
+      }
+      darkModeQuery.removeEventListener('change', handleDarkModeChange);
+    };
+  }, [coverImage]);
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;

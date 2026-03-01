@@ -76,26 +76,72 @@ export async function getImageBrightness(imageUrl: string): Promise<number> {
 }
 
 /**
- * Parsea un gradiente HSL de ONDA y calcula su brillo promedio
- * @param gradient - String del gradiente (ej: linear-gradient(135deg, hsl(200, 50%, 60%) 0%, ...))
+ * Calcula el brillo relativo de un color en formato RGB
+ */
+export function getRgbBrightness(r: number, g: number, b: number): number {
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * Parsea un gradiente y calcula su brillo promedio soportando HSL, RGB y Hex
+ * @param gradient - String del gradiente
  * @returns Brillo promedio (0-255)
  */
 export function getGradientBrightness(gradient: string): number {
-  // Extraer todos los hsl(...) del gradiente
-  const hslMatches = gradient.match(/hsl\(\s*(\d+),\s*(\d+)%,\s*(\d+)%\s*\)/g);
-  if (!hslMatches) return 128;
-  
   let totalBrightness = 0;
-  hslMatches.forEach(match => {
-    const parts = match.match(/\d+/g);
-    if (parts && parts.length >= 3) {
-      totalBrightness += getHslBrightness(
-        parseInt(parts[0], 10),
-        parseInt(parts[1], 10),
-        parseInt(parts[2], 10)
-      );
-    }
-  });
-  
-  return totalBrightness / hslMatches.length;
+  let count = 0;
+
+  // 1. Buscar HSL: hsl(h, s%, l%)
+  const hslMatches = gradient.match(/hsl\(\s*(\d+),\s*(\d+)%,\s*(\d+)%\s*\)/g);
+  if (hslMatches) {
+    hslMatches.forEach(match => {
+      const parts = match.match(/\d+/g);
+      if (parts && parts.length >= 3) {
+        totalBrightness += getHslBrightness(
+          parseInt(parts[0], 10),
+          parseInt(parts[1], 10),
+          parseInt(parts[2], 10)
+        );
+        count++;
+      }
+    });
+  }
+
+  // 2. Buscar RGB/RGBA: rgb(r, g, b) o rgba(r, g, b, a)
+  const rgbMatches = gradient.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\s*\)/g);
+  if (rgbMatches) {
+    rgbMatches.forEach(match => {
+      const parts = match.match(/\d+/g);
+      if (parts && parts.length >= 3) {
+        totalBrightness += getRgbBrightness(
+          parseInt(parts[0], 10),
+          parseInt(parts[1], 10),
+          parseInt(parts[2], 10)
+        );
+        count++;
+      }
+    });
+  }
+
+  // 3. Buscar Hex: #ffffff o #fff
+  const hexMatches = gradient.match(/#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/g);
+  if (hexMatches) {
+    hexMatches.forEach(match => {
+      let r, g, b;
+      if (match.length === 4) {
+        r = parseInt(match[1] + match[1], 16);
+        g = parseInt(match[2] + match[2], 16);
+        b = parseInt(match[3] + match[3], 16);
+      } else {
+        r = parseInt(match.substring(1, 3), 16);
+        g = parseInt(match.substring(3, 5), 16);
+        b = parseInt(match.substring(5, 7), 16);
+      }
+      totalBrightness += getRgbBrightness(r, g, b);
+      count++;
+    });
+  }
+
+  if (count === 0) return 128; // Fallback
+  return totalBrightness / count;
 }

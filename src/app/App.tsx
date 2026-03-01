@@ -4,7 +4,6 @@ import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
 import { useWeatherGradient } from '../hooks/useWeatherGradient';
 import { DEFAULT_GRADIENTS } from '../constants';
-import { getGradientBrightness } from '../utils/getBrightness';
 import { WaitingScreen } from '../components/screens/WaitingScreen';
 import { PlayingScreen } from '../components/screens/PlayingScreen';
 

@@ -182,18 +182,6 @@
   --color-text-primary: #FFFFFF;
 }
 
-/* Force colors on specific elements to ensure contrast */
-[data-brightness] h1,
-[data-brightness] h2,
-[data-brightness] .text-ink,
-[data-brightness] .playing-screen-time,
-[data-brightness] .playing-screen-station-name,
-[data-brightness] .playing-screen-station-name-book,
-[data-brightness] .playing-screen-station-name-light,
-[data-brightness] .marquee span {
-  color: var(--color-ink) !important;
-}
-
 /* ==========================================================================
    Base elements
    ========================================================================== */
