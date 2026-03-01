@@ -54,14 +54,14 @@ function App() {
   
 
   return (
-    <div className="min-h-screen bg-paper font-sans safe-area">
+    <div className="min-h-screen bg-black font-sans safe-area">
       <div
-        className={`bg-paper flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen ${coverArt ? '' : ''}`}
+        className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
         style={{
           background: coverArt ? undefined : coverGradient,
           backgroundSize: '100% 100%',
-          color: isLight ? '#1a1a1a' : '#ffffff',
         }}
+        data-brightness={isLight ? 'light' : 'dark'}
       >
         <audio
           ref={audioRef}

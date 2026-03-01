@@ -172,14 +172,34 @@
 }
 
 /* Contrast based on background brightness */
-[data-brightness="light"] {
-  --color-ink: var(--color-black) !important;
-  --color-text-primary: var(--color-black) !important;
+[data-brightness="light"],
+[data-brightness="light"] span,
+[data-brightness="light"] div,
+[data-brightness="light"] h1,
+[data-brightness="light"] h2,
+.playing-screen-container[data-brightness="light"] .text-ink,
+.playing-screen-container[data-brightness="light"] .playing-screen-time,
+.playing-screen-container[data-brightness="light"] .playing-screen-station-name-book,
+.playing-screen-container[data-brightness="light"] .playing-screen-station-name-light,
+.playing-screen-container[data-brightness="light"] .marquee span {
+  --color-ink: #000000 !important;
+  --color-text-primary: #000000 !important;
+  color: #000000 !important;
 }
 
-[data-brightness="dark"] {
-  --color-ink: var(--color-white) !important;
-  --color-text-primary: var(--color-white) !important;
+[data-brightness="dark"],
+[data-brightness="dark"] span,
+[data-brightness="dark"] div,
+[data-brightness="dark"] h1,
+[data-brightness="dark"] h2,
+.playing-screen-container[data-brightness="dark"] .text-ink,
+.playing-screen-container[data-brightness="dark"] .playing-screen-time,
+.playing-screen-container[data-brightness="dark"] .playing-screen-station-name-book,
+.playing-screen-container[data-brightness="dark"] .playing-screen-station-name-light,
+.playing-screen-container[data-brightness="dark"] .marquee span {
+  --color-ink: #FFFFFF !important;
+  --color-text-primary: #FFFFFF !important;
+  color: #FFFFFF !important;
 }
 
 /* ==========================================================================
@@ -588,7 +608,7 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--color-paper);
+  background: transparent;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: var(--z-index-base);
@@ -602,10 +622,10 @@ body {
 }
 
 .playing-screen-landscape-bg {
-  display: none;
+  display: block;
   position: fixed;
   inset: -10%;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
   transform: scale(1.1);
 }

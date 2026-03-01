@@ -231,16 +231,17 @@ export const PlayingScreen = memo(({
       className={`playing-screen-container ${swipeDirection === 'vertical' && isDragging.current ? 'swiping-vertical' : ''}`}
       data-brightness={isLight ? 'light' : 'dark'}
     >
-      {/* Fondo desenfocado para landscape */}
+      {/* Fondo desenfocado para todos los modos */}
       <div 
         className="playing-screen-landscape-bg"
         style={{
           background: coverImage ? `url(${coverImage}) center/cover no-repeat` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
-          filter: 'blur(40px) brightness(0.6)',
-          opacity: 0.8,
+          filter: 'blur(60px)',
+          opacity: 0.9,
           position: 'fixed',
           inset: '-10%',
         }}
+        data-brightness={isLight ? 'light' : 'dark'}
       />
       <div 
         ref={boardRef}
