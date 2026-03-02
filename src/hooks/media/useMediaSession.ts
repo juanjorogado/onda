@@ -4,6 +4,7 @@ import { TrackInfo } from '../../types/track';
 interface MediaSessionProps {
   track?: TrackInfo;
   stationName?: string;
+  stationCover?: string;
   fallbackGradient?: string;
   isPlaying: boolean;
   onPlay?: () => void;
@@ -38,6 +39,7 @@ declare global {
 export function useMediaSession({
   track,
   stationName,
+  stationCover,
   fallbackGradient,
   isPlaying,
   onPlay,
@@ -80,28 +82,97 @@ export function useMediaSession({
       }
     };
 
-    const fallbackArtwork = (!track?.cover && fallbackGradient)
-      ? (() => {
-          const big = generateGradientArtwork(fallbackGradient, 512);
-          const small = generateGradientArtwork(fallbackGradient, 192);
-          const artwork = [];
-          if (big) artwork.push({ src: big, sizes: '512x512', type: 'image/png' });
-          if (small) artwork.push({ src: small, sizes: '192x192', type: 'image/png' });
-          return artwork;
-        })()
-      : [];
+    const generateStationLogoArtwork = async (logoUrl: string, size = 512): Promise<string | null> => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return null;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        const imgLoadPromise = new Promise<string>((resolve, reject) => {
+          img.onload = () => resolve(img.src);
+          img.onerror = reject;
+        });
+        
+        img.src = logoUrl;
+        await imgLoadPromise;
+
+        // Detectar modo del sistema
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Fondo según modo
+        ctx.fillStyle = isDarkMode ? '#000000' : '#FFFFFF';
+        ctx.fillRect(0, 0, size, size);
+
+        // Calcular tamaño del logo (mantener aspect ratio, max 80% del canvas)
+        const maxSize = size * 0.8;
+        const scale = Math.min(maxSize / img.width, maxSize / img.height);
+        const drawWidth = img.width * scale;
+        const drawHeight = img.height * scale;
+        const x = (size - drawWidth) / 2;
+        const y = (size - drawHeight) / 2;
+
+        // Dibujar logo
+        if (isDarkMode) {
+          ctx.filter = 'invert(1)';
+        }
+        ctx.drawImage(img, x, y, drawWidth, drawHeight);
+
+        return canvas.toDataURL('image/png');
+      } catch {
+        return null;
+      }
+    };
+
+    // Generar artwork: prioridad = track cover > station logo > gradient
+    const generateArtwork = async () => {
+      // 1. Si hay cover del track, usarlo
+      if (track?.cover) {
+        return [
+          { src: track.cover, sizes: '512x512', type: 'image/png' },
+          { src: track.cover, sizes: '192x192', type: 'image/png' },
+        ];
+      }
+
+      // 2. Si hay logo de la estación, usarlo (con inversión de color según modo)
+      if (stationCover) {
+        try {
+          const logoBig = await generateStationLogoArtwork(stationCover, 512);
+          const logoSmall = await generateStationLogoArtwork(stationCover, 192);
+          const artwork: MediaImage[] = [];
+          if (logoBig) artwork.push({ src: logoBig, sizes: '512x512', type: 'image/png' });
+          if (logoSmall) artwork.push({ src: logoSmall, sizes: '192x192', type: 'image/png' });
+          if (artwork.length > 0) return artwork;
+        } catch {
+          // Fall through to gradient
+        }
+      }
+
+      // 3. Usar gradiente como último fallback
+      if (fallbackGradient) {
+        const big = generateGradientArtwork(fallbackGradient, 512);
+        const small = generateGradientArtwork(fallbackGradient, 192);
+        const artwork: MediaImage[] = [];
+        if (big) artwork.push({ src: big, sizes: '512x512', type: 'image/png' });
+        if (small) artwork.push({ src: small, sizes: '192x192', type: 'image/png' });
+        return artwork;
+      }
+
+      return [];
+    };
 
     // Configurar metadatos
-    mediaSession.metadata = new window.MediaMetadata({
-      title: track?.title || stationName || 'ONDA Radio',
-      artist: track?.artist || stationName || 'Radio en vivo',
-      album: stationName || 'ONDA Radio',
-      artwork: track?.cover
-        ? [
-            { src: track.cover, sizes: '512x512', type: 'image/png' },
-            { src: track.cover, sizes: '192x192', type: 'image/png' },
-          ]
-        : fallbackArtwork,
+    generateArtwork().then((artwork) => {
+      mediaSession.metadata = new window.MediaMetadata({
+        title: track?.title || stationName || 'ONDA Radio',
+        artist: track?.artist || stationName || 'Radio en vivo',
+        album: stationName || 'ONDA Radio',
+        artwork,
+      });
     });
 
     // Configurar acciones
