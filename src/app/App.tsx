@@ -40,7 +40,6 @@ function App() {
   useMediaSession({
     track,
     stationName: headerName,
-    stationCover: currentStation?.cover,
     fallbackGradient: coverGradient,
     isPlaying,
     onPlay: togglePlay,

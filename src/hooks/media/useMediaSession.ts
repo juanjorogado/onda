@@ -4,7 +4,6 @@ import { TrackInfo } from '../../types/track';
 interface MediaSessionProps {
   track?: TrackInfo;
   stationName?: string;
-  stationCover?: string;
   fallbackGradient?: string;
   isPlaying: boolean;
   onPlay?: () => void;
@@ -39,7 +38,6 @@ declare global {
 export function useMediaSession({
   track,
   stationName,
-  stationCover,
   fallbackGradient,
   isPlaying,
   onPlay,
@@ -82,7 +80,73 @@ export function useMediaSession({
       }
     };
 
-    // Generar artwork: prioridad = track cover > station logo > gradient
+    // Generar logo con nombre de estación (texto adaptativo)
+    const generateStationLogoArtwork = (stationName: string, size = 512): string | null => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return null;
+
+        // Detectar modo del sistema
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Fondo según modo
+        ctx.fillStyle = isDarkMode ? '#000000' : '#FFFFFF';
+        ctx.fillRect(0, 0, size, size);
+
+        // Calcular tamaño de fuente
+        const baseFontSize = size * 0.12;
+        const maxWidth = size * 0.85;
+        
+        // Dividir texto en palabras
+        const words = stationName.split(' ');
+        const lines: string[] = [];
+        let currentLine = '';
+        
+        for (const word of words) {
+          const testLine = currentLine ? `${currentLine} ${word}` : word;
+          ctx.font = `bold ${baseFontSize}px Arial, sans-serif`;
+          const metrics = ctx.measureText(testLine);
+          
+          if (metrics.width > maxWidth && currentLine) {
+            lines.push(currentLine);
+            currentLine = word;
+          } else {
+            currentLine = testLine;
+          }
+        }
+        if (currentLine) lines.push(currentLine);
+
+        // Ajustar tamaño si hay muchas líneas
+        const maxLines = 4;
+        let fontSize = baseFontSize;
+        if (lines.length > maxLines) {
+          fontSize = baseFontSize * (maxLines / lines.length);
+        }
+
+        // Dibujar texto centrado
+        ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+        ctx.fillStyle = isDarkMode ? '#FFFFFF' : '#000000';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        const lineHeight = fontSize * 1.2;
+        const totalHeight = lines.length * lineHeight;
+        const startY = (size - totalHeight) / 2 + lineHeight / 2;
+        
+        lines.forEach((line, index) => {
+          ctx.fillText(line, size / 2, startY + index * lineHeight);
+        });
+
+        return canvas.toDataURL('image/png');
+      } catch {
+        return null;
+      }
+    };
+
+    // Generar artwork: prioridad = track cover > gradient > station logo
     const generateArtwork = async (): Promise<MediaImage[]> => {
       // 1. Si hay cover del track, usarlo
       if (track?.cover) {
@@ -93,24 +157,30 @@ export function useMediaSession({
         ];
       }
 
-      // 2. Si hay logo de la estación, usarlo directamente
-      if (stationCover) {
-        console.log('[MediaSession] Using station cover:', stationCover);
-        return [
-          { src: stationCover, sizes: '512x512', type: 'image/png' },
-          { src: stationCover, sizes: '192x192', type: 'image/png' },
-        ];
-      }
-
-      // 3. Usar gradiente como fallback
+      // 2. Usar gradiente
       if (fallbackGradient) {
         const big = generateGradientArtwork(fallbackGradient, 512);
         const small = generateGradientArtwork(fallbackGradient, 192);
         const artwork: MediaImage[] = [];
         if (big) artwork.push({ src: big, sizes: '512x512', type: 'image/png' });
         if (small) artwork.push({ src: small, sizes: '192x192', type: 'image/png' });
-        console.log('[MediaSession] Using gradient artwork');
-        return artwork;
+        if (artwork.length > 0) {
+          console.log('[MediaSession] Using gradient artwork');
+          return artwork;
+        }
+      }
+
+      // 3. Logo con nombre de la estación (fallback)
+      if (stationName) {
+        const logoBig = generateStationLogoArtwork(stationName, 512);
+        const logoSmall = generateStationLogoArtwork(stationName, 192);
+        const artwork: MediaImage[] = [];
+        if (logoBig) artwork.push({ src: logoBig, sizes: '512x512', type: 'image/png' });
+        if (logoSmall) artwork.push({ src: logoSmall, sizes: '192x192', type: 'image/png' });
+        if (artwork.length > 0) {
+          console.log('[MediaSession] Using station logo artwork');
+          return artwork;
+        }
       }
 
       console.log('[MediaSession] No artwork available');
@@ -158,5 +228,5 @@ export function useMediaSession({
         // Ignorar errores al limpiar
       }
     };
-  }, [track, stationName, stationCover, fallbackGradient, isPlaying, onPlay, onPause, onPreviousTrack, onNextTrack]);
+  }, [track, stationName, fallbackGradient, isPlaying, onPlay, onPause, onPreviousTrack, onNextTrack]);
 }
