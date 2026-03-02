@@ -99,7 +99,13 @@ export function useMediaSession({
         });
         
         img.src = logoUrl;
-        await imgLoadPromise;
+        
+        // Timeout de 5 segundos
+        const timeoutPromise = new Promise<string>((_, reject) => 
+          setTimeout(() => reject(new Error('Image load timeout')), 5000)
+        );
+        
+        await Promise.race([imgLoadPromise, timeoutPromise]);
 
         // Detectar modo del sistema
         const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
