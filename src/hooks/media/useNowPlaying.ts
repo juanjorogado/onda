@@ -330,15 +330,15 @@ export function useNowPlaying(station?: Station | null) {
       if (trackInfo) {
         setTrack(trackInfo);
       } else {
-        // Fallback: usar cover de la estación
-        setTrack({ cover: station.cover || undefined });
+        // Fallback: no usar cover de la estación (solo para lock screen)
+        setTrack({});
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         return;
       }
       if (!signal.aborted) {
-        setTrack({ cover: station.cover || undefined });
+        setTrack({});
       }
     }
   }, [station]);

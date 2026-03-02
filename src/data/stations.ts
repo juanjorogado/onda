@@ -10,7 +10,7 @@ export const stations: Station[] = [
     genre: 'Experimental / Underground / Global',
     location: 'London, UK',
     timezone: 'Europe/London',
-    cover: 'https://www.nts.live/assets/logos/nts-logo-black.png'
+    cover: '/logos/nts.svg'
   },
   {
     id: 'resonance-fm',
@@ -19,7 +19,7 @@ export const stations: Station[] = [
     genre: 'Experimental / Sound Art / Community',
     location: 'London, UK',
     timezone: 'Europe/London',
-    cover: 'https://www.resonancefm.com/images/logo.png'
+    cover: ''
   },
   {
     id: 'bbc-6music',
@@ -28,7 +28,7 @@ export const stations: Station[] = [
     genre: 'Alternative / Indie / Rock',
     location: 'London, UK',
     timezone: 'Europe/London',
-    cover: 'https://ichef.bbci.co.uk/images/ic/192x192/p0bq9rzs.jpg'
+    cover: '/logos/bbc6.svg'
   },
   {
     id: 'wfmu-fixed',
@@ -37,7 +37,7 @@ export const stations: Station[] = [
     genre: 'Freeform / Eclectic / Cult',
     location: 'Jersey City, USA',
     timezone: 'America/New_York',
-    cover: 'https://wfmu.org/images/wfmu-logo.png'
+    cover: '/logos/wfmu.svg'
   },
   {
     id: 'kexp',
@@ -46,7 +46,7 @@ export const stations: Station[] = [
     genre: 'Indie / Alternative / Listener-Powered',
     location: 'Seattle, USA',
     timezone: 'America/Los_Angeles',
-    cover: 'https://www.kexp.org/assets/images/kexp-logo.png'
+    cover: '/logos/kexp.svg'
   },
 
   // --- EUROPA COMUNITARIA & EXPERIMENTAL ---
@@ -57,10 +57,10 @@ export const stations: Station[] = [
     genre: 'Experimental / Community / Underground',
     location: 'Berlin, Germany',
     timezone: 'Europe/Berlin',
-    cover: 'https://cashmereradio.com/wp-content/uploads/2020/06/cashmere-logo.png'
+cover: '/logos/cashmere.svg'
   },
 
-  // --- RADIO FRANCE - LA CURATION PARISINA ---
+  // --- RADIO France - LA CURATION PARISINA ---
   {
     id: 'fip',
     name: 'FIP',
@@ -68,7 +68,7 @@ export const stations: Station[] = [
     genre: 'Eclectic / Jazz / Electro / World',
     location: 'Paris, France',
     timezone: 'Europe/Paris',
-    cover: 'https://www.radiofrance.fr/fip/themes/custom/radio_france/images/logo-fip.svg'
+    cover: '/logos/fip.svg'
   },
   {
     id: 'france-musique',
@@ -77,7 +77,7 @@ export const stations: Station[] = [
     genre: 'Classical / Contemporary / Jazz',
     location: 'Paris, France',
     timezone: 'Europe/Paris',
-    cover: 'https://www.radiofrance.fr/francemusique/sites/default/files/2021-11/logo-france-musique.svg'
+    cover: '/logos/francemusique.svg'
   },
 
   // --- EUROPA BOUTIQUE ---
@@ -88,7 +88,7 @@ export const stations: Station[] = [
     genre: 'Jazz / Rare Groove / Soul',
     location: 'Paris, France',
     timezone: 'Europe/Paris',
-    cover: 'https://www.tsfjazz.com/wp-content/themes/tsfjazz/img/logo.png'
+    cover: '/logos/tsfjazz.svg'
   },
   {
     id: 'radio-raheem',
@@ -97,7 +97,7 @@ export const stations: Station[] = [
     genre: 'Electronic / Cosmic / Jazz',
     location: 'Milan, Italy',
     timezone: 'Europe/Rome',
-    cover: 'https://www.radioraheem.it/wp-content/uploads/2017/03/RR_logo_black.png'
+    cover: ''
   },
   {
     id: 'radio-paradise',
@@ -106,7 +106,7 @@ export const stations: Station[] = [
     genre: 'Eclectic / Rock / World',
     location: 'California, USA',
     timezone: 'America/Los_Angeles',
-    cover: 'https://www.radioparadise.com/images/logo.png'
+    cover: '/logos/radioparadise.svg'
   },
 
   // --- CLÁSICA & NEOCLÁSICA ---
@@ -117,7 +117,7 @@ export const stations: Station[] = [
     genre: 'Solo Piano / Neoclassical',
     location: 'Oregon, USA',
     timezone: 'America/Los_Angeles',
-    cover: 'https://www.solopianoradio.com/images/whisperings-logo.png'
+    cover: ''
   },
 
   // --- CURADURÍA GLOBAL ---
@@ -128,6 +128,6 @@ export const stations: Station[] = [
     genre: 'Eclectic / Electronic / Jazz',
     location: 'London, UK',
     timezone: 'Europe/London',
-    cover: 'https://www.nts.live/static/images/nts-logo.png'
+    cover: '/logos/nts.svg'
   }
 ];
