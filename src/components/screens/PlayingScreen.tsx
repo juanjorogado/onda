@@ -104,7 +104,7 @@ export const PlayingScreen = memo(({
           if (isMounted) {
             // Brillo > 128 = fondo claro → texto negro
             // Brillo ≤ 128 = fondo oscuro → texto blanco
-            setIsLight(brightness <= 128);
+            setIsLight(brightness > 128);
           }
         } catch {
           if (isMounted) {
