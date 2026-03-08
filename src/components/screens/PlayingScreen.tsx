@@ -5,6 +5,7 @@ import { extractCity } from '../../utils/extractCity';
 import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
+import { ShazamButton } from '../ui/ShazamButton';
 import { getImageBrightness, getGradientBrightness } from '../../utils/getBrightness';
 
 interface PlayingScreenProps {
@@ -381,6 +382,7 @@ export const PlayingScreen = memo(({
               {children}
             </div>
           )}
+          {isPlaying && !trackTitle && !trackArtist && <ShazamButton />}
         </div>
 
         {/* Track Text - NowPlaying con marquee */}

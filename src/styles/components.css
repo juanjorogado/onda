@@ -173,6 +173,42 @@
   50% { opacity: 0.7; transform: scale(0.98); }
 }
 
+/* ==========================================================================
+   Shazam Button
+   ========================================================================== */
+.shazam-button {
+  position: absolute;
+  bottom: var(--spacing-4);
+  right: var(--spacing-4);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  cursor: pointer;
+  transition: background-color 0.3s var(--easing-smooth), transform 0.3s var(--easing-smooth);
+  animation: fade-in 0.5s var(--easing-smooth) forwards;
+  z-index: 20;
+}
+
+.shazam-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.shazam-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
 .waiting-screen-indicator {
   position: absolute;
   left: 50%;
