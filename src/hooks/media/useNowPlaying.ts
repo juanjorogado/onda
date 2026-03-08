@@ -314,14 +314,31 @@ export function useNowPlaying(station?: Station | null) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stationIdRef = useRef<string | null>(null);
 
-  const updateTrack = useCallback((newTrack: TrackInfo) => {
+  const updateTrack = useCallback(async (newTrack: TrackInfo) => {
     setTrack(prev => ({ ...prev, ...newTrack }));
+    
+    // Si NO tenemos cover pero tenemos título/artista de la identificación, BUSCARLO
+    if (!newTrack.cover && newTrack.title && newTrack.artist) {
+      try {
+        const fullInfo = await searchTrackInfo(newTrack.artist, newTrack.title);
+        if (fullInfo?.cover) {
+          setTrack(prev => ({ ...prev, cover: fullInfo.cover }));
+        }
+      } catch (e) {
+        console.warn('No se pudo encontrar el cover para el track identificado:', e);
+      }
+    }
   }, []);
 
   const fetchNowPlaying = useCallback(async () => {
     if (!station) {
       setTrack({});
       return;
+    }
+
+    // Si la estación cambia, LIMPIAR el track identificado manualmente
+    if (stationIdRef.current !== station.id) {
+      setTrack({});
     }
 
     // Skip if already fetching for this station

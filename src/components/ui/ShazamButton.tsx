@@ -28,6 +28,16 @@ export const ShazamButton = memo(({ streamUrl, onTrackIdentified }: ShazamButton
 
       if (data.success && data.track) {
         onTrackIdentified?.(data.track);
+        
+        // Notificar al usuario (Feedback visual sutil)
+        // Podríamos disparar un haptic feedback aquí
+        if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
+
+        // Si tenemos URL de Apple Music, podríamos guardarla o mostrarla
+        if (data.track.apple_music_url) {
+          console.log('Canción identificada en Apple Music:', data.track.apple_music_url);
+          // TODO: Implementar guardado en Anytype (necesita API o Webhook)
+        }
       } else {
         console.warn('No se pudo identificar la canción:', data.message || 'Sin resultados');
         // Aquí podríamos mostrar un toast o feedback visual de "no encontrado"

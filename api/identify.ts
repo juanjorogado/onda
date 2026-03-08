@@ -72,6 +72,12 @@ export default async function handler(
     // 4. Procesar y retornar resultado simplificado
     if (result.status?.code === 0 && result.metadata?.music?.[0]) {
       const music = result.metadata.music[0];
+      
+      // Intentar obtener el cover de ACRCloud si está disponible
+      // ACRCloud suele devolver metadatos externos en music.external_metadata
+      const appleMusic = music.external_metadata?.apple_music;
+      const spotify = music.external_metadata?.spotify;
+      
       return response.status(200).json({
         success: true,
         track: {
@@ -80,6 +86,10 @@ export default async function handler(
           album: music.album?.name,
           label: music.label,
           release_date: music.release_date,
+          // ACRCloud a veces devuelve IDs o URLs directas
+          apple_music_url: appleMusic?.track?.id ? `https://music.apple.com/song/${appleMusic.track.id}` : undefined,
+          spotify_url: spotify?.track?.id ? `https://open.spotify.com/track/${spotify.track.id}` : undefined,
+          // Intentaremos buscar el cover en el cliente con los nuevos metadatos si no viene aquí
         }
       });
     }
