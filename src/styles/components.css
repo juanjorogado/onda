@@ -375,16 +375,17 @@
   overflow: hidden;
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
   text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.05);
+  /* Máscara solo si el texto desborda */
   mask-image: linear-gradient(
     to right,
-    black 0,
-    black calc(100% - var(--blur-edge)),
+    black 0%,
+    black calc(100% - var(--spacing-8)),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
-    black 0,
-    black calc(100% - var(--blur-edge)),
+    black 0%,
+    black calc(100% - var(--spacing-8)),
     transparent 100%
   );
 }

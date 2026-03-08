@@ -83,12 +83,13 @@ export const NowPlaying = memo(({
       // Usamos el scrollWidth del span interno que contiene el texto original
       const textWidth = textRef.current.scrollWidth;
       
-      const needsScroll = textWidth > containerWidth;
+      // Siempre permitir scroll si el usuario lo prefiere, o si el texto es largo
+      const needsScroll = textWidth > containerWidth - 20; 
       setShouldScroll(needsScroll);
 
       if (needsScroll) {
         // Velocidad constante: ~50px por segundo
-        const newDuration = Math.max(10, textWidth / 50);
+        const newDuration = Math.max(10, textWidth / 40);
         setDuration(newDuration);
       }
     };
