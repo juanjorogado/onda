@@ -315,7 +315,7 @@ export function useNowPlaying(station?: Station | null) {
   const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stationIdRef = useRef<string | null>(null);
 
-  const updateTrack = useCallback(async (newTrack: TrackInfo) => {
+  const updateTrack = useCallback(async (newTrack: TrackInfo & { duration_ms?: number, offset_ms?: number }) => {
     console.log('Actualizando track identificado:', newTrack);
     setTrack(prev => ({ ...prev, ...newTrack }));
 
@@ -324,11 +324,22 @@ export function useNowPlaying(station?: Station | null) {
       clearTimeout(resetTimeoutRef.current);
     }
 
-    // Resetear a info genérica después de 5 minutos (duración típica de una canción larga)
+    // Calcular tiempo de reseteo dinámico
+    // Si tenemos duración y offset, calculamos el tiempo restante + margen
+    // Si no, usamos 5 minutos por defecto
+    let resetTime = 5 * 60 * 1000;
+    
+    if (newTrack.duration_ms && newTrack.offset_ms !== undefined) {
+      const remainingMs = newTrack.duration_ms - newTrack.offset_ms;
+      // Añadimos 15 segundos de margen por el retraso del stream y el procesamiento
+      resetTime = Math.max(30000, remainingMs + 15000); 
+      console.log(`Reseteo dinámico configurado en ${Math.round(resetTime / 1000)} segundos`);
+    }
+
     resetTimeoutRef.current = setTimeout(() => {
-      console.log('Resetting identified track info after timeout');
+      console.log('Resetting identified track info after dynamic timeout');
       setTrack({});
-    }, 5 * 60 * 1000);
+    }, resetTime);
     
     // Si NO tenemos cover pero tenemos título/artista de la identificación, BUSCARLO
     if (newTrack.title && newTrack.artist) {

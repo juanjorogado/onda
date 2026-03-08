@@ -89,6 +89,9 @@ export default async function handler(
           // ACRCloud a veces devuelve IDs o URLs directas
           apple_music_url: appleMusic?.track?.id ? `https://music.apple.com/song/${appleMusic.track.id}` : undefined,
           spotify_url: spotify?.track?.id ? `https://open.spotify.com/track/${spotify.track.id}` : undefined,
+          // Datos para el reseteo dinámico
+          duration_ms: music.duration_ms,
+          offset_ms: music.play_offset_ms,
           // Intentaremos buscar el cover en el cliente con los nuevos metadatos si no viene aquí
         }
       });
