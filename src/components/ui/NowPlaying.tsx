@@ -107,7 +107,7 @@ export const NowPlaying = memo(({
   if (!text) return null;
   
   return (
-    <div ref={containerRef} className={`overflow-hidden text-ink ${className}`}>
+    <div key={text} ref={containerRef} className={`overflow-hidden text-ink animate-fade-in ${className}`}>
       <div className={`marquee ${shouldScroll ? 'is-scrolling' : 'is-static'}`}>
         <div 
           className="marquee-content"

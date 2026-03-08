@@ -193,4 +193,13 @@
   }
 }
 
+/* Utility classes for animations */
+.animate-fade-in {
+  animation: fade-in var(--duration-normal) var(--easing-smooth) both;
+}
+
+.animate-cover-fade-in {
+  animation: cover-fade-in var(--duration-normal) var(--easing-smooth) both;
+}
+
 /* Weather overlays */

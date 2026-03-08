@@ -65,7 +65,7 @@ export const ShazamButton = memo(({ streamUrl, onTrackIdentified }: ShazamButton
       disabled={isIdentifying || isSuccess}
       aria-label={isIdentifying ? "Identificando..." : isSuccess ? "Identificado" : "Identificar canción"}
     >
-      <div className="shazam-icon">
+      <div className="shazam-icon" key={status}>
         {isIdentifying ? (
           <div className="shazam-loading-spinner"></div>
         ) : isSuccess ? (

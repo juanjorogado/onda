@@ -243,6 +243,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: fade-in var(--duration-normal) var(--easing-smooth) both;
 }
 
 .shazam-loading-spinner {
@@ -524,7 +525,7 @@
   position: relative;
   overflow: hidden !important;
   animation: scale-in var(--duration-normal) var(--easing-smooth) var(--delay-medium) both;
-  transition: transform var(--duration-faster) var(--easing-smooth), background var(--duration-fast) var(--easing-smooth);
+  transition: transform var(--duration-faster) var(--easing-smooth), background var(--duration-normal) var(--easing-smooth);
 }
 
 .playing-screen-cover::before {
@@ -621,9 +622,9 @@
 }
 
 .playing-screen-cover-image {
-  animation: cover-fade-in var(--duration-normal) var(--easing-smooth);
-  transition: opacity var(--duration-fast) var(--easing-smooth);
-  will-change: opacity;
+  animation: cover-fade-in var(--duration-normal) var(--easing-smooth) both;
+  transition: opacity var(--duration-normal) var(--easing-smooth);
+  will-change: opacity, transform;
   border-radius: var(--radius-cover);
   overflow: hidden;
 }
