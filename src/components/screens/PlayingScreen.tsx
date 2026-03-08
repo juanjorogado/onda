@@ -19,14 +19,16 @@ interface PlayingScreenProps {
   coverImage?: string;
   timezone?: string;
   isPlaying: boolean;
-  isLoading?: boolean;
-  hasError?: boolean;
+  isLoading: boolean;
+  hasError: boolean;
+  streamUrl?: string;
+  onTrackIdentified?: (track: any) => void;
   onToggle: () => void;
-  onSwipe?: (direction: 'left' | 'right') => void;
+  onSwipe: (direction: 'left' | 'right') => void;
   children?: ReactNode;
 }
 
-export const PlayingScreen = memo(({
+export const PlayingScreen = memo(({ 
   stationName,
   stationLocation,
   trackTitle,
@@ -39,9 +41,11 @@ export const PlayingScreen = memo(({
   isPlaying,
   isLoading,
   hasError,
+  streamUrl,
+  onTrackIdentified,
   onToggle,
   onSwipe,
-  children
+  children,
 }: PlayingScreenProps) => {
   const time = useCurrentTime();
   const startX = useRef(0);
@@ -382,7 +386,12 @@ export const PlayingScreen = memo(({
               {children}
             </div>
           )}
-          {isPlaying && !trackTitle && !trackArtist && <ShazamButton />}
+          {isPlaying && !trackTitle && !trackArtist && streamUrl && (
+            <ShazamButton 
+              streamUrl={streamUrl} 
+              onTrackIdentified={onTrackIdentified} 
+            />
+          )}
         </div>
 
         {/* Track Text - NowPlaying con marquee */}

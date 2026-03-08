@@ -314,6 +314,10 @@ export function useNowPlaying(station?: Station | null) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stationIdRef = useRef<string | null>(null);
 
+  const updateTrack = useCallback((newTrack: TrackInfo) => {
+    setTrack(prev => ({ ...prev, ...newTrack }));
+  }, []);
+
   const fetchNowPlaying = useCallback(async () => {
     if (!station) {
       setTrack({});
@@ -390,5 +394,5 @@ export function useNowPlaying(station?: Station | null) {
     };
   }, [station?.id, fetchNowPlaying]);
 
-  return track;
+  return { ...track, updateTrack };
 }

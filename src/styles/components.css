@@ -197,9 +197,18 @@
   z-index: 20;
 }
 
-.shazam-button:hover {
+.shazam-button:hover:not(:disabled) {
   background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
+}
+
+.shazam-button:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.shazam-button.is-identifying {
+  animation: pulse-soft 1.5s ease-in-out infinite;
 }
 
 .shazam-icon {
@@ -207,6 +216,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.shazam-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--color-white);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 
 
 .waiting-screen-indicator {

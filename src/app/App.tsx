@@ -20,6 +20,7 @@ function App() {
     prevStation,
     handleAudioError,
     handleAudioEnded,
+    updateTrack,
     headerName,
     headerLocation,
     coverArt,
@@ -94,6 +95,8 @@ function App() {
               isPlaying={isPlaying}
               isLoading={isLoading}
               hasError={hasError}
+              streamUrl={currentStation?.url}
+              onTrackIdentified={updateTrack}
               onToggle={togglePlay}
               onSwipe={handleSwipe}
             >

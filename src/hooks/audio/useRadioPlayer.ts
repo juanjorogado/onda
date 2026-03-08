@@ -38,7 +38,7 @@ export function useRadioPlayer() {
     src: currentStation?.url,
   });
 
-  const track = useNowPlaying(currentStation);
+  const { updateTrack, ...track } = useNowPlaying(currentStation);
 
   const changeStation = useCallback((newIndex: number) => {
     if (stations.length <= 1 || isTransitioning) return;
@@ -98,6 +98,7 @@ export function useRadioPlayer() {
     prevStation,
     handleAudioError,
     handleAudioEnded,
+    updateTrack,
     headerName,
     headerLocation,
     coverArt,
