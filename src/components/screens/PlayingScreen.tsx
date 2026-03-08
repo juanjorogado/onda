@@ -394,17 +394,21 @@ export const PlayingScreen = memo(({
             isPlaying={isPlaying}
           />
           
-          {/* Loading/Error indicator */}
-          {isLoading && (
-            <div className="playing-screen-status" data-status="loading">
-              Conectando...
-            </div>
-          )}
-          {hasError && !isLoading && (
-            <div className="playing-screen-status" data-status="error">
-              Error de conexión
-            </div>
-          )}
+          {/* Loading/Error layer - Absolute positioned to avoid layout shifts */}
+          <div className="playing-screen-status-layer">
+            {isLoading && (
+              <div className="playing-screen-status" data-status="loading">
+                <span className="status-dot"></span>
+                Conectando...
+              </div>
+            )}
+            {hasError && !isLoading && (
+              <div className="playing-screen-status" data-status="error">
+                <span className="status-dot"></span>
+                Error de conexión
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

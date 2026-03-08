@@ -65,7 +65,9 @@ export const NowPlaying = memo(({
   className = '' 
 }: NowPlayingProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [shouldScroll, setShouldScroll] = useState(true);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const [duration, setDuration] = useState(20);
   
   const text = useMemo(
     () => formatTrackInfo(title, artist, album, year, stationName, isPlaying),
@@ -74,37 +76,58 @@ export const NowPlaying = memo(({
   
   // Detectar si el texto es más ancho que el contenedor
   useEffect(() => {
-    if (!containerRef.current || !text) return;
-    
-    const container = containerRef.current;
-    const span = container.querySelector('span');
-    
-    if (span) {
-      // Comparar el ancho del texto con el ancho del contenedor
-      // Dividimos por 2 porque el texto está duplicado
-      const textWidth = span.scrollWidth / 2;
-      const containerWidth = container.offsetWidth;
+    const checkScroll = () => {
+      if (!containerRef.current || !textRef.current || !text) return;
       
-      // Solo hacer scroll si el texto es significativamente más ancho que el contenedor
-      // Añadimos un margen de 20px para evitar scroll innecesario en textos que casi caben
-      setShouldScroll(textWidth > containerWidth + 20);
-    }
+      const containerWidth = containerRef.current.offsetWidth;
+      // Usamos el scrollWidth del span interno que contiene el texto original
+      const textWidth = textRef.current.scrollWidth;
+      
+      const needsScroll = textWidth > containerWidth;
+      setShouldScroll(needsScroll);
+
+      if (needsScroll) {
+        // Velocidad constante: ~50px por segundo
+        const newDuration = Math.max(10, textWidth / 50);
+        setDuration(newDuration);
+      }
+    };
+
+    // Ejecutar después de un pequeño delay para asegurar que el DOM esté listo
+    const timeoutId = setTimeout(checkScroll, 100);
+    
+    window.addEventListener('resize', checkScroll);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', checkScroll);
+    };
   }, [text]);
   
   if (!text) return null;
   
-  // Duplicar el texto con espacios para el efecto continuo del marquee
-  const marqueeText = `${text}${MARQUEE_SEPARATOR}${text}${MARQUEE_SEPARATOR}`;
-  
   return (
     <div ref={containerRef} className={`overflow-hidden text-ink ${className}`}>
-      <div className="marquee">
-        <span 
-          className={`text-xl font-normal ${!shouldScroll ? 'marquee-paused' : ''}`}
-          style={{ ['--marquee-play-state' as string]: shouldScroll ? 'running' : 'paused' }}
+      <div className={`marquee ${shouldScroll ? 'is-scrolling' : 'is-static'}`}>
+        <div 
+          className="marquee-content"
+          style={{ 
+            animationDuration: `${duration}s`,
+            animationPlayState: isPlaying ? 'running' : 'paused'
+          }}
         >
-          {marqueeText}
-        </span>
+          <span ref={textRef} className="text-xl font-normal">
+            {text}
+          </span>
+          {shouldScroll && (
+            <>
+              <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
+              <span className="text-xl font-normal">
+                {text}
+              </span>
+              <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
