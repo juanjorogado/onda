@@ -74,9 +74,11 @@ export const ShazamButton = memo(({ streamUrl, onTrackIdentified }: ShazamButton
           </svg>
         ) : (
           <svg width="22" height="36" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect rx="7" ry="7" x="4" y="0" width="14" height="28" stroke="currentColor" strokeWidth="2"/>
-            <path d="M22,20.7C22,26.77 17.07,31.7 11,31.7C4.93,31.7 0,26.77 0,20.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M11,36L11,32" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <g opacity="0.9">
+              <rect rx="7" ry="7" x="4" y="0" width="14" height="28" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M22,20.7C22,26.77 17.07,31.7 11,31.7C4.93,31.7 0,26.77 0,20.7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M11,36L11,32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </g>
           </svg>
         )}
       </div>

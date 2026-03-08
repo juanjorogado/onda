@@ -17,9 +17,10 @@ export const integrationService = {
     // Usamos tanto VITE_ como la forma estándar de Vercel por si acaso
     const webhookUrl = import.meta.env.VITE_ANYTYPE_WEBHOOK_URL || (window as any)._env_?.VITE_ANYTYPE_WEBHOOK_URL;
     
-    console.log('Intentando guardar en Anytype...', { 
-      hasWebhook: !!webhookUrl, 
-      track: track.title 
+    console.log('DEBUG: Preparando envío al webhook...', { 
+      urlConfigurada: !!webhookUrl, 
+      urlParcial: webhookUrl ? `${webhookUrl.substring(0, 20)}...` : 'N/A',
+      cancion: track.title 
     });
 
     if (!webhookUrl) {
@@ -47,15 +48,15 @@ export const integrationService = {
 
       const response = await fetch(webhookUrl, {
         method: 'POST',
-        mode: 'no-cors', // Algunos webhooks locales no manejan bien CORS
+        mode: 'no-cors', // Para Google Sheets/Scripts, necesitamos no-cors para evitar el preflight (OPTIONS) que no soporta
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain', // Usamos text/plain para que sea una "simple request" y pase el CORS
         },
         body: JSON.stringify(payload),
       });
 
-      // Con 'no-cors', la respuesta es opaca, así que asumimos éxito si no hay error
-      console.log('Petición enviada a Anytype (modo no-cors)');
+      // Con 'no-cors', la respuesta es "opaque", no podemos ver el status pero la petición se envía
+      console.log('Petición enviada al webhook (modo no-cors/text-plain)');
       return true;
     } catch (error) {
       console.error('Error al guardar en Anytype:', error);
