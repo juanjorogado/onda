@@ -211,6 +211,25 @@
   animation: pulse-soft 1.5s ease-in-out infinite;
 }
 
+.shazam-button.is-success {
+  background-color: rgba(76, 175, 80, 0.4);
+  color: var(--color-white);
+  border-color: rgba(76, 175, 80, 0.6);
+  animation: scale-up-fade-out 2s var(--easing-smooth) forwards;
+}
+
+.shazam-button.is-error {
+  background-color: rgba(244, 67, 54, 0.4);
+  color: var(--color-white);
+  border-color: rgba(244, 67, 54, 0.6);
+}
+
+@keyframes scale-up-fade-out {
+  0% { transform: scale(1); opacity: 1; }
+  20% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
 .shazam-icon {
   display: flex;
   align-items: center;
