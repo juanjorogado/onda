@@ -9,6 +9,8 @@ interface Options {
 export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Options) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -18,16 +20,30 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
 
   useEffect(() => {
     if (audioRef.current && src) {
+      setIsLoading(true);
+      setError(null);
+      
       if (audioRef.current.src !== src) {
         audioRef.current.src = src;
+        audioRef.current.load();
         if (isPlaying) {
-          audioRef.current.play().catch(() => {
-            setIsPlaying(false);
-          });
+          audioRef.current.play()
+            .then(() => {
+              setIsPlaying(true);
+              setIsLoading(false);
+            })
+            .catch((err) => {
+              console.error('Audio play error:', err);
+              setIsPlaying(false);
+              setIsLoading(false);
+              setError('No se pudo reproducir el audio');
+            });
         }
+      } else {
+        setIsLoading(false);
       }
     }
-  }, [src, isPlaying, setIsPlaying]);
+  }, [src, isPlaying]);
 
   // Prevenir que iOS pause el audio cuando la app va a segundo plano
   useEffect(() => {
@@ -42,32 +58,38 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     // Prevenir que iOS pause automáticamente
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden' && isPlaying && audio.paused) {
-        // Si el audio se pausó cuando la página se ocultó, intentar reanudar
-        audio.play().catch(() => {
-          // Ignorar errores de autoplay
-        });
+        audio.play().catch(() => {});
       }
     };
 
     const handlePageShow = () => {
-      // Reanudar audio cuando la página vuelve a ser visible
       if (isPlaying && audio.paused) {
         audio.play().catch(() => {});
       }
     };
 
-    const handlePageHide = () => {
-      // Mantener el audio reproduciéndose cuando la página se oculta
-      if (isPlaying && !audio.paused) {
-        // No hacer nada, dejar que continúe
-      }
+    const handlePageHide = () => {};
+
+    const handleWaiting = () => setIsLoading(true);
+    const handleCanPlay = () => setIsLoading(false);
+    const handleError = () => {
+      setIsLoading(false);
+      setError('Error de conexión con la estación');
+      setIsPlaying(false);
     };
+
+    audio.addEventListener('waiting', handleWaiting);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('error', handleError);
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pageshow', handlePageShow);
     window.addEventListener('pagehide', handlePageHide);
 
     return () => {
+      audio.removeEventListener('waiting', handleWaiting);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('error', handleError);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pageshow', handlePageShow);
       window.removeEventListener('pagehide', handlePageHide);
@@ -82,9 +104,13 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     } else {
       audioRef.current.play()
         .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
+        .catch((err) => {
+          console.error('Audio play error:', err);
+          setError('No se pudo reproducir el audio');
+          setIsPlaying(false);
+        });
     }
   };
 
-  return { audioRef, isPlaying, setIsPlaying, togglePlay };
+  return { audioRef, isPlaying, setIsPlaying, togglePlay, isLoading, error, setError };
 }

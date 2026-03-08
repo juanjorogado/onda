@@ -30,6 +30,10 @@ export const HOUR_RANGES = {
   DUSK_END: 20,
 } as const;
 
+// Timeout para providers de now playing (ms)
+export const PROVIDER_TIMEOUT = 8000;
+export const SHOUTCAST_TIMEOUT = 5000;
+
 // URLs de APIs
 export const API_ENDPOINTS = {
   KEXP: 'https://api.kexp.org/v2/plays/?ordering=-airdate&limit=1',

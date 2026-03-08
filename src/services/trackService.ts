@@ -1,8 +1,17 @@
 import { TrackInfo } from '../types/track';
+import { safeFetch } from '../utils/fetchWithTimeout';
 
 // Headers comunes para requests a MusicBrainz
 const MUSICBRAINZ_HEADERS = {
   'User-Agent': 'ONDA Radio App/1.0',
+};
+
+// Timeouts específicos por servicio (ms)
+const TIMEOUTS = {
+  musicbrainz: 8000,
+  lastfm: 5000,
+  itunes: 5000,
+  coverartarchive: 8000,
 };
 
 // Tipos para MusicBrainz
@@ -81,25 +90,15 @@ interface CoverArtResponse {
 }
 
 /**
- * Helper para hacer fetch con manejo de errores unificado
- */
-async function safeFetch<T>(url: string, options?: RequestInit): Promise<T | null> {
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) return null;
-    return await response.json() as T;
-  } catch {
-    return null;
-  }
-}
-
-/**
  * Busca un recording en MusicBrainz
  */
 async function findRecording(query: string): Promise<MusicBrainzRecording | null> {
   const encodedQuery = encodeURIComponent(query);
   const url = `https://musicbrainz.org/ws/2/recording/?query=${encodedQuery}&limit=1&fmt=json`;
-  const data = await safeFetch<MusicBrainzRecordingResponse>(url, { headers: MUSICBRAINZ_HEADERS });
+  const data = await safeFetch<MusicBrainzRecordingResponse>(url, { 
+    headers: MUSICBRAINZ_HEADERS,
+    timeout: TIMEOUTS.musicbrainz,
+  });
 
   if (!data?.recordings || data.recordings.length === 0) return null;
   return data.recordings[0];
@@ -110,7 +109,10 @@ async function findRecording(query: string): Promise<MusicBrainzRecording | null
  */
 async function getRecordingReleases(recordingId: string): Promise<MusicBrainzRelease[] | null> {
   const url = `https://musicbrainz.org/ws/2/recording/${recordingId}?inc=releases&fmt=json`;
-  const data = await safeFetch<MusicBrainzReleaseResponse>(url, { headers: MUSICBRAINZ_HEADERS });
+  const data = await safeFetch<MusicBrainzReleaseResponse>(url, { 
+    headers: MUSICBRAINZ_HEADERS,
+    timeout: TIMEOUTS.musicbrainz,
+  });
 
   return data?.releases && data.releases.length > 0 ? data.releases : null;
 }
@@ -120,7 +122,10 @@ async function getRecordingReleases(recordingId: string): Promise<MusicBrainzRel
  */
 async function findArtistId(artist: string): Promise<string | null> {
   const artistUrl = `https://musicbrainz.org/ws/2/artist/?query=artist:${encodeURIComponent(artist)}&limit=1&fmt=json`;
-  const artistData = await safeFetch<MusicBrainzArtistResponse>(artistUrl, { headers: MUSICBRAINZ_HEADERS });
+  const artistData = await safeFetch<MusicBrainzArtistResponse>(artistUrl, { 
+    headers: MUSICBRAINZ_HEADERS,
+    timeout: TIMEOUTS.musicbrainz,
+  });
 
   if (!artistData?.artists || artistData.artists.length === 0) return null;
   return artistData.artists[0].id;
@@ -156,7 +161,7 @@ export async function searchTrackLastFM(artist: string, title: string): Promise<
   if (!API_KEY) return null;
   
   const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${API_KEY}&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(title)}&format=json`;
-  const data = await safeFetch<LastFmResponse>(url);
+  const data = await safeFetch<LastFmResponse>(url, { timeout: TIMEOUTS.lastfm });
 
   // Verificar que no haya error en la respuesta
   if (!data?.track || data.error) return null;
@@ -206,7 +211,7 @@ export async function searchTrackMusicBrainz(artist: string, title: string): Pro
 async function searchTrackAppleMusic(artist: string, title: string): Promise<string | null> {
   const query = `${encodeURIComponent(artist)} ${encodeURIComponent(title)}`;
   const url = `https://itunes.apple.com/search?term=${query}&media=music&limit=1`;
-  const data = await safeFetch<iTunesResponse>(url);
+  const data = await safeFetch<iTunesResponse>(url, { timeout: TIMEOUTS.itunes });
 
   if (!data?.results || data.results.length === 0) return null;
 
@@ -222,7 +227,7 @@ async function searchTrackCoverArt(artist: string, title: string): Promise<strin
   if (!result) return null;
 
   const coverArtUrl = `https://coverartarchive.org/release/${result.releases[0].id}`;
-  const coverArtData = await safeFetch<CoverArtResponse>(coverArtUrl);
+  const coverArtData = await safeFetch<CoverArtResponse>(coverArtUrl, { timeout: TIMEOUTS.coverartarchive });
 
   if (!coverArtData?.images || coverArtData.images.length === 0) return null;
 

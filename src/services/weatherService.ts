@@ -71,6 +71,43 @@ interface OpenMeteoResponse {
 // Cache para evitar llamadas excesivas (30 minutos)
 const weatherCache = new Map<string, { condition: WeatherCondition; timestamp: number }>();
 const CACHE_DURATION = 30 * 60 * 1000; // 30 minutos
+const STORAGE_KEY = 'onda-weather-cache';
+
+/**
+ * Carga el cache desde localStorage
+ */
+function loadCacheFromStorage(): void {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return;
+    
+    const parsed = JSON.parse(stored) as Array<[string, { condition: WeatherCondition; timestamp: number }]>;
+    const now = Date.now();
+    
+    for (const [location, data] of parsed) {
+      if (now - data.timestamp < CACHE_DURATION) {
+        weatherCache.set(location, data);
+      }
+    }
+  } catch {
+    // Ignorar errores de localStorage
+  }
+}
+
+/**
+ * Guarda el cache en localStorage
+ */
+function saveCacheToStorage(): void {
+  try {
+    const entries = Array.from(weatherCache.entries());
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  } catch {
+    // Ignorar errores de localStorage (quota exceeded, etc)
+  }
+}
+
+// Cargar cache al inicio
+loadCacheFromStorage();
 
 /**
  * Obtiene el clima actual de una ciudad usando Open-Meteo (API gratuita, sin key)
@@ -147,6 +184,7 @@ export async function getCurrentWeather(location: string): Promise<WeatherCondit
       condition: weatherCondition,
       timestamp: Date.now(),
     });
+    saveCacheToStorage();
 
     console.log(`[WeatherService] ${location}: ${weatherCondition.description} (${weatherCondition.type}, intensity: ${weatherCondition.intensity})`);
     

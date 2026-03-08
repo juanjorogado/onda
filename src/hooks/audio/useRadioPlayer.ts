@@ -33,7 +33,7 @@ export function useRadioPlayer() {
   // Memoizar la estación actual para evitar recálculos
   const currentStation = useMemo(() => stations[currentIndex] || null, [currentIndex]);
 
-  const { audioRef, isPlaying, setIsPlaying, togglePlay } = useAudioPlayer({
+  const { audioRef, isPlaying, setIsPlaying, togglePlay, isLoading, error } = useAudioPlayer({
     volume: 1.0,
     src: currentStation?.url,
   });
@@ -91,7 +91,8 @@ export function useRadioPlayer() {
     audioRef,
     isPlaying,
     isTransitioning,
-    hasError,
+    hasError: hasError || !!error,
+    isLoading,
     togglePlay,
     nextStation,
     prevStation,

@@ -2,17 +2,73 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { Station } from '../../types/station';
 import { TrackInfo } from '../../types/track';
 import { searchTrackInfo } from '../../services/trackService';
-import { POLLING_INTERVAL, API_ENDPOINTS } from '../../constants';
+import { POLLING_INTERVAL, API_ENDPOINTS, PROVIDER_TIMEOUT, SHOUTCAST_TIMEOUT } from '../../constants';
+import { fetchWithTimeout } from '../../utils/fetchWithTimeout';
 
 type StationProvider = (station: Station, signal: AbortSignal) => Promise<TrackInfo | null>;
+
+// Configuración de providers - fácil de extender
+interface ProviderConfig {
+  provider: StationProvider;
+  timeout?: number;
+  enableExternalLookup?: boolean;
+}
+
+const DEFAULT_PROVIDER_CONFIG: ProviderConfig = {
+  provider: icecastMetadataProvider,
+  timeout: SHOUTCAST_TIMEOUT,
+  enableExternalLookup: true,
+};
+
+// Mapa de configuración de providers
+const STATION_PROVIDERS: Record<string, ProviderConfig> = {
+  // Estaciones con APIs específicas
+  kexp: { provider: kexpProvider, timeout: PROVIDER_TIMEOUT },
+  wfmu: { provider: wfmuProvider, timeout: PROVIDER_TIMEOUT },
+  dublab: { provider: dublabProvider, timeout: PROVIDER_TIMEOUT },
+  'tsf-jazz': { provider: tsfJazzProvider, timeout: PROVIDER_TIMEOUT },
+  'radio-nova': { provider: radioNovaProvider, timeout: PROVIDER_TIMEOUT },
+  'worldwide-fm': { provider: worldwideFmProvider, timeout: PROVIDER_TIMEOUT },
+  ottava: { provider: ottavaProvider, timeout: PROVIDER_TIMEOUT },
+
+  // Providers genéricos para estaciones sin API específica
+  'jazz-sakura': DEFAULT_PROVIDER_CONFIG,
+  'listen-moe': DEFAULT_PROVIDER_CONFIG,
+  'cashmere-radio': DEFAULT_PROVIDER_CONFIG,
+  'radio-raheem': DEFAULT_PROVIDER_CONFIG,
+  'bbc-6music': DEFAULT_PROVIDER_CONFIG,
+  'resonance-fm': DEFAULT_PROVIDER_CONFIG,
+  'fip': DEFAULT_PROVIDER_CONFIG,
+  'france-musique': DEFAULT_PROVIDER_CONFIG,
+  'france-culture': DEFAULT_PROVIDER_CONFIG,
+  'radio-paradise': DEFAULT_PROVIDER_CONFIG,
+  'nts-radio': DEFAULT_PROVIDER_CONFIG,
+  'whisperings-piano': DEFAULT_PROVIDER_CONFIG,
+};
+
+/**
+ * Registra un provider personalizado para una estación
+ */
+export function registerStationProvider(stationId: string, config: ProviderConfig): void {
+  STATION_PROVIDERS[stationId.toLowerCase()] = config;
+}
+
+/**
+ * Obtiene el provider para una estación o retorna null
+ */
+function getStationProvider(stationId: string): StationProvider | null {
+  const config = STATION_PROVIDERS[stationId.toLowerCase()];
+  return config?.provider || null;
+}
 
 /**
  * Provider para KEXP: obtiene información de track desde su API
  */
 async function kexpProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  const response = await fetch(API_ENDPOINTS.KEXP, {
+  const response = await fetchWithTimeout(API_ENDPOINTS.KEXP, {
     signal,
     headers: { 'Accept': 'application/json' },
+    timeout: PROVIDER_TIMEOUT,
   });
 
   if (signal.aborted) return null;
@@ -60,9 +116,10 @@ async function icecastMetadataProvider(station: Station, signal: AbortSignal): P
       // Intentar obtener metadata de Shoutcast
       const statsUrl = streamUrl.replace(/\.mp3$|\.aac$/, '') + '/stats';
       try {
-        const response = await fetch(statsUrl, {
+        const response = await fetchWithTimeout(statsUrl, {
           signal,
           headers: { 'Accept': 'application/json' },
+          timeout: 5000,
         });
 
         if (!signal.aborted && response.ok) {
@@ -97,9 +154,10 @@ async function icecastMetadataProvider(station: Station, signal: AbortSignal): P
  */
 async function ottavaProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
   try {
-    const response = await fetch('https://ottava.jp/api/nowplaying', {
+    const response = await fetchWithTimeout('https://ottava.jp/api/nowplaying', {
       signal,
       headers: { 'Accept': 'application/json' },
+      timeout: PROVIDER_TIMEOUT,
     });
 
     if (signal.aborted) return null;
@@ -122,12 +180,13 @@ async function ottavaProvider(_station: Station, signal: AbortSignal): Promise<T
  */
 async function dublabProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
   try {
-    const response = await fetch('https://www.dublab.com/api/nowplaying', {
+    const response = await fetchWithTimeout('https://www.dublab.com/api/nowplaying', {
       signal,
       headers: {
         'Accept': 'application/json',
         'User-Agent': 'ONDA Radio App/1.0',
       },
+      timeout: PROVIDER_TIMEOUT,
     });
 
     if (signal.aborted) return null;
@@ -150,9 +209,10 @@ async function dublabProvider(_station: Station, signal: AbortSignal): Promise<T
  */
 async function radioNovaProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
   try {
-    const response = await fetch('https://www.novaplanet.com/radio/nowplaying', {
+    const response = await fetchWithTimeout('https://www.novaplanet.com/radio/nowplaying', {
       signal,
       headers: { 'Accept': 'application/json' },
+      timeout: PROVIDER_TIMEOUT,
     });
 
     if (signal.aborted) return null;
@@ -175,9 +235,10 @@ async function radioNovaProvider(_station: Station, signal: AbortSignal): Promis
  */
 async function tsfJazzProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
   try {
-    const response = await fetch('https://www.tsfjazz.com/api/nowplaying', {
+    const response = await fetchWithTimeout('https://www.tsfjazz.com/api/nowplaying', {
       signal,
       headers: { 'Accept': 'application/json' },
+      timeout: PROVIDER_TIMEOUT,
     });
 
     if (signal.aborted) return null;
@@ -200,9 +261,10 @@ async function tsfJazzProvider(_station: Station, signal: AbortSignal): Promise<
  */
 async function worldwideFmProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
   try {
-    const response = await fetch('https://worldwidefm.net/api/nowplaying', {
+    const response = await fetchWithTimeout('https://worldwidefm.net/api/nowplaying', {
       signal,
       headers: { 'Accept': 'application/json' },
+      timeout: PROVIDER_TIMEOUT,
     });
 
     if (signal.aborted) return null;
@@ -225,9 +287,10 @@ async function worldwideFmProvider(_station: Station, signal: AbortSignal): Prom
  */
 async function wfmuProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
   try {
-    const response = await fetch('https://wfmu.org/wp-content/themes/wfmu-theme/ajax/now-playing.php', {
+    const response = await fetchWithTimeout('https://wfmu.org/wp-content/themes/wfmu-theme/ajax/now-playing.php', {
       signal,
       headers: { 'Accept': 'application/json' },
+      timeout: PROVIDER_TIMEOUT,
     });
 
     if (signal.aborted) return null;
@@ -245,66 +308,11 @@ async function wfmuProvider(_station: Station, signal: AbortSignal): Promise<Tra
   }
 }
 
-
-
-/**
- * Mapa de providers por estación
- * Fácil de extender agregando nuevas estaciones
- */
-const STATION_PROVIDERS: Record<string, StationProvider> = {
-  // Estaciones con APIs específicas
-  kexp: kexpProvider,
-  wfmu: wfmuProvider,
-  dublab: dublabProvider,
-  'tsf-jazz': tsfJazzProvider,
-  'radio-nova': radioNovaProvider,
-  'worldwide-fm': worldwideFmProvider,
-  ottava: ottavaProvider,
-
-  // Providers genéricos para estaciones sin API específica
-  // (usan metadata del stream o fallback a búsqueda Last.fm)
-  'jazz-sakura': icecastMetadataProvider,
-  'listen-moe': icecastMetadataProvider,
-  'cashmere-radio': icecastMetadataProvider,
-  'radio-raheem': icecastMetadataProvider,
-  'bbc-6music': icecastMetadataProvider,
-  'resonance-fm': icecastMetadataProvider,
-  'fip': icecastMetadataProvider,
-  'france-musique': icecastMetadataProvider,
-  'france-culture': icecastMetadataProvider,
-  'radio-paradise': icecastMetadataProvider,
-  'nts-radio': icecastMetadataProvider,
-  'whisperings-piano': icecastMetadataProvider,
-};
-
-/**
- * Obtiene el provider para una estación o retorna null
- */
-function getStationProvider(stationId: string): StationProvider | null {
-  return STATION_PROVIDERS[stationId.toLowerCase()] || null;
-}
-
-/**
- * Helper para limpiar recursos (interval y abort controller)
- */
-function cleanupResources(
-  intervalRef: React.MutableRefObject<ReturnType<typeof setInterval> | null>,
-  abortControllerRef: React.MutableRefObject<AbortController | null>
-) {
-  if (intervalRef.current) {
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
-  }
-  if (abortControllerRef.current) {
-    abortControllerRef.current.abort();
-    abortControllerRef.current = null;
-  }
-}
-
 export function useNowPlaying(station?: Station | null) {
   const [track, setTrack] = useState<TrackInfo>({});
   const abortControllerRef = useRef<AbortController | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stationIdRef = useRef<string | null>(null);
 
   const fetchNowPlaying = useCallback(async () => {
     if (!station) {
@@ -312,6 +320,14 @@ export function useNowPlaying(station?: Station | null) {
       return;
     }
 
+    // Skip if already fetching for this station
+    if (stationIdRef.current === station.id && abortControllerRef.current) {
+      return;
+    }
+
+    stationIdRef.current = station.id;
+
+    // Abort previous request BEFORE starting new one
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -325,30 +341,53 @@ export function useNowPlaying(station?: Station | null) {
         ? await provider(station, signal)
         : null;
 
-      if (signal.aborted) return;
+      // Check if this request is still valid (station didn't change)
+      if (signal.aborted || stationIdRef.current !== station.id) return;
 
       if (trackInfo) {
         setTrack(trackInfo);
       } else {
-        // Fallback: no usar cover de la estación (solo para lock screen)
         setTrack({});
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         return;
       }
-      if (!signal.aborted) {
+      // Only set empty track if request wasn't aborted and station didn't change
+      if (!signal.aborted && stationIdRef.current === station.id) {
         setTrack({});
       }
     }
   }, [station]);
 
+  // Initial fetch and polling
   useEffect(() => {
-    cleanupResources(intervalRef, abortControllerRef);
+    // Clean up previous interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // Reset station tracking for new station
+    stationIdRef.current = station?.id || null;
+
+    // Fetch immediately
     fetchNowPlaying();
+
+    // Set up polling
     intervalRef.current = setInterval(fetchNowPlaying, POLLING_INTERVAL);
 
-    return () => cleanupResources(intervalRef, abortControllerRef);
+    // Cleanup on unmount or station change
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
   }, [station?.id, fetchNowPlaying]);
 
   return track;

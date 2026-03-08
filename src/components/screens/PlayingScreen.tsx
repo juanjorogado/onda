@@ -5,7 +5,7 @@ import { extractCity } from '../../utils/extractCity';
 import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
-import { getImageBrightness } from '../../utils/getBrightness';
+import { getImageBrightness, getGradientBrightness } from '../../utils/getBrightness';
 
 interface PlayingScreenProps {
   stationName: string;
@@ -18,6 +18,8 @@ interface PlayingScreenProps {
   coverImage?: string;
   timezone?: string;
   isPlaying: boolean;
+  isLoading?: boolean;
+  hasError?: boolean;
   onToggle: () => void;
   onSwipe?: (direction: 'left' | 'right') => void;
   children?: ReactNode;
@@ -34,6 +36,8 @@ export const PlayingScreen = memo(({
   coverImage,
   timezone,
   isPlaying,
+  isLoading,
+  hasError,
   onToggle,
   onSwipe,
   children
@@ -93,28 +97,33 @@ export const PlayingScreen = memo(({
     let mediaQuery: MediaQueryList | null = null;
     
     const checkContrast = async () => {
-      // Por defecto: usar modo del sistema
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const isLandscape = window.innerWidth > window.innerHeight;
       
-      // Solo calcular brillo si hay cover Y está en landscape
-      if (coverImage && isLandscape) {
-        try {
-          const brightness = await getImageBrightness(coverImage);
-          if (isMounted) {
-            // Brillo > 128 = fondo claro → texto negro
-            // Brillo ≤ 128 = fondo oscuro → texto blanco
-            setIsLight(brightness > 128);
+      // En landscape el fondo es dinámico (imagen o gradiente), en portrait es sólido
+      if (isLandscape) {
+        let brightness = prefersDark ? 0 : 255;
+        
+        if (coverImage) {
+          try {
+            brightness = await getImageBrightness(coverImage);
+          } catch {
+            if (coverGradient) {
+              brightness = getGradientBrightness(coverGradient);
+            }
           }
-        } catch {
-          if (isMounted) {
-            setIsLight(!prefersDark);
-          }
+        } else if (coverGradient) {
+          brightness = getGradientBrightness(coverGradient);
+        }
+        
+        if (isMounted) {
+          // Brillo > 128 = fondo claro → texto negro
+          setIsLight(brightness > 128);
         }
       } else {
-        // Sin cover o portrait: usar modo del sistema
+        // Portrait: usar modo del sistema (fondo sólido var(--color-paper))
         if (isMounted) {
-          setIsLight(!prefersDark); // !prefersDark = light mode → true (texto negro)
+          setIsLight(!prefersDark);
         }
       }
     };
@@ -142,7 +151,7 @@ export const PlayingScreen = memo(({
       }
       darkModeQuery.removeEventListener('change', handleDarkModeChange);
     };
-  }, [coverImage]);
+  }, [coverImage, coverGradient]);
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;
@@ -384,6 +393,18 @@ export const PlayingScreen = memo(({
             stationName={stationName}
             isPlaying={isPlaying}
           />
+          
+          {/* Loading/Error indicator */}
+          {isLoading && (
+            <div className="playing-screen-status" data-status="loading">
+              Conectando...
+            </div>
+          )}
+          {hasError && !isLoading && (
+            <div className="playing-screen-status" data-status="error">
+              Error de conexión
+            </div>
+          )}
         </div>
       </div>
     </div>
