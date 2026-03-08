@@ -180,8 +180,8 @@
   position: absolute;
   bottom: var(--spacing-4);
   right: var(--spacing-4);
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background-color: rgba(255, 255, 255, 0.1);
@@ -218,9 +218,9 @@
 }
 
 .shazam-loading-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
   border-top-color: var(--color-white);
   border-radius: 50%;
   animation: spin 1s linear infinite;
