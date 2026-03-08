@@ -211,6 +211,15 @@
   animation: pulse-soft 1.5s ease-in-out infinite;
 }
 
+.shazam-button.is-identifying svg {
+  animation: mic-bounce 1s ease-in-out infinite;
+}
+
+@keyframes mic-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
 .shazam-button.is-success {
   background-color: rgba(76, 175, 80, 0.4);
   color: var(--color-white);
