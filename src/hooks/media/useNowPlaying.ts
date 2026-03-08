@@ -315,14 +315,22 @@ export function useNowPlaying(station?: Station | null) {
   const stationIdRef = useRef<string | null>(null);
 
   const updateTrack = useCallback(async (newTrack: TrackInfo) => {
+    console.log('Actualizando track identificado:', newTrack);
     setTrack(prev => ({ ...prev, ...newTrack }));
     
     // Si NO tenemos cover pero tenemos título/artista de la identificación, BUSCARLO
-    if (!newTrack.cover && newTrack.title && newTrack.artist) {
+    if (newTrack.title && newTrack.artist) {
       try {
+        console.log('Buscando cover para:', newTrack.artist, newTrack.title);
         const fullInfo = await searchTrackInfo(newTrack.artist, newTrack.title);
+        console.log('Resultado búsqueda extendida:', fullInfo);
         if (fullInfo?.cover) {
-          setTrack(prev => ({ ...prev, cover: fullInfo.cover }));
+          setTrack(prev => ({ 
+            ...prev, 
+            cover: fullInfo.cover,
+            album: prev.album || fullInfo.album,
+            year: prev.year || fullInfo.year
+          }));
         }
       } catch (e) {
         console.warn('No se pudo encontrar el cover para el track identificado:', e);
@@ -330,9 +338,16 @@ export function useNowPlaying(station?: Station | null) {
     }
   }, []);
 
-  const fetchNowPlaying = useCallback(async () => {
+  const fetchNowPlaying = useCallback(async (isPolling = false) => {
     if (!station) {
       setTrack({});
+      return;
+    }
+
+    // Si tenemos un track identificado manualmente (con título y artista), 
+    // y estamos en un polling (no un cambio de estación), NO lo sobreescribimos
+    // a menos que el provider encuentre algo nuevo (que no suele ocurrir si ya falló)
+    if (isPolling && track.title && track.artist && !getStationProvider(station.id)) {
       return;
     }
 
@@ -393,10 +408,10 @@ export function useNowPlaying(station?: Station | null) {
     stationIdRef.current = station?.id || null;
 
     // Fetch immediately
-    fetchNowPlaying();
+    fetchNowPlaying(false);
 
     // Set up polling
-    intervalRef.current = setInterval(fetchNowPlaying, POLLING_INTERVAL);
+    intervalRef.current = setInterval(() => fetchNowPlaying(true), POLLING_INTERVAL);
 
     // Cleanup on unmount or station change
     return () => {
