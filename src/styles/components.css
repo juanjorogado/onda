@@ -163,7 +163,14 @@
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);
   text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.05);
-  animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both;
+  animation: 
+    fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both,
+    pulse-soft 3s ease-in-out var(--duration-normal) infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
 }
 
 .waiting-screen-indicator {
