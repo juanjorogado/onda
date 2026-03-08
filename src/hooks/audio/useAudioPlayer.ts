@@ -45,7 +45,7 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     }
   }, [src, isPlaying]);
 
-  // Prevenir que iOS pause el audio cuando la app va a segundo plano
+  // Prevenir que iOS pause el audio cuando la app va a segundo plano e interrupciones (llamadas)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -55,20 +55,49 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     audio.setAttribute('webkit-playsinline', 'true');
     audio.setAttribute('x-webkit-airplay', 'allow');
     
-    // Prevenir que iOS pause automáticamente
+    // Bandera para rastrear si la pausa fue provocada por el sistema
+    let wasPlayingBeforeInterruption = false;
+
+    // Prevenir que iOS pause automáticamente o intentar reanudar
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && isPlaying && audio.paused) {
+      if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
+        console.log('App visible y debería estar sonando. Intentando reanudar...');
         audio.play().catch(() => {});
       }
     };
 
     const handlePageShow = () => {
       if (isPlaying && audio.paused) {
+        console.log('PageShow detectado y debería estar sonando. Intentando reanudar...');
         audio.play().catch(() => {});
       }
     };
 
-    const handlePageHide = () => {};
+    const handleInterruption = (e: any) => {
+      console.log('Audio interruption detected:', e);
+      if (isPlaying) {
+        wasPlayingBeforeInterruption = true;
+      }
+    };
+
+    const handlePause = () => {
+      // Si el audio se pausa pero el estado isPlaying es true, fue una interrupción del sistema
+      if (isPlaying) {
+        console.log('Audio pausado por el sistema (interrupción)');
+        wasPlayingBeforeInterruption = true;
+      }
+    };
+
+    const handlePlay = () => {
+      wasPlayingBeforeInterruption = false;
+    };
+
+    const handleFocus = () => {
+      if (isPlaying && audio.paused) {
+        console.log('Foco recuperado y debería estar sonando. Intentando reanudar...');
+        audio.play().catch(() => {});
+      }
+    };
 
     const handleWaiting = () => setIsLoading(true);
     const handleCanPlay = () => setIsLoading(false);
@@ -81,18 +110,22 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     audio.addEventListener('waiting', handleWaiting);
     audio.addEventListener('canplay', handleCanPlay);
     audio.addEventListener('error', handleError);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('play', handlePlay);
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pageshow', handlePageShow);
-    window.addEventListener('pagehide', handlePageHide);
+    window.addEventListener('focus', handleFocus);
 
     return () => {
       audio.removeEventListener('waiting', handleWaiting);
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('error', handleError);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('play', handlePlay);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pageshow', handlePageShow);
-      window.removeEventListener('pagehide', handlePageHide);
+      window.removeEventListener('focus', handleFocus);
     };
   }, [isPlaying]);
 

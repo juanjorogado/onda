@@ -312,11 +312,23 @@ export function useNowPlaying(station?: Station | null) {
   const [track, setTrack] = useState<TrackInfo>({});
   const abortControllerRef = useRef<AbortController | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stationIdRef = useRef<string | null>(null);
 
   const updateTrack = useCallback(async (newTrack: TrackInfo) => {
     console.log('Actualizando track identificado:', newTrack);
     setTrack(prev => ({ ...prev, ...newTrack }));
+
+    // Limpiar timeout anterior si existe
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current);
+    }
+
+    // Resetear a info genérica después de 5 minutos (duración típica de una canción larga)
+    resetTimeoutRef.current = setTimeout(() => {
+      console.log('Resetting identified track info after timeout');
+      setTrack({});
+    }, 5 * 60 * 1000);
     
     // Si NO tenemos cover pero tenemos título/artista de la identificación, BUSCARLO
     if (newTrack.title && newTrack.artist) {
