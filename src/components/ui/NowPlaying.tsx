@@ -113,7 +113,7 @@ export const NowPlaying = memo(({
           className="marquee-content"
           style={{ 
             animationDuration: `${duration}s`,
-            animationPlayState: isPlaying ? 'running' : 'paused'
+            animationPlayState: 'running'
           }}
         >
           <span ref={textRef} className="text-xl font-normal">
