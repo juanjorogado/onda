@@ -67,6 +67,7 @@ export const NowPlaying = memo(({
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [duration, setDuration] = useState(20);
+  const [shouldScroll, setShouldScroll] = useState(false);
   
   const text = useMemo(
     () => formatTrackInfo(title, artist, album, year, stationName, isPlaying),
@@ -78,14 +79,16 @@ export const NowPlaying = memo(({
     const checkScroll = () => {
       if (!containerRef.current || !textRef.current || !text) return;
       
-      // Measure the FULL marquee content width (text + separator + text + separator)
-      // Not just the individual text span, otherwise duration is calculated incorrectly
-      const containerWidth = containerRef.current.scrollWidth;
-      const textWidth = textRef.current.scrollWidth;
+      // Measure container width and text width to determine if scrolling is needed
+      const containerWidth = containerRef.current?.clientWidth || 0;
+      const textWidth = textRef.current?.scrollWidth || 0;
+      
+      // Only scroll if text overflows the container
+      setShouldScroll(textWidth > containerWidth);
       
       // Full content width is approximately 2x text + 2x separator
       // But more reliably, we can measure from the container which contains the duplicated content
-      const fullContentWidth = containerWidth;
+      const fullContentWidth = containerRef.current.scrollWidth;
       
       // Velocidad constante: ~50px por segundo
       // We divide by 2 because the animation only moves 50% of the content
@@ -107,7 +110,7 @@ export const NowPlaying = memo(({
   
   return (
     <div key={text} ref={containerRef} className={`overflow-hidden text-ink animate-fade-in ${className}`}>
-      <div className="marquee is-scrolling">
+      <div className={`marquee ${shouldScroll ? 'is-scrolling' : ''}`}>
         <div 
           className="marquee-content"
           style={{ 
