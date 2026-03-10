@@ -66,7 +66,6 @@ export const NowPlaying = memo(({
 }: NowPlayingProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
-  const [shouldScroll, setShouldScroll] = useState(false);
   const [duration, setDuration] = useState(20);
   
   const text = useMemo(
@@ -74,24 +73,16 @@ export const NowPlaying = memo(({
     [title, artist, album, year, stationName, isPlaying]
   );
   
-  // Detectar si el texto es más ancho que el contenedor
+  // Siempre animamos el marquee
   useEffect(() => {
     const checkScroll = () => {
       if (!containerRef.current || !textRef.current || !text) return;
       
-      const containerWidth = containerRef.current.offsetWidth;
-      // Usamos el scrollWidth del span interno que contiene el texto original
       const textWidth = textRef.current.scrollWidth;
       
-      // Siempre permitir scroll si el usuario lo prefiere, o si el texto es largo
-      const needsScroll = textWidth > containerWidth - 20; 
-      setShouldScroll(needsScroll);
-
-      if (needsScroll) {
-        // Velocidad constante: ~50px por segundo
-        const newDuration = Math.max(10, textWidth / 40);
-        setDuration(newDuration);
-      }
+      // Velocidad constante: ~50px por segundo
+      const newDuration = Math.max(10, textWidth / 40);
+      setDuration(newDuration);
     };
 
     // Ejecutar después de un pequeño delay para asegurar que el DOM esté listo
@@ -108,7 +99,7 @@ export const NowPlaying = memo(({
   
   return (
     <div key={text} ref={containerRef} className={`overflow-hidden text-ink animate-fade-in ${className}`}>
-      <div className={`marquee ${shouldScroll ? 'is-scrolling' : 'is-static'}`}>
+      <div className="marquee is-scrolling">
         <div 
           className="marquee-content"
           style={{ 
@@ -119,7 +110,7 @@ export const NowPlaying = memo(({
           <span ref={textRef} className="text-xl font-normal">
             {text}
           </span>
-          {shouldScroll && (
+          {(
             <>
               <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
               <span className="text-xl font-normal">
