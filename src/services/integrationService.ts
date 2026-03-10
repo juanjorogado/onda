@@ -47,7 +47,7 @@ export const integrationService = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ targetUrl: webhookUrl, ...payload }),
       });
 
       // Si el proxy funciona, terminamos aquí
