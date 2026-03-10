@@ -78,10 +78,18 @@ export const NowPlaying = memo(({
     const checkScroll = () => {
       if (!containerRef.current || !textRef.current || !text) return;
       
+      // Measure the FULL marquee content width (text + separator + text + separator)
+      // Not just the individual text span, otherwise duration is calculated incorrectly
+      const containerWidth = containerRef.current.scrollWidth;
       const textWidth = textRef.current.scrollWidth;
       
+      // Full content width is approximately 2x text + 2x separator
+      // But more reliably, we can measure from the container which contains the duplicated content
+      const fullContentWidth = containerWidth;
+      
       // Velocidad constante: ~50px por segundo
-      const newDuration = Math.max(10, textWidth / 40);
+      // We divide by 2 because the animation only moves 50% of the content
+      const newDuration = Math.max(10, (fullContentWidth / 2) / 40);
       setDuration(newDuration);
     };
 
