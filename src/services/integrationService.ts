@@ -23,11 +23,6 @@ export const integrationService = {
       cancion: track.title 
     });
 
-    if (!webhookUrl) {
-      console.warn('VITE_ANYTYPE_WEBHOOK_URL no configurado. El tema no se guardará automáticamente.');
-      return false;
-    }
-
     try {
       const payload = {
         source: 'ONDA Radio',
@@ -44,7 +39,29 @@ export const integrationService = {
         }
       };
 
-      console.log('Enviando payload a Anytype:', payload);
+      console.log('Enviando payload a webhook (con proxy si está desplegado)...');
+
+      // 1) Intentar pasar por el proxy serverless para evitar CORS y obtener respuesta real
+      const proxyResp = await fetch('/api/forward-webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Si el proxy funciona, terminamos aquí
+      if (proxyResp.ok) {
+        const info = await proxyResp.json().catch(() => ({}));
+        console.log('Proxy webhook result:', info);
+        return true;
+      }
+
+      // 2) Si no hay proxy o falla, intentar enviar directo (no-cors + text/plain)
+      if (!webhookUrl) {
+        console.warn('No hay proxy ni URL de webhook configurada. Saltando guardado.');
+        return false;
+      }
 
       await fetch(webhookUrl, {
         method: 'POST',

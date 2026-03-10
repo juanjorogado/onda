@@ -201,5 +201,3 @@
 .animate-cover-fade-in {
   animation: cover-fade-in var(--duration-normal) var(--easing-smooth) both;
 }
-
-/* Weather overlays */
