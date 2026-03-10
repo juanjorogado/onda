@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { integrationService } from '../../services/integrationService';
 
 interface ShazamButtonProps {

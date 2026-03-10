@@ -46,7 +46,7 @@ export const integrationService = {
 
       console.log('Enviando payload a Anytype:', payload);
 
-      const response = await fetch(webhookUrl, {
+      await fetch(webhookUrl, {
         method: 'POST',
         mode: 'no-cors', // Para Google Sheets/Scripts, necesitamos no-cors para evitar el preflight (OPTIONS) que no soporta
         headers: {

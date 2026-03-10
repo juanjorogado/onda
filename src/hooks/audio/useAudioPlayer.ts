@@ -55,9 +55,6 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     audio.setAttribute('webkit-playsinline', 'true');
     audio.setAttribute('x-webkit-airplay', 'allow');
     
-    // Bandera para rastrear si la pausa fue provocada por el sistema
-    let wasPlayingBeforeInterruption = false;
-
     // Prevenir que iOS pause automáticamente o intentar reanudar
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
@@ -73,23 +70,14 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
       }
     };
 
-    const handleInterruption = (e: any) => {
-      console.log('Audio interruption detected:', e);
-      if (isPlaying) {
-        wasPlayingBeforeInterruption = true;
-      }
-    };
-
     const handlePause = () => {
       // Si el audio se pausa pero el estado isPlaying es true, fue una interrupción del sistema
       if (isPlaying) {
         console.log('Audio pausado por el sistema (interrupción)');
-        wasPlayingBeforeInterruption = true;
       }
     };
 
     const handlePlay = () => {
-      wasPlayingBeforeInterruption = false;
     };
 
     const handleFocus = () => {
