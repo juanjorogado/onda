@@ -82,8 +82,9 @@ export const NowPlaying = memo(({
       const fullContentWidth = containerRef.current.scrollWidth;
       
       // Velocidad constante: ~50px por segundo
-      // Dividimos por 2 porque la animación solo mueve el 50% del contenido
-      const newDuration = Math.max(10, (fullContentWidth / 2) / 50);
+      // Minimum duration de 15s para que se vea bien el movimiento
+      // para texto corto, y máximo 30s para texto largo
+      const newDuration = Math.min(30, Math.max(15, (fullContentWidth / 2) / 50));
       setDuration(newDuration);
     };
 
@@ -112,15 +113,11 @@ export const NowPlaying = memo(({
           <span ref={textRef} className="text-xl font-normal">
             {text}
           </span>
-          {(
-            <>
-              <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
-              <span className="text-xl font-normal">
-                {text}
-              </span>
-              <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
-            </>
-          )}
+          <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
+          <span className="text-xl font-normal">
+            {text}
+          </span>
+          <span className="marquee-separator">{MARQUEE_SEPARATOR}</span>
         </div>
       </div>
     </div>
