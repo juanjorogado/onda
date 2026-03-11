@@ -1,7 +1,6 @@
 import { TrackInfo } from '../types/track';
 
 interface IdentificationResult extends TrackInfo {
-  apple_music_url?: string;
   spotify_url?: string;
 }
 
@@ -34,7 +33,6 @@ export const integrationService = {
           album: track.album,
           year: track.year,
           apple_music_url: track.apple_music_url,
-          spotify_url: track.spotify_url,
           cover: track.cover,
         }
       };

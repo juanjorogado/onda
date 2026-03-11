@@ -78,17 +78,21 @@ export default async function handler(
       const appleMusic = music.external_metadata?.apple_music;
       const spotify = music.external_metadata?.spotify;
       
+      // ACRCloud devuelve release_date (ej: "2023-01-15"), extraer año
+      const releaseDate = music.release_date;
+      const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
+      
       return response.status(200).json({
         success: true,
         track: {
           title: music.title,
           artist: music.artists?.[0]?.name,
           album: music.album?.name,
+          year,
           label: music.label,
           release_date: music.release_date,
           // ACRCloud a veces devuelve IDs o URLs directas
           apple_music_url: appleMusic?.track?.id ? `https://music.apple.com/song/${appleMusic.track.id}` : undefined,
-          spotify_url: spotify?.track?.id ? `https://open.spotify.com/track/${spotify.track.id}` : undefined,
           // Datos para el reseteo dinámico
           duration_ms: music.duration_ms,
           offset_ms: music.play_offset_ms,

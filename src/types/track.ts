@@ -4,5 +4,6 @@ export interface TrackInfo {
   album?: string;
   cover?: string;
   year?: number;
+  apple_music_url?: string;
 }
 
