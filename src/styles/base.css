@@ -135,7 +135,7 @@ body {
    ========================================================================== */
 .text-ink {
   color: var(--color-ink);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
 }
 
 .bg-paper {
@@ -260,7 +260,7 @@ body {
   font-size: var(--font-size-xs);
   color: var(--color-ink);
   opacity: 0;
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
