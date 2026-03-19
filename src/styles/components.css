@@ -154,7 +154,7 @@
   max-width: var(--container-width-base);
   flex-shrink: 0;
   color: var(--color-ink);
-  font-size: 2rem; /* 32px - waiting screen text */
+  font-size: var(--font-size-display);
   line-height: var(--line-height-base);
   font-family: var(--font-family-base);
   font-style: normal;
@@ -180,31 +180,31 @@
   position: absolute;
   bottom: var(--spacing-4);
   right: var(--spacing-4);
-  width: 60px;
-  height: 60px;
+  width: var(--size-identify-button);
+  height: var(--size-identify-button);
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border: var(--border-width-1) solid var(--color-glass-border);
+  background-color: var(--color-glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-white);
   cursor: pointer;
-  transition: background-color 0.3s var(--easing-smooth), transform 0.3s var(--easing-smooth);
-  animation: fade-in 0.5s var(--easing-smooth) forwards;
-  z-index: 20;
+  transition: background-color var(--duration-fast) var(--easing-smooth), transform var(--duration-fast) var(--easing-smooth);
+  animation: fade-in var(--duration-normal) var(--easing-smooth) forwards;
+  z-index: var(--z-index-content);
 }
 
 .shazam-button:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--color-glass-bg-hover);
   transform: scale(1.05);
 }
 
 .shazam-button:disabled {
   cursor: default;
-  opacity: 0.8;
+  opacity: var(--opacity-bg);
 }
 
 .shazam-button.is-identifying {
@@ -221,16 +221,16 @@
 }
 
 .shazam-button.is-success {
-  background-color: rgba(76, 175, 80, 0.4);
+  background-color: var(--color-feedback-success-bg);
   color: var(--color-white);
-  border-color: rgba(76, 175, 80, 0.6);
+  border-color: var(--color-feedback-success-border);
   animation: scale-up-fade-out 2s var(--easing-smooth) forwards;
 }
 
 .shazam-button.is-error {
-  background-color: rgba(244, 67, 54, 0.4);
+  background-color: var(--color-feedback-error-bg);
   color: var(--color-white);
-  border-color: rgba(244, 67, 54, 0.6);
+  border-color: var(--color-feedback-error-border);
 }
 
 @keyframes scale-up-fade-out {
@@ -247,12 +247,12 @@
 }
 
 .shazam-loading-spinner {
-  width: 28px;
-  height: 28px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  width: var(--size-spinner);
+  height: var(--size-spinner);
+  border: var(--border-width-3) solid var(--color-glass-border);
   border-top-color: var(--color-white);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin var(--duration-normal) linear infinite;
 }
 
 @keyframes spin {
@@ -307,6 +307,8 @@
   z-index: 0;
   pointer-events: none;
   transform: scale(1.1);
+  filter: blur(var(--blur-bg));
+  opacity: var(--opacity-bg);
 }
 
 /* Contraste dinámico de texto */
@@ -356,10 +358,6 @@
   }
 }
 
-.playing-screen-container.swiping-vertical {
-  overflow-y: hidden;
-  touch-action: none;
-}
 
 .playing-screen-board {
   position: relative;

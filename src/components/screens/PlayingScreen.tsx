@@ -1,4 +1,5 @@
-import { memo, KeyboardEvent, useRef, ReactNode, useMemo, useState, useEffect } from 'react';
+import { memo, KeyboardEvent, useRef, useMemo, useState, useEffect } from 'react';
+import { TrackInfo } from '../../types/track';
 import { useCurrentTime } from '../../hooks/time/useCurrentTime';
 import { formatTime } from '../../utils/formatTime';
 import { extractCity } from '../../utils/extractCity';
@@ -22,10 +23,9 @@ interface PlayingScreenProps {
   isLoading: boolean;
   hasError: boolean;
   streamUrl?: string;
-  onTrackIdentified?: (track: any) => void;
+  onTrackIdentified?: (track: TrackInfo) => void;
   onToggle: () => void;
   onSwipe: (direction: 'left' | 'right') => void;
-  children?: ReactNode;
 }
 
 export const PlayingScreen = memo(({ 
@@ -45,21 +45,19 @@ export const PlayingScreen = memo(({
   onTrackIdentified,
   onToggle,
   onSwipe,
-  children,
 }: PlayingScreenProps) => {
   const time = useCurrentTime();
   const startX = useRef(0);
   const startY = useRef(0);
   const swiped = useRef(false);
   const isDragging = useRef(false);
+  const [isDraggingState, setIsDraggingState] = useState(false);
   const [translateX, setTranslateX] = useState(0);
-  const [translateY, setTranslateY] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [swipeDirection, setSwipeDirection] = useState<'horizontal' | 'vertical' | null>(null);
-  const swipeDirectionRef = useRef<'horizontal' | 'vertical' | null>(null);
+  const [swipeDirection, setSwipeDirection] = useState<'horizontal' | null>(null);
+  const swipeDirectionRef = useRef<'horizontal' | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef(0);
-  const containerHeight = useRef(0);
   const [isLight, setIsLight] = useState(false);
 
   // Hook de feedback háptico para mejor UX en coche
@@ -71,9 +69,9 @@ export const PlayingScreen = memo(({
   // Reset translate cuando cambia la estación
   useEffect(() => {
     setTranslateX(0);
-    setTranslateY(0);
     setIsTransitioning(false);
     isDragging.current = false;
+    setIsDraggingState(false);
     setSwipeDirection(null);
     swipeDirectionRef.current = null;
   }, [stationName]);
@@ -83,17 +81,16 @@ export const PlayingScreen = memo(({
     swipeDirectionRef.current = swipeDirection;
   }, [swipeDirection]);
 
-  // Actualizar el ancho y alto del contenedor
+  // Actualizar el ancho del contenedor
   useEffect(() => {
-    const updateDimensions = () => {
+    const updateWidth = () => {
       if (boardRef.current) {
         containerWidth.current = boardRef.current.offsetWidth || window.innerWidth;
-        containerHeight.current = boardRef.current.offsetHeight || window.innerHeight;
       }
     };
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
   // Calcular el brillo del fondo para el contraste de texto
@@ -174,6 +171,7 @@ export const PlayingScreen = memo(({
       startY.current = touch.clientY;
       swiped.current = false;
       isDragging.current = false;
+      setIsDraggingState(false);
       setIsTransitioning(false);
       setSwipeDirection(null);
     };
@@ -204,11 +202,11 @@ export const PlayingScreen = memo(({
         e.preventDefault();
         e.stopPropagation();
         isDragging.current = true;
-        
+        setIsDraggingState(true);
+
         const maxTranslate = containerWidth.current * 0.5;
         const clampedDx = Math.max(-maxTranslate, Math.min(maxTranslate, dx));
         setTranslateX(clampedDx);
-        setTranslateY(0);
         
         if (absDx > SWIPE_THRESHOLD) {
           swiped.current = true;
@@ -247,10 +245,12 @@ export const PlayingScreen = memo(({
           setTimeout(() => {
             setIsTransitioning(false);
             isDragging.current = false;
+            setIsDraggingState(false);
             setSwipeDirection(null);
           }, 300);
         } else {
           isDragging.current = false;
+          setIsDraggingState(false);
           setSwipeDirection(null);
         }
       }
@@ -266,37 +266,27 @@ export const PlayingScreen = memo(({
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [onSwipe, swipe, translateX, translateY]);
+  }, [onSwipe, swipe, translateX]);
 
   return (
-    <div 
-      className={`playing-screen-container ${swipeDirection === 'vertical' && isDragging.current ? 'swiping-vertical' : ''}`}
+    <div
+      className="playing-screen-container"
       data-brightness={isLight ? 'light' : 'dark'}
     >
       {/* Fondo desenfocado para todos los modos */}
-      <div 
+      <div
         className="playing-screen-landscape-bg"
         style={{
           background: coverImage ? `url(${coverImage}) center/cover no-repeat` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
-          filter: 'blur(60px)',
-          opacity: 0.9,
-          position: 'fixed',
-          inset: '-10%',
         }}
       />
       <div 
         ref={boardRef}
-        className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning' : ''} ${isDragging.current ? 'swipe-dragging' : ''}`}
+        className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning' : ''} ${isDraggingState ? 'swipe-dragging' : ''}`}
         style={{
-          transform: swipeDirection === 'vertical' 
-            ? `translateY(${translateY}px)`
-            : `translateX(${translateX}px) rotateY(${translateX * 0.05}deg)`,
-          opacity: isDragging.current 
-            ? swipeDirection === 'vertical' && containerHeight.current > 0
-              ? Math.max(0.7, 1 - Math.abs(translateY) / (containerHeight.current * 0.5))
-              : swipeDirection === 'horizontal' && containerWidth.current > 0
-              ? Math.max(0.7, 1 - Math.abs(translateX) / (containerWidth.current * 0.5))
-              : 1
+          transform: `translateX(${translateX}px) rotateY(${translateX * 0.05}deg)`,
+          opacity: isDraggingState && containerWidth.current > 0
+            ? Math.max(0.7, 1 - Math.abs(translateX) / (containerWidth.current * 0.5))
             : 1,
           transition: isTransitioning ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
         }}
@@ -381,11 +371,7 @@ export const PlayingScreen = memo(({
               key={coverImage}
             />
           )}
-          {children && (
-            <div className="playing-screen-cover-content">
-              {children}
-            </div>
-          )}
+
           {isPlaying && !trackTitle && !trackArtist && streamUrl && (
             <ShazamButton 
               streamUrl={streamUrl} 
@@ -396,26 +382,28 @@ export const PlayingScreen = memo(({
 
         {/* Track Text - NowPlaying con marquee */}
         <div className="playing-screen-text-container">
-          <NowPlaying 
-            title={trackTitle}
-            artist={trackArtist}
-            album={trackAlbum}
-            year={trackYear}
-            stationName={stationName}
-            isPlaying={isPlaying}
-          />
-          
+          <div aria-live="polite" aria-atomic="true">
+            <NowPlaying
+              title={trackTitle}
+              artist={trackArtist}
+              album={trackAlbum}
+              year={trackYear}
+              stationName={stationName}
+              isPlaying={isPlaying}
+            />
+          </div>
+
           {/* Loading/Error layer - Absolute positioned to avoid layout shifts */}
-          <div className="playing-screen-status-layer">
+          <div className="playing-screen-status-layer" aria-live="polite" aria-atomic="true">
             {isLoading && (
               <div className="playing-screen-status" data-status="loading">
-                <span className="status-dot"></span>
+                <span className="status-dot" aria-hidden="true"></span>
                 Conectando...
               </div>
             )}
             {hasError && !isLoading && (
-              <div className="playing-screen-status" data-status="error">
-                <span className="status-dot"></span>
+              <div className="playing-screen-status" data-status="error" role="alert">
+                <span className="status-dot" aria-hidden="true"></span>
                 Error de conexión
               </div>
             )}

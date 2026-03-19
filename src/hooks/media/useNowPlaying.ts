@@ -25,33 +25,20 @@ const STATION_PROVIDERS: Record<string, ProviderConfig> = {
   // Estaciones con APIs específicas
   kexp: { provider: kexpProvider, timeout: PROVIDER_TIMEOUT },
   wfmu: { provider: wfmuProvider, timeout: PROVIDER_TIMEOUT },
-  dublab: { provider: dublabProvider, timeout: PROVIDER_TIMEOUT },
   'tsf-jazz': { provider: tsfJazzProvider, timeout: PROVIDER_TIMEOUT },
-  'radio-nova': { provider: radioNovaProvider, timeout: PROVIDER_TIMEOUT },
-  'worldwide-fm': { provider: worldwideFmProvider, timeout: PROVIDER_TIMEOUT },
-  ottava: { provider: ottavaProvider, timeout: PROVIDER_TIMEOUT },
 
   // Providers genéricos para estaciones sin API específica
-  'jazz-sakura': DEFAULT_PROVIDER_CONFIG,
-  'listen-moe': DEFAULT_PROVIDER_CONFIG,
   'cashmere-radio': DEFAULT_PROVIDER_CONFIG,
   'radio-raheem': DEFAULT_PROVIDER_CONFIG,
   'bbc-6music': DEFAULT_PROVIDER_CONFIG,
   'resonance-fm': DEFAULT_PROVIDER_CONFIG,
   'fip': DEFAULT_PROVIDER_CONFIG,
   'france-musique': DEFAULT_PROVIDER_CONFIG,
-  'france-culture': DEFAULT_PROVIDER_CONFIG,
   'radio-paradise': DEFAULT_PROVIDER_CONFIG,
   'nts-radio': DEFAULT_PROVIDER_CONFIG,
+  'nts-2': DEFAULT_PROVIDER_CONFIG,
   'whisperings-piano': DEFAULT_PROVIDER_CONFIG,
 };
-
-/**
- * Registra un provider personalizado para una estación
- */
-export function registerStationProvider(stationId: string, config: ProviderConfig): void {
-  STATION_PROVIDERS[stationId.toLowerCase()] = config;
-}
 
 /**
  * Obtiene el provider para una estación o retorna null
@@ -149,88 +136,6 @@ async function icecastMetadataProvider(station: Station, signal: AbortSignal): P
 }
 
 /**
- * Provider para OTTAVA (Japón) - Radio clásica/contemporánea
- * Intenta obtener metadata desde la web oficial
- */
-async function ottavaProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    const response = await fetchWithTimeout('https://ottava.jp/api/nowplaying', {
-      signal,
-      headers: { 'Accept': 'application/json' },
-      timeout: PROVIDER_TIMEOUT,
-    });
-
-    if (signal.aborted) return null;
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    return {
-      title: data?.title || undefined,
-      artist: data?.artist || undefined,
-      album: data?.album || undefined,
-      cover: data?.cover || data?.image || undefined,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Provider para Dublab - Usa su API pública
- */
-async function dublabProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    const response = await fetchWithTimeout('https://www.dublab.com/api/nowplaying', {
-      signal,
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'ONDA Radio App/1.0',
-      },
-      timeout: PROVIDER_TIMEOUT,
-    });
-
-    if (signal.aborted) return null;
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    return {
-      title: data?.track?.title || data?.title || undefined,
-      artist: data?.track?.artist || data?.artist || undefined,
-      album: data?.track?.album || data?.album || undefined,
-      cover: data?.track?.artwork || data?.artwork || undefined,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Provider para Radio Nova (Francia)
- */
-async function radioNovaProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    const response = await fetchWithTimeout('https://www.novaplanet.com/radio/nowplaying', {
-      signal,
-      headers: { 'Accept': 'application/json' },
-      timeout: PROVIDER_TIMEOUT,
-    });
-
-    if (signal.aborted) return null;
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    return {
-      title: data?.currentTrack?.title || undefined,
-      artist: data?.currentTrack?.artist || undefined,
-      album: data?.currentTrack?.album || undefined,
-      cover: data?.currentTrack?.cover || undefined,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
  * Provider para TSF Jazz (Francia)
  */
 async function tsfJazzProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
@@ -250,32 +155,6 @@ async function tsfJazzProvider(_station: Station, signal: AbortSignal): Promise<
       artist: data?.artist || undefined,
       album: data?.album || undefined,
       cover: data?.cover || undefined,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Provider para Worldwide FM (Londres)
- */
-async function worldwideFmProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    const response = await fetchWithTimeout('https://worldwidefm.net/api/nowplaying', {
-      signal,
-      headers: { 'Accept': 'application/json' },
-      timeout: PROVIDER_TIMEOUT,
-    });
-
-    if (signal.aborted) return null;
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    return {
-      title: data?.track?.title || data?.title || undefined,
-      artist: data?.track?.artist || data?.artist || undefined,
-      album: data?.track?.album || data?.album || undefined,
-      cover: data?.track?.artwork || data?.artwork || undefined,
     };
   } catch {
     return null;
@@ -316,37 +195,26 @@ export function useNowPlaying(station?: Station | null) {
   const stationIdRef = useRef<string | null>(null);
 
   const updateTrack = useCallback(async (newTrack: TrackInfo & { duration_ms?: number, offset_ms?: number }) => {
-    console.log('Actualizando track identificado:', newTrack);
     setTrack(prev => ({ ...prev, ...newTrack }));
 
-    // Limpiar timeout anterior si existe
     if (resetTimeoutRef.current) {
       clearTimeout(resetTimeoutRef.current);
     }
 
-    // Calcular tiempo de reseteo dinámico
-    // Si tenemos duración y offset, calculamos el tiempo restante + margen
-    // Si no, usamos 5 minutos por defecto
     let resetTime = 5 * 60 * 1000;
-    
+
     if (newTrack.duration_ms && newTrack.offset_ms !== undefined) {
       const remainingMs = newTrack.duration_ms - newTrack.offset_ms;
-      // Añadimos 15 segundos de margen por el retraso del stream y el procesamiento
-      resetTime = Math.max(30000, remainingMs + 15000); 
-      console.log(`Reseteo dinámico configurado en ${Math.round(resetTime / 1000)} segundos`);
+      resetTime = Math.max(30000, remainingMs + 15000);
     }
 
     resetTimeoutRef.current = setTimeout(() => {
-      console.log('Resetting identified track info after dynamic timeout');
       setTrack({});
     }, resetTime);
-    
-    // Si NO tenemos cover pero tenemos título/artista de la identificación, BUSCARLO
+
     if (newTrack.title && newTrack.artist) {
       try {
-        console.log('Buscando cover para:', newTrack.artist, newTrack.title);
         const fullInfo = await searchTrackInfo(newTrack.artist, newTrack.title);
-        console.log('Resultado búsqueda extendida:', fullInfo);
         if (fullInfo?.cover) {
           setTrack(prev => ({ 
             ...prev, 

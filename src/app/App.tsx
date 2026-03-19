@@ -63,7 +63,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black font-sans safe-area">
-      <div
+      <main
         className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
         style={{
           background: coverArt ? undefined : coverGradient,
@@ -107,7 +107,7 @@ function App() {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   )
 }

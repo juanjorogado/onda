@@ -1,9 +1,10 @@
 import { memo, useState, useCallback } from 'react';
+import { TrackInfo } from '../../types/track';
 import { integrationService } from '../../services/integrationService';
 
 interface ShazamButtonProps {
   streamUrl: string;
-  onTrackIdentified?: (track: any) => void;
+  onTrackIdentified?: (track: TrackInfo) => void;
 }
 
 export const ShazamButton = memo(({ streamUrl, onTrackIdentified }: ShazamButtonProps) => {

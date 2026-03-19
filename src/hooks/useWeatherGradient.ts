@@ -1,52 +1,19 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Station } from '../types/station';
 import { getCityGradientFallback } from '../services/imageService';
 
-interface WeatherGradientState {
-  gradient: string;
-  isLoading: boolean;
-}
-
-/**
- * Hook para obtener gradientes influenciados por el clima real
- * @param station - Estación actual
- * @returns Estado del gradiente con información del clima
- */
-export function useWeatherGradient(station: Station | null): WeatherGradientState {
-  const [state, setState] = useState<WeatherGradientState>({
-    gradient: station ? getCityGradientFallback(station.location, station.timezone) : '',
-    isLoading: false,
-  });
-
-  const updateGradient = useCallback(async () => {
-    if (!station) {
-      setState({ gradient: '', isLoading: false });
-      return;
-    }
-
-    setState(prev => ({ ...prev, isLoading: true }));
-
-    try {
-      const gradient = getCityGradientFallback(station.location, station.timezone);
-      setState({
-        gradient,
-        isLoading: false,
-      });
-    } catch (error) {
-      console.error('[useWeatherGradient] Error:', error);
-      setState({
-        gradient: getCityGradientFallback(station.location, station.timezone),
-        isLoading: false,
-      });
-    }
-  }, [station]);
+export function useWeatherGradient(station: Station | null): { gradient: string } {
+  const [gradient, setGradient] = useState(
+    station ? getCityGradientFallback(station.location, station.timezone) : ''
+  );
 
   useEffect(() => {
-    // Actualizar inmediatamente al cambiar de estación
-    updateGradient();
+    if (!station) {
+      setGradient('');
+      return;
+    }
+    setGradient(getCityGradientFallback(station.location, station.timezone));
+  }, [station]);
 
-    return () => void 0;
-  }, [updateGradient]);
-
-  return state;
+  return { gradient };
 }

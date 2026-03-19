@@ -16,12 +16,6 @@ export const integrationService = {
     // Usamos tanto VITE_ como la forma estándar de Vercel por si acaso
     const webhookUrl = import.meta.env.VITE_ANYTYPE_WEBHOOK_URL || (window as any)._env_?.VITE_ANYTYPE_WEBHOOK_URL;
     
-    console.log('DEBUG: Preparando envío al webhook...', { 
-      urlConfigurada: !!webhookUrl, 
-      urlParcial: webhookUrl ? `${webhookUrl.substring(0, 20)}...` : 'N/A',
-      cancion: track.title 
-    });
-
     try {
       const payload = {
         source: 'ONDA Radio',
@@ -37,9 +31,6 @@ export const integrationService = {
         }
       };
 
-      console.log('Enviando payload a webhook (con proxy si está desplegado)...');
-
-      // 1) Intentar pasar por el proxy serverless para evitar CORS y obtener respuesta real
       const proxyResp = await fetch('/api/forward-webhook', {
         method: 'POST',
         headers: {
@@ -50,8 +41,6 @@ export const integrationService = {
 
       // Si el proxy funciona, terminamos aquí
       if (proxyResp.ok) {
-        const info = await proxyResp.json().catch(() => ({}));
-        console.log('Proxy webhook result:', info);
         return true;
       }
 
@@ -70,8 +59,6 @@ export const integrationService = {
         body: JSON.stringify(payload),
       });
 
-      // Con 'no-cors', la respuesta es "opaque", no podemos ver el status pero la petición se envía
-      console.log('Petición enviada al webhook (modo no-cors/text-plain)');
       return true;
     } catch (error) {
       console.error('Error al guardar en Anytype:', error);

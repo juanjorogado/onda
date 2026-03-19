@@ -58,31 +58,18 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     // Prevenir que iOS pause automáticamente o intentar reanudar
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
-        console.log('App visible y debería estar sonando. Intentando reanudar...');
         audio.play().catch(() => {});
       }
     };
 
     const handlePageShow = () => {
       if (isPlaying && audio.paused) {
-        console.log('PageShow detectado y debería estar sonando. Intentando reanudar...');
         audio.play().catch(() => {});
       }
     };
 
-    const handlePause = () => {
-      // Si el audio se pausa pero el estado isPlaying es true, fue una interrupción del sistema
-      if (isPlaying) {
-        console.log('Audio pausado por el sistema (interrupción)');
-      }
-    };
-
-    const handlePlay = () => {
-    };
-
     const handleFocus = () => {
       if (isPlaying && audio.paused) {
-        console.log('Foco recuperado y debería estar sonando. Intentando reanudar...');
         audio.play().catch(() => {});
       }
     };
@@ -98,8 +85,6 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
     audio.addEventListener('waiting', handleWaiting);
     audio.addEventListener('canplay', handleCanPlay);
     audio.addEventListener('error', handleError);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('play', handlePlay);
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('pageshow', handlePageShow);
@@ -109,8 +94,6 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
       audio.removeEventListener('waiting', handleWaiting);
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('error', handleError);
-      audio.removeEventListener('pause', handlePause);
-      audio.removeEventListener('play', handlePlay);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pageshow', handlePageShow);
       window.removeEventListener('focus', handleFocus);

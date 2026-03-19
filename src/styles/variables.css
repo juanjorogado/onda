@@ -17,6 +17,18 @@
   --color-brand-60: rgba(237, 63, 28, 0.6);
   --color-white-60: rgba(255, 255, 255, 0.6);
 
+  /* Colors - Feedback */
+  --color-feedback-success-bg: rgba(76, 175, 80, 0.4);
+  --color-feedback-success-border: rgba(76, 175, 80, 0.6);
+  --color-feedback-error-bg: rgba(244, 67, 54, 0.4);
+  --color-feedback-error-border: rgba(244, 67, 54, 0.6);
+  --color-feedback-error-text: #ef5350;
+
+  /* Colors - Glass effect */
+  --color-glass-bg: rgba(255, 255, 255, 0.1);
+  --color-glass-bg-hover: rgba(255, 255, 255, 0.2);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+
   /* ==========================================================================
      Typography
      ========================================================================== */
@@ -24,9 +36,10 @@
   
   /* Font sizes */
   --font-size-xs: 12px;
-  --font-size-base: 16px; /* Root font size for rem calculations */
-  --font-size-m: 24px; /* Medium text (headers, labels) */
-  --font-size-xl: 40px; /* Large text (titles, display) */
+  --font-size-base: 16px;    /* Root font size for rem calculations */
+  --font-size-m: 24px;       /* Medium text (headers, labels) */
+  --font-size-display: 2rem; /* 32px — waiting screen headline */
+  --font-size-xl: 40px;      /* Large text (titles, display) */
   
   /* Font weights */
   --font-weight-light: 300;
@@ -71,6 +84,11 @@
 
   /* Layout - Border width */
   --border-width-1: 1px;
+  --border-width-3: 3px;
+
+  /* Layout - Component sizes */
+  --size-identify-button: 3.75rem; /* 60px */
+  --size-spinner: 1.75rem;         /* 28px */
 
   /* ==========================================================================
      Viewport
@@ -79,9 +97,16 @@
   --viewport-height-dynamic: 100dvh;
 
   /* ==========================================================================
+     Blur
+     ========================================================================== */
+  --blur-bg: 3.75rem;    /* 60px — blurred background panel */
+  --blur-glass: 1.25rem; /* 20px — glass/frosted effect */
+
+  /* ==========================================================================
      Opacity
      ========================================================================== */
   --opacity-60: 0.6;
+  --opacity-bg: 0.9;
 
   /* ==========================================================================
      Z-index layers

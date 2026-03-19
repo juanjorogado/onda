@@ -284,8 +284,8 @@ body {
 }
 
 .playing-screen-status[data-status="error"] {
-  color: #ef5350;
-  opacity: 0.9;
+  color: var(--color-feedback-error-text);
+  opacity: var(--opacity-bg);
 }
 
 @keyframes status-fade-in {
