@@ -94,7 +94,6 @@
   text-align: start;
   white-space: pre;
   transition: color var(--duration-normal) var(--easing-smooth);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
 }
 
 .waiting-screen-time {
@@ -111,7 +110,6 @@
   white-space: pre;
   margin-left: var(--spacing-2);
   transition: color var(--duration-normal) var(--easing-smooth);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
 }
 
 .waiting-screen-cover {
@@ -162,7 +160,6 @@
   text-align: left;
   white-space: break-spaces;
   transition: color var(--duration-normal) var(--easing-smooth);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
   animation: 
     fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both,
     pulse-soft 3s ease-in-out var(--duration-normal) infinite;
@@ -303,10 +300,10 @@
 .playing-screen-landscape-bg {
   display: block;
   position: fixed;
-  inset: -10%;
+  inset: var(--bg-blur-inset);
   z-index: 0;
   pointer-events: none;
-  transform: scale(1.1);
+  transform: scale(var(--bg-blur-scale));
   filter: blur(var(--blur-bg));
   opacity: var(--opacity-bg);
 }
@@ -322,8 +319,16 @@
 
 .playing-screen-container[data-brightness="dark"] .playing-screen-station-name,
 .playing-screen-container[data-brightness="dark"] .playing-screen-time,
+.playing-screen-container[data-brightness="dark"] .playing-screen-status,
 .playing-screen-container[data-brightness="dark"] .text-ink {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: var(--text-shadow-on-dark);
+}
+
+.playing-screen-container[data-brightness="light"] .playing-screen-station-name,
+.playing-screen-container[data-brightness="light"] .playing-screen-time,
+.playing-screen-container[data-brightness="light"] .playing-screen-status,
+.playing-screen-container[data-brightness="light"] .text-ink {
+  text-shadow: var(--text-shadow-on-light);
 }
 
 /* Capa de contraste para landscape */
@@ -467,7 +472,7 @@
   white-space: pre;
   overflow: hidden;
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
+  text-shadow: var(--text-shadow-on-dynamic);
   /* Máscara solo si el texto desborda */
   mask-image: linear-gradient(
     to right,
@@ -489,7 +494,7 @@
 
 .playing-screen-station-name-light {
   font-weight: var(--font-weight-light);
-  opacity: 0.6;
+  opacity: var(--opacity-secondary);
 }
 
 .playing-screen-time {
@@ -507,7 +512,7 @@
   margin-left: var(--spacing-2);
   margin-right: var(--spacing-4);
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
+  text-shadow: var(--text-shadow-on-dynamic);
 }
 
 .playing-screen-cover {
@@ -554,8 +559,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 40%);
-  background-size: 200% 200%;
+  background-image: linear-gradient(90deg, var(--weather-wind-overlay) 0%, transparent 40%);
+  background-size: var(--animation-background-size) var(--animation-background-size);
   animation: wind-move 12s ease-in-out infinite;
   pointer-events: none;
   mix-blend-mode: overlay;
@@ -582,8 +587,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 140%;
-  height: 140%;
+  width: var(--storm-flash-overflow);
+  height: var(--storm-flash-overflow);
   pointer-events: none;
   mix-blend-mode: screen;
   z-index: var(--z-index-content);
@@ -595,14 +600,11 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 28%;
-  height: 70%;
+  width: var(--storm-bolt-width);
+  height: var(--storm-bolt-height);
   transform: translate(-50%, -50%);
-  background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.25) 100%);
-  box-shadow:
-    0 0 10px rgba(255,255,255,0.6),
-    0 0 20px rgba(255,255,255,0.4),
-    0 0 30px rgba(255,255,255,0.25);
+  background: var(--storm-bolt-gradient);
+  box-shadow: var(--storm-bolt-glow);
   clip-path: polygon(
     12% 0%,
     28% 0%,

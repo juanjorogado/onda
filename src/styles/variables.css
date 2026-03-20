@@ -22,7 +22,7 @@
   --color-feedback-success-border: rgba(76, 175, 80, 0.6);
   --color-feedback-error-bg: rgba(244, 67, 54, 0.4);
   --color-feedback-error-border: rgba(244, 67, 54, 0.6);
-  --color-feedback-error-text: #ef5350;
+  --color-feedback-error-text: #c62828;
 
   /* Colors - Glass effect */
   --color-glass-bg: rgba(255, 255, 255, 0.1);
@@ -89,6 +89,12 @@
   /* Layout - Component sizes */
   --size-identify-button: 3.75rem; /* 60px */
   --size-spinner: 1.75rem;         /* 28px */
+  --size-status-layer: 1.25rem;    /* 20px — status indicator area */
+  --size-status-dot: 0.375rem;     /* 6px — status dot */
+
+  /* Layout - Background blur panel */
+  --bg-blur-inset: -10%;  /* bleed beyond viewport */
+  --bg-blur-scale: 1.1;   /* compensating scale */
 
   /* ==========================================================================
      Viewport
@@ -106,7 +112,17 @@
      Opacity
      ========================================================================== */
   --opacity-60: 0.6;
+  --opacity-secondary: 0.75;  /* texto secundario (ubicación, subtítulos) */
+  --opacity-status: 0.85;     /* indicadores de estado (loading, error) */
   --opacity-bg: 0.9;
+
+  /* ==========================================================================
+     Text shadows — para texto sobre fondos dinámicos (imagen/gradiente)
+     ========================================================================== */
+  --text-shadow-on-dynamic: 0 1px 3px rgba(0, 0, 0, 0.2);   /* base, orientación portrait */
+  --text-shadow-on-dark: 0 1px 4px rgba(0, 0, 0, 0.55);     /* texto claro sobre fondo oscuro */
+  --text-shadow-on-light: 0 1px 3px rgba(255, 255, 255, 0.4); /* texto oscuro sobre fondo claro */
+  --text-shadow-status: 0 1px 2px rgba(0, 0, 0, 0.2);       /* texto de estado (xs, 12px) */
 
   /* ==========================================================================
      Z-index layers
@@ -128,11 +144,29 @@
   --gradient-overlay-black-mid: rgba(0, 0, 0, 0.1);
   --gradient-overlay-black-end: rgba(0, 0, 0, 0.2);
 
+  /* Gradients - Weather effects */
+  --weather-wind-overlay: rgba(255, 255, 255, 0.06); /* wind shimmer start */
+  --storm-bolt-glow: 0 0 10px rgba(255, 255, 255, 0.6),
+                     0 0 20px rgba(255, 255, 255, 0.4),
+                     0 0 30px rgba(255, 255, 255, 0.25);
+  --storm-bolt-gradient: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+
+  /* Layout - Weather storm flash */
+  --storm-flash-overflow: 140%; /* oversized to allow bolt clipping */
+  --storm-bolt-width: 28%;
+  --storm-bolt-height: 70%;
+
   /* ==========================================================================
      Animation - Timing
      ========================================================================== */
   --duration-normal: 1s;
   --duration-fast: 0.3s;
+  --duration-medium: 0.4s;
   --duration-faster: 0.2s;
   --duration-slow: 3s;
   --duration-slower: 20s;
@@ -175,8 +209,9 @@
   --animation-scale-wave-end: 2.2;
 
   /* Animation - Translations */
-  --animation-translate-x: 1.25rem; /* 20px */
-  --animation-translate-y: 0.625rem; /* 10px */
+  --animation-translate-x: 1.25rem;      /* 20px */
+  --animation-translate-y: 0.625rem;     /* 10px */
+  --animation-translate-status: -0.25rem; /* -4px initial offset for status fade-in */
 
   /* Animation - Opacity values */
   --animation-opacity-wave-1-start: 0.8;

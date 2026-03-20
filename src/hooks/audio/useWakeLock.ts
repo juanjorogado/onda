@@ -11,12 +11,12 @@ export function useWakeLock() {
       try {
         // 1. Wake Lock API (Android, Chrome, Safari 16.4+)
         if ('wakeLock' in navigator) {
-          wakeLock = await (navigator as any).wakeLock.request('screen');
-          
+          wakeLock = await navigator.wakeLock.request('screen');
+
           const handleVisibilityChange = async () => {
             if (document.visibilityState === 'visible') {
               try {
-                wakeLock = await (navigator as any).wakeLock.request('screen');
+                wakeLock = await navigator.wakeLock.request('screen');
               } catch (err) {
                 console.warn('Error re-requesting wake lock:', err);
               }
@@ -29,7 +29,7 @@ export function useWakeLock() {
         // 2. iOS Fallback: Video invisible loop
         // En iOS, reproducir un video (incluso sin audio) previene que la pantalla se apague.
         // Esto es útil para versiones de iOS donde Wake Lock no es 100% fiable o no está presente.
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIOS) {
           video = document.createElement('video');
           video.muted = true;

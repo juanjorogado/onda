@@ -12,13 +12,13 @@
 
 /* Contrast based on background brightness */
 [data-brightness="light"] {
-  --color-ink: #000000;
-  --color-text-primary: #000000;
+  --color-ink: var(--color-black);
+  --color-text-primary: var(--color-black);
 }
 
 [data-brightness="dark"] {
-  --color-ink: #FFFFFF;
-  --color-text-primary: #FFFFFF;
+  --color-ink: var(--color-white);
+  --color-text-primary: var(--color-white);
 }
 
 /* ==========================================================================
@@ -135,7 +135,6 @@ body {
    ========================================================================== */
 .text-ink {
   color: var(--color-ink);
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
 }
 
 .bg-paper {
@@ -249,7 +248,7 @@ body {
   top: 100%;
   left: 0;
   width: 100%;
-  height: 20px;
+  height: var(--size-status-layer);
   pointer-events: none;
 }
 
@@ -260,17 +259,17 @@ body {
   font-size: var(--font-size-xs);
   color: var(--color-ink);
   opacity: 0;
-  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.03);
+  text-shadow: var(--text-shadow-status);
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  transform: translateY(-4px);
-  animation: status-fade-in 0.4s var(--easing-smooth) forwards;
+  transform: translateY(var(--animation-translate-status));
+  animation: status-fade-in var(--duration-medium) var(--easing-smooth) forwards;
 }
 
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: var(--size-status-dot);
+  height: var(--size-status-dot);
   border-radius: 50%;
   background-color: currentColor;
 }
@@ -280,7 +279,7 @@ body {
 }
 
 .playing-screen-status[data-status="loading"] {
-  opacity: 0.6;
+  opacity: var(--opacity-status);
 }
 
 .playing-screen-status[data-status="error"] {
