@@ -82,6 +82,8 @@ async function kexpProvider(_station: Station, signal: AbortSignal): Promise<Tra
         album: trackInfo.album || additionalInfo.album,
         cover: trackInfo.cover || additionalInfo.cover,
         year: trackInfo.year || additionalInfo.year,
+        genre: trackInfo.genre || additionalInfo.genre,
+        apple_music_url: trackInfo.apple_music_url || additionalInfo.apple_music_url,
       };
     }
   }
@@ -216,11 +218,13 @@ export function useNowPlaying(station?: Station | null) {
       try {
         const fullInfo = await searchTrackInfo(newTrack.artist, newTrack.title);
         if (fullInfo?.cover) {
-          setTrack(prev => ({ 
-            ...prev, 
+          setTrack(prev => ({
+            ...prev,
             cover: fullInfo.cover,
             album: prev.album || fullInfo.album,
-            year: prev.year || fullInfo.year
+            year: prev.year || fullInfo.year,
+            genre: prev.genre || fullInfo.genre,
+            apple_music_url: prev.apple_music_url || fullInfo.apple_music_url,
           }));
         }
       } catch (e) {

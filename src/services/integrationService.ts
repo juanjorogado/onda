@@ -12,20 +12,22 @@ export const integrationService = {
    * Guarda un tema identificado en Anytype a través de un webhook.
    * Esto permite automatizar la colección musical sin salir de la app.
    */
-  saveToAnytype: async (track: IdentificationResult): Promise<boolean> => {
+  saveToAnytype: async (track: IdentificationResult, stationName?: string): Promise<boolean> => {
     // Usamos tanto VITE_ como la forma estándar de Vercel por si acaso
-    const webhookUrl = import.meta.env.VITE_ANYTYPE_WEBHOOK_URL || (window as any)._env_?.VITE_ANYTYPE_WEBHOOK_URL;
-    
+    const webhookUrl = import.meta.env.VITE_ANYTYPE_WEBHOOK_URL || window._env_?.VITE_ANYTYPE_WEBHOOK_URL;
+
     try {
       const payload = {
         source: 'ONDA Radio',
         timestamp: new Date().toISOString(),
         space: 'Music Collection',
+        station: stationName,
         track: {
           title: track.title,
           artist: track.artist,
           album: track.album,
           year: track.year,
+          genre: track.genre,
           apple_music_url: track.apple_music_url,
           cover: track.cover,
         }

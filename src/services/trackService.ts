@@ -58,10 +58,15 @@ interface LastFmArtist {
   name?: string;
 }
 
+interface LastFmTag {
+  name: string;
+}
+
 interface LastFmTrack {
   name?: string;
   artist?: LastFmArtist;
   album?: LastFmAlbum;
+  toptags?: { tag?: LastFmTag[] };
 }
 
 interface LastFmResponse {
@@ -72,6 +77,8 @@ interface LastFmResponse {
 // Tipos para Apple Music/iTunes
 interface iTunesResult {
   artworkUrl100?: string;
+  primaryGenreName?: string;
+  trackViewUrl?: string;
 }
 
 interface iTunesResponse {
@@ -178,12 +185,15 @@ export async function searchTrackLastFM(artist: string, title: string): Promise<
                 track.album?.image?.find((img) => img.size === 'medium')?.['#text'] ||
                 undefined;
   
+  const genre = track.toptags?.tag?.[0]?.name;
+
   return {
     title: track.name || title,
     artist: track.artist?.name || artist,
     album: track.album?.title,
     cover,
     year,
+    ...(genre && { genre }),
   };
 }
 
@@ -206,17 +216,23 @@ export async function searchTrackMusicBrainz(artist: string, title: string): Pro
 }
 
 /**
- * Busca el cover de un track usando Apple Music API (iTunes Search)
+ * Busca datos de un track en iTunes: cover, género y enlace a Apple Music
  */
-async function searchTrackAppleMusic(artist: string, title: string): Promise<string | null> {
+async function searchTrackAppleMusic(artist: string, title: string): Promise<Partial<TrackInfo> | null> {
   const query = `${encodeURIComponent(artist)} ${encodeURIComponent(title)}`;
   const url = `https://itunes.apple.com/search?term=${query}&media=music&limit=1`;
   const data = await safeFetch<iTunesResponse>(url, { timeout: TIMEOUTS.itunes });
 
   if (!data?.results || data.results.length === 0) return null;
 
-  const track = data.results[0];
-  return track.artworkUrl100?.replace('100x100', '600x600') || track.artworkUrl100 || null;
+  const result = data.results[0];
+  const cover = result.artworkUrl100?.replace('100x100', '600x600') || result.artworkUrl100;
+
+  return {
+    ...(cover && { cover }),
+    ...(result.primaryGenreName && { genre: result.primaryGenreName }),
+    ...(result.trackViewUrl && { apple_music_url: result.trackViewUrl }),
+  };
 }
 
 /**
@@ -236,55 +252,51 @@ async function searchTrackCoverArt(artist: string, title: string): Promise<strin
 }
 
 /**
- * Construye un objeto TrackInfo con los datos proporcionados
- */
-function buildTrackInfo(
-  title: string,
-  artist: string,
-  cover?: string,
-  year?: number,
-  album?: string
-): TrackInfo {
-  return {
-    title,
-    artist,
-    ...(cover && { cover }),
-    ...(year && { year }),
-    ...(album && { album }),
-  };
-}
-
-/**
  * Busca información de un track usando múltiples servicios como fallback.
  * Prioriza obtener el cover de la canción.
  */
 export async function searchTrackInfo(artist: string, title: string): Promise<TrackInfo | null> {
   if (!artist || !title) return null;
-  
+
   const lastFMResult = await searchTrackLastFM(artist, title);
   if (lastFMResult?.cover) return lastFMResult;
-  
-  const appleMusicCover = await searchTrackAppleMusic(artist, title);
-  if (appleMusicCover) {
-    return buildTrackInfo(title, artist, appleMusicCover, lastFMResult?.year, lastFMResult?.album);
+
+  const iTunesData = await searchTrackAppleMusic(artist, title);
+  if (iTunesData?.cover) {
+    return {
+      title,
+      artist,
+      ...iTunesData,
+      year: lastFMResult?.year ?? iTunesData.year,
+      album: lastFMResult?.album ?? iTunesData.album,
+      genre: lastFMResult?.genre ?? iTunesData.genre,
+    };
   }
-  
+
   const coverArtCover = await searchTrackCoverArt(artist, title);
   if (coverArtCover) {
-    return buildTrackInfo(title, artist, coverArtCover, lastFMResult?.year, lastFMResult?.album);
+    return {
+      title,
+      artist,
+      cover: coverArtCover,
+      year: lastFMResult?.year,
+      album: lastFMResult?.album,
+      genre: lastFMResult?.genre,
+    };
   }
-  
+
   const musicBrainzResult = await searchTrackMusicBrainz(artist, title);
   if (musicBrainzResult) {
-    return buildTrackInfo(
-      musicBrainzResult.title || title,
-      musicBrainzResult.artist || artist,
-      lastFMResult?.cover,
-      musicBrainzResult.year,
-      lastFMResult?.album
-    );
+    return {
+      title: musicBrainzResult.title || title,
+      artist: musicBrainzResult.artist || artist,
+      cover: lastFMResult?.cover,
+      year: musicBrainzResult.year,
+      album: lastFMResult?.album,
+      genre: lastFMResult?.genre,
+    };
   }
-  
+
   return lastFMResult;
 }
 

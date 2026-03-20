@@ -49,7 +49,7 @@ export const PlayingScreen = memo(({
   const time = useCurrentTime();
   const startX = useRef(0);
   const startY = useRef(0);
-  const swiped = useRef(false);
+  const hasCompletedSwipe = useRef(false);
   const isDragging = useRef(false);
   const [isDraggingState, setIsDraggingState] = useState(false);
   const [translateX, setTranslateX] = useState(0);
@@ -100,33 +100,25 @@ export const PlayingScreen = memo(({
     
     const checkContrast = async () => {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const isLandscape = window.innerWidth > window.innerHeight;
-      
-      // En landscape el fondo es dinámico (imagen o gradiente), en portrait es sólido
-      if (isLandscape) {
-        let brightness = prefersDark ? 0 : 255;
-        
-        if (coverImage) {
-          try {
-            brightness = await getImageBrightness(coverImage);
-          } catch {
-            if (coverGradient) {
-              brightness = getGradientBrightness(coverGradient);
-            }
+
+      // El fondo siempre es la imagen o gradiente desenfocado — detectar brillo real.
+      // Sin imagen ni gradiente, se usa la preferencia del sistema como fallback.
+      let brightness = prefersDark ? 0 : 255;
+
+      if (coverImage) {
+        try {
+          brightness = await getImageBrightness(coverImage);
+        } catch {
+          if (coverGradient) {
+            brightness = getGradientBrightness(coverGradient);
           }
-        } else if (coverGradient) {
-          brightness = getGradientBrightness(coverGradient);
         }
-        
-        if (isMounted) {
-          // Brillo > 128 = fondo claro → texto negro
-          setIsLight(brightness > 128);
-        }
-      } else {
-        // Portrait: usar modo del sistema (fondo sólido var(--color-paper))
-        if (isMounted) {
-          setIsLight(!prefersDark);
-        }
+      } else if (coverGradient) {
+        brightness = getGradientBrightness(coverGradient);
+      }
+
+      if (isMounted) {
+        setIsLight(brightness > 128);
       }
     };
     
@@ -169,7 +161,7 @@ export const PlayingScreen = memo(({
       const touch = e.touches[0];
       startX.current = touch.clientX;
       startY.current = touch.clientY;
-      swiped.current = false;
+      hasCompletedSwipe.current = false;
       isDragging.current = false;
       setIsDraggingState(false);
       setIsTransitioning(false);
@@ -177,7 +169,7 @@ export const PlayingScreen = memo(({
     };
 
     const handleTouchMove = (e: globalThis.TouchEvent) => {
-      if (swiped.current || !onSwipe) return;
+      if (hasCompletedSwipe.current || !onSwipe) return;
       
       const touch = e.touches[0];
       const dx = touch.clientX - startX.current;
@@ -209,7 +201,7 @@ export const PlayingScreen = memo(({
         setTranslateX(clampedDx);
         
         if (absDx > SWIPE_THRESHOLD) {
-          swiped.current = true;
+          hasCompletedSwipe.current = true;
           setIsTransitioning(true);
 
           // Feedback háptico al completar swipe
@@ -229,7 +221,7 @@ export const PlayingScreen = memo(({
     };
 
     const handleTouchEnd = (e: globalThis.TouchEvent) => {
-      if (swiped.current) {
+      if (hasCompletedSwipe.current) {
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -373,9 +365,10 @@ export const PlayingScreen = memo(({
           )}
 
           {isPlaying && !trackTitle && !trackArtist && streamUrl && (
-            <ShazamButton 
-              streamUrl={streamUrl} 
-              onTrackIdentified={onTrackIdentified} 
+            <ShazamButton
+              streamUrl={streamUrl}
+              stationName={stationName}
+              onTrackIdentified={onTrackIdentified}
             />
           )}
         </div>

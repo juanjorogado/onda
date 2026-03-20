@@ -4,10 +4,11 @@ import { integrationService } from '../../services/integrationService';
 
 interface ShazamButtonProps {
   streamUrl: string;
+  stationName?: string;
   onTrackIdentified?: (track: TrackInfo) => void;
 }
 
-export const ShazamButton = memo(({ streamUrl, onTrackIdentified }: ShazamButtonProps) => {
+export const ShazamButton = memo(({ streamUrl, stationName, onTrackIdentified }: ShazamButtonProps) => {
   const [status, setStatus] = useState<'idle' | 'identifying' | 'success' | 'error'>('idle');
 
   const handleClick = useCallback(async (e: React.MouseEvent) => {
@@ -35,7 +36,7 @@ export const ShazamButton = memo(({ streamUrl, onTrackIdentified }: ShazamButton
         if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
 
         // Guardar automáticamente en Anytype si está configurado
-        await integrationService.saveToAnytype(data.track);
+        await integrationService.saveToAnytype(data.track, stationName);
 
         // Mostrar estado de éxito temporalmente
         setStatus('success');
