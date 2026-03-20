@@ -1,0 +1,49 @@
+---
+description: Filosofía de Onda — principios que guían cada decisión de diseño y desarrollo
+globs: ["**/*.ts", "**/*.tsx", "**/*.css"]
+alwaysApply: true
+---
+
+# Filosofía de Onda
+
+## Conducción primero
+
+La interfaz se diseña para el peor contexto de atención posible: un vistazo de medio segundo a 120 km/h. Cada elemento que no informa en ese vistazo es un elemento de más. No hay menús, no hay opciones, no hay configuración visible. Solo lo que suena, dónde suena y cuándo es allí.
+
+**Criterio de aceptación:** ¿Se entiende de un vistazo? Si requiere leer, explorar o recordar, no está listo.
+
+## Los principios de Rams como filtro
+
+No como inspiración — como checklist. Antes de añadir algo:
+
+- ¿Es innovador o repite lo que ya existe?
+- ¿Hace la app más útil o solo más compleja?
+- ¿Es honesto — muestra lo que realmente ocurre?
+- ¿Será comprensible sin instrucciones?
+- ¿Es tan discreto que no compite con la música?
+- ¿Funcionará igual de bien en cinco años?
+- ¿Es tan poco diseño como es posible?
+
+> "Good design is as little design as possible." — Dieter Rams
+
+Si la respuesta a alguna pregunta es dudosa, la propuesta no está lista.
+
+## El código también es diseño
+
+La belleza de Onda no termina en la pantalla. El código sigue los mismos principios que la interfaz.
+
+- Nombrar con precisión: el nombre comunica el propósito sin necesitar comentario
+- Una responsabilidad por pieza: componentes, hooks y archivos CSS con alcance claro
+- Sin capas innecesarias: la arquitectura más simple que resuelve el problema real
+- Todo el código es visible — es open source; no hay distinción entre "código que se ve" y "código que no se ve"
+
+> "Good design is thorough down to the last detail." — Dieter Rams
+
+## Open source con criterio
+
+Abierto no significa caótico. El código es legible porque el diseño es legible.
+
+- Los Design Tokens son la única fuente de verdad — ningún valor de diseño hardcodeado
+- Las decisiones están documentadas donde importa
+- Cualquiera puede entender la app en diez minutos y contribuir en veinte
+- La arquitectura refleja la interfaz: simple, directa, sin capas innecesarias
