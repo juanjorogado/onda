@@ -23,7 +23,7 @@ interface PlayingScreenProps {
   isLoading: boolean;
   hasError: boolean;
   streamUrl?: string;
-  onTrackIdentified?: (track: TrackInfo) => void;
+  onTrackIdentified?: (track: TrackInfo) => Promise<TrackInfo>;
   onToggle: () => void;
   onSwipe: (direction: 'left' | 'right') => void;
 }

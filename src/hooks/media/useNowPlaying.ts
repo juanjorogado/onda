@@ -196,7 +196,7 @@ export function useNowPlaying(station?: Station | null) {
   const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stationIdRef = useRef<string | null>(null);
 
-  const updateTrack = useCallback(async (newTrack: TrackInfo & { duration_ms?: number, offset_ms?: number }) => {
+  const updateTrack = useCallback(async (newTrack: TrackInfo & { duration_ms?: number, offset_ms?: number }): Promise<TrackInfo> => {
     setTrack(prev => ({ ...prev, ...newTrack }));
 
     if (resetTimeoutRef.current) {
@@ -214,23 +214,28 @@ export function useNowPlaying(station?: Station | null) {
       setTrack({});
     }, resetTime);
 
+    let enriched: TrackInfo = { ...newTrack };
+
     if (newTrack.title && newTrack.artist) {
       try {
         const fullInfo = await searchTrackInfo(newTrack.artist, newTrack.title);
-        if (fullInfo?.cover) {
-          setTrack(prev => ({
-            ...prev,
-            cover: fullInfo.cover,
-            album: prev.album || fullInfo.album,
-            year: prev.year || fullInfo.year,
-            genre: prev.genre || fullInfo.genre,
-            apple_music_url: prev.apple_music_url || fullInfo.apple_music_url,
-          }));
+        if (fullInfo) {
+          enriched = {
+            ...enriched,
+            cover: enriched.cover || fullInfo.cover,
+            album: enriched.album || fullInfo.album,
+            year: enriched.year || fullInfo.year,
+            genre: enriched.genre || fullInfo.genre,
+            apple_music_url: enriched.apple_music_url || fullInfo.apple_music_url,
+          };
+          setTrack(prev => ({ ...prev, ...enriched }));
         }
       } catch (e) {
         console.warn('No se pudo encontrar el cover para el track identificado:', e);
       }
     }
+
+    return enriched;
   }, []);
 
   const fetchNowPlaying = useCallback(async (isPolling = false) => {

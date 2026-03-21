@@ -5,7 +5,7 @@ import { integrationService } from '../../services/integrationService';
 interface ShazamButtonProps {
   streamUrl: string;
   stationName?: string;
-  onTrackIdentified?: (track: TrackInfo) => void;
+  onTrackIdentified?: (track: TrackInfo) => Promise<TrackInfo>;
 }
 
 export const ShazamButton = memo(({ streamUrl, stationName, onTrackIdentified }: ShazamButtonProps) => {
@@ -30,13 +30,14 @@ export const ShazamButton = memo(({ streamUrl, stationName, onTrackIdentified }:
       const data = await response.json();
 
       if (data.success && data.track) {
-        onTrackIdentified?.(data.track);
-        
+        // Esperar el track enriquecido (género, apple_music_url) antes de guardar
+        const enrichedTrack = await onTrackIdentified?.(data.track) ?? data.track;
+
         // Notificar al usuario (Feedback visual sutil)
         if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
 
-        // Guardar automáticamente en Anytype si está configurado
-        await integrationService.saveToAnytype(data.track, stationName);
+        // Guardar con datos completos una vez terminado el enriquecimiento
+        await integrationService.saveToAnytype(enrichedTrack, stationName);
 
         // Mostrar estado de éxito temporalmente
         setStatus('success');
