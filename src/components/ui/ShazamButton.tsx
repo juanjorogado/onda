@@ -52,7 +52,7 @@ export const ShazamButton = memo(({ streamUrl, stationName, onTrackIdentified }:
       setStatus('error');
       setTimeout(() => setStatus('idle'), 3000);
     }
-  }, [streamUrl, onTrackIdentified, status]);
+  }, [streamUrl, stationName, onTrackIdentified, status]);
 
   // Si se identificó con éxito, el botón ya no es necesario (la info es visible)
   // Pero lo dejamos un momento para el feedback visual del checkmark

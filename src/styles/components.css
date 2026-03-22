@@ -469,8 +469,9 @@
   font-family: var(--font-family-base);
   font-style: normal;
   text-align: start;
-  white-space: pre;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
   text-shadow: var(--text-shadow-on-dynamic);
   /* Máscara solo si el texto desborda */
@@ -486,6 +487,11 @@
     black calc(100% - var(--spacing-8)),
     transparent 100%
   );
+}
+
+.playing-screen-station-name span {
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .playing-screen-station-name-book {

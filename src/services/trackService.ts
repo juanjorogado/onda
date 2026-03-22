@@ -219,7 +219,7 @@ export async function searchTrackMusicBrainz(artist: string, title: string): Pro
  * Busca datos de un track en iTunes: cover, género y enlace a Apple Music
  */
 async function searchTrackAppleMusic(artist: string, title: string): Promise<Partial<TrackInfo> | null> {
-  const query = `${encodeURIComponent(artist)} ${encodeURIComponent(title)}`;
+  const query = encodeURIComponent(`${artist} ${title}`);
   const url = `https://itunes.apple.com/search?term=${query}&media=music&limit=1`;
   const data = await safeFetch<iTunesResponse>(url, { timeout: TIMEOUTS.itunes });
 

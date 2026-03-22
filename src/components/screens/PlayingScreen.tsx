@@ -150,7 +150,7 @@ export const PlayingScreen = memo(({
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;
   const city = extractCity(stationLocation);
-  const locationText = city ? ` — ${city}` : '';
+  const locationText = city ?? '';
 
   // Event handlers con preventDefault usando listeners nativos (no pasivos)
   useEffect(() => {
