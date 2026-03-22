@@ -11,6 +11,12 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isPlayingRef = useRef(isPlaying);
+
+  // Mantener ref sincronizada sin añadirla a los deps del efecto de src
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  });
 
   useEffect(() => {
     if (audioRef.current) {
@@ -19,31 +25,28 @@ export function useAudioPlayer({ volume = AUDIO_CONFIG.DEFAULT_VOLUME, src }: Op
   }, [volume]);
 
   useEffect(() => {
-    if (audioRef.current && src) {
-      setIsLoading(true);
-      setError(null);
-      
-      if (audioRef.current.src !== src) {
-        audioRef.current.src = src;
-        audioRef.current.load();
-        if (isPlaying) {
-          audioRef.current.play()
-            .then(() => {
-              setIsPlaying(true);
-              setIsLoading(false);
-            })
-            .catch((err) => {
-              console.error('Audio play error:', err);
-              setIsPlaying(false);
-              setIsLoading(false);
-              setError('No se pudo reproducir el audio');
-            });
-        }
-      } else {
-        setIsLoading(false);
-      }
+    if (!audioRef.current || !src) return;
+    if (audioRef.current.src === src) return;
+
+    setIsLoading(true);
+    setError(null);
+    audioRef.current.src = src;
+    audioRef.current.load();
+
+    if (isPlayingRef.current) {
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.error('Audio play error:', err);
+          setIsPlaying(false);
+          setIsLoading(false);
+          setError('No se pudo reproducir el audio');
+        });
     }
-  }, [src, isPlaying]);
+  }, [src]);
 
   // Prevenir que iOS pause el audio cuando la app va a segundo plano e interrupciones (llamadas)
   useEffect(() => {

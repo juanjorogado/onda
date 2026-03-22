@@ -173,11 +173,11 @@ body {
    Marquee animation - Smooth infinite scroll
    ========================================================================== */
 .marquee {
-  overflow: hidden;
-  white-space: nowrap;
   position: relative;
   width: 100%;
-  /* Gradient mask más amplio para suavizar los bordes */
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
   mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -196,13 +196,6 @@ body {
     transparent 98%,
     transparent 100%
   );
-}
-
-.marquee {
-  position: relative;
-  width: 100%;
-  display: flex;
-  overflow: hidden;
 }
 
 .marquee.is-static {

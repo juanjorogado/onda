@@ -304,8 +304,9 @@ export function useNowPlaying(station?: Station | null) {
       intervalRef.current = null;
     }
 
-    // Reset station tracking for new station
+    // Reset station tracking and clear previous track immediately
     stationIdRef.current = station?.id || null;
+    setTrack({});
 
     // Fetch immediately
     fetchNowPlaying(false);

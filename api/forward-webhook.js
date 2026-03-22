@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     }
 
     // Add idempotency key to prevent duplicate rows
-    const idempotencyKey = `${body?.stationId || 'unknown'}-${body?.timezone || 'unknown'}`;
+    const idempotencyKey = `${body?.station || 'unknown'}-${body?.timestamp || Date.now()}`;
 
     const payload = {
       ...body,
