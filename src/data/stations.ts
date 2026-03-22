@@ -15,7 +15,7 @@ export const stations: Station[] = [
   {
     id: 'resonance-fm',
     name: 'Resonance FM',
-    url: 'https://stream.resonance.fm:8000/resonance',
+    url: 'https://stream.resonance.fm/resonance',
     genre: 'Experimental / Sound Art / Community',
     location: 'London, UK',
     timezone: 'Europe/London',
@@ -57,7 +57,7 @@ export const stations: Station[] = [
     genre: 'Experimental / Community / Underground',
     location: 'Berlin, Germany',
     timezone: 'Europe/Berlin',
-cover: '/logos/cashmere.svg'
+    cover: '/logos/cashmere.svg'
   },
 
   // --- RADIO France - LA CURATION PARISINA ---
