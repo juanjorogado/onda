@@ -645,7 +645,6 @@
 
 .playing-screen-text-container {
   width: 100%;
-  max-width: var(--container-width-base);
   flex-shrink: 0;
   flex-grow: 0;
   padding-top: var(--spacing-4);
@@ -653,6 +652,12 @@
   position: relative;
   z-index: var(--z-index-content);
   animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both;
+}
+
+/* Marquee alignment — mirrors station header horizontal inset */
+.now-playing {
+  padding-left: var(--spacing-2);
+  padding-right: var(--spacing-2);
 }
 
 @media (orientation: landscape) {
@@ -699,5 +704,10 @@
     padding-top: var(--spacing-2);
     padding-bottom: 0;
     align-self: end;
+  }
+
+  .now-playing {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
