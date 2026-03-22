@@ -1,6 +1,37 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'crypto';
 
+interface ACRCloudArtist {
+  name?: string;
+}
+
+interface ACRCloudAlbum {
+  name?: string;
+}
+
+interface ACRCloudAppleMusicMetadata {
+  track?: { id?: string };
+}
+
+interface ACRCloudMusic {
+  title?: string;
+  artists?: ACRCloudArtist[];
+  album?: ACRCloudAlbum;
+  label?: string;
+  release_date?: string;
+  duration_ms?: number;
+  play_offset_ms?: number;
+  external_metadata?: {
+    apple_music?: ACRCloudAppleMusicMetadata;
+    spotify?: unknown;
+  };
+}
+
+interface ACRCloudResponse {
+  status?: { code?: number };
+  metadata?: { music?: ACRCloudMusic[] };
+}
+
 /**
  * Identifica una canción usando ACRCloud capturando un fragmento del stream de audio.
  * Esto evita usar el micrófono del usuario y detener la reproducción local.
@@ -67,7 +98,7 @@ export default async function handler(
       body: formData,
     });
 
-    const result: any = await acrResponse.json();
+    const result = await acrResponse.json() as ACRCloudResponse;
 
     // 4. Procesar y retornar resultado simplificado
     if (result.status?.code === 0 && result.metadata?.music?.[0]) {
@@ -107,11 +138,12 @@ export default async function handler(
       message: 'No track identified'
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Identification error:', error);
-    return response.status(500).json({ 
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return response.status(500).json({
       error: 'Failed to identify track',
-      message: error.message 
+      message,
     });
   }
 }
