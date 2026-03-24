@@ -34,13 +34,13 @@
 .wave-container.playing .wave-circle:nth-child(1) {
   border: var(--border-width-1) solid var(--color-brand);
   background-color: transparent;
-  animation: water-wave-1 var(--duration-very-slow) cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  animation: water-wave-1 var(--duration-very-slow) var(--easing-gentle) infinite;
 }
 
 .wave-container.playing .wave-circle:nth-child(2) {
   border: var(--border-width-1) solid var(--color-brand);
   opacity: var(--opacity-60);
-  animation: water-wave-2 var(--duration-very-slow) cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite var(--duration-normal);
+  animation: water-wave-2 var(--duration-very-slow) var(--easing-gentle) infinite var(--duration-normal);
 }
 
 /* Onda más suave con transición elegante - Personalidad orgánica */
@@ -164,32 +164,6 @@
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-/* Pulse animation - Feedback interactivo más evidente y elegante */
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(var(--animation-scale-pulse));
-  }
-}
-
-/* Station change animation - Transición distintiva con personalidad */
-@keyframes station-change {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    opacity: var(--opacity-60);
-    transform: scale(0.97) translateY(2px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
   }
 }
 

@@ -11,11 +11,6 @@
   --color-ink: var(--color-black);
   --color-paper: var(--color-white);
   --color-background: var(--color-white);
-  --color-text-primary: var(--color-black);
-
-  /* Colors - With opacity */
-  --color-brand-60: rgba(237, 63, 28, 0.6);
-  --color-white-60: rgba(255, 255, 255, 0.6);
 
   /* Colors - Feedback */
   --color-feedback-success-bg: rgba(76, 175, 80, 0.4);
@@ -53,14 +48,13 @@
      ========================================================================== */
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
-  --spacing-3: 0.75rem;
   --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
   --spacing-8: 2rem;
 
-  /* Spacing - Specific values */
-  --spacing-14px: 0.875rem; /* 14px */
-  --spacing-24px: 1.5rem; /* 24px */
-  --spacing-26px: 1.625rem; /* 26px */
+  /* Spacing - Specific values (off-grid, semantic) */
+  --spacing-14px: 0.875rem; /* 14px — onda indicator icon */
+  --spacing-26px: 1.625rem; /* 26px — board top offset */
   --spacing-48px: 3rem; /* 48px */
   --spacing-96px: 6rem; /* 96px */
 
@@ -79,7 +73,6 @@
   --screen-height-min: 52.75rem; /* 844px */
 
   /* Layout - Border radius */
-  --radius-card: var(--spacing-4);
   --radius-cover: 1.375rem; /* 22px */
 
   /* Layout - Border width */
@@ -144,23 +137,6 @@
   --gradient-overlay-black-mid: rgba(0, 0, 0, 0.1);
   --gradient-overlay-black-end: rgba(0, 0, 0, 0.2);
 
-  /* Gradients - Weather effects */
-  --weather-wind-overlay: rgba(255, 255, 255, 0.06); /* wind shimmer start */
-  --storm-bolt-glow: 0 0 10px rgba(255, 255, 255, 0.6),
-                     0 0 20px rgba(255, 255, 255, 0.4),
-                     0 0 30px rgba(255, 255, 255, 0.25);
-  --storm-bolt-gradient: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.85) 50%,
-    rgba(255, 255, 255, 0.25) 100%
-  );
-
-  /* Layout - Weather storm flash */
-  --storm-flash-overflow: 140%; /* oversized to allow bolt clipping */
-  --storm-bolt-width: 28%;
-  --storm-bolt-height: 70%;
-
   /* ==========================================================================
      Animation - Timing
      ========================================================================== */
@@ -181,12 +157,6 @@
   /* Animation - Easing */
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --easing-wave: cubic-bezier(0.42, 0, 0.58, 1);
-
-  /* ==========================================================================
-     Animation - Blur and mask
-     ========================================================================== */
-  --blur-edge: 0.5rem; /* 8px */
 
   /* ==========================================================================
      Animation - Overflow and size
@@ -204,18 +174,11 @@
 
   /* Animation - Scales */
   --animation-scale-start: 0.95;
-  --animation-scale-pulse: 0.98;
   --animation-scale-wave-mid: 1.2;
   --animation-scale-wave-end: 2.2;
 
   /* Animation - Translations */
-  --animation-translate-x: 1.25rem;      /* 20px */
   --animation-translate-y: 0.625rem;     /* 10px */
   --animation-translate-status: -0.25rem; /* -4px initial offset for status fade-in */
 
-  /* Animation - Opacity values */
-  --animation-opacity-wave-1-start: 0.8;
-  --animation-opacity-wave-1-mid: 0.5;
-  --animation-opacity-wave-2-start: 0.6;
-  --animation-opacity-wave-2-mid: 0.3;
 }

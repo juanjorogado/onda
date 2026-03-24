@@ -303,7 +303,7 @@ export const PlayingScreen = memo(({
           <div className="playing-screen-station-board">
             <div className="playing-screen-station-name">
               <span className="playing-screen-station-name-book">{stationText}</span>
-              {locationText && <span className="playing-screen-station-name-light">{locationText}</span>}
+              {locationText && <span className="playing-screen-station-name-light"> — {locationText}</span>}
             </div>
             <div className="playing-screen-time">{stationTime}</div>
           </div>
