@@ -22,7 +22,7 @@
    Base elements
    ========================================================================== */
 html {
-  font-size: var(--font-size-base);
+  font-size: 16px;
   background-color: var(--color-background);
   color-scheme: light dark;
 }

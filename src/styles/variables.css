@@ -31,9 +31,7 @@
   
   /* Font sizes */
   --font-size-xs: 12px;
-  --font-size-base: 16px;    /* Root font size for rem calculations */
   --font-size-m: 24px;       /* Medium text (headers, labels) */
-  --font-size-display: 2rem; /* 32px — waiting screen headline */
   --font-size-xl: 40px;      /* Large text (titles, display) */
   
   /* Font weights */

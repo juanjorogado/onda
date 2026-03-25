@@ -152,7 +152,7 @@
   max-width: var(--container-width-base);
   flex-shrink: 0;
   color: var(--color-ink);
-  font-size: var(--font-size-display);
+  font-size: 2rem;
   line-height: var(--line-height-base);
   font-family: var(--font-family-base);
   font-style: normal;
@@ -578,7 +578,7 @@
   .playing-screen-board {
     max-width: 100%;
     margin: 0;
-    padding: var(--spacing-4);
+    padding: var(--spacing-2);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto 1fr auto;
