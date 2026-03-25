@@ -453,6 +453,7 @@
   text-align: start;
   overflow: hidden;
   display: block;
+  white-space: nowrap;
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
   mask-image: linear-gradient(
     to right,
@@ -503,7 +504,9 @@
   max-width: var(--container-width-base);
   min-height: var(--cover-height-min);
   height: calc(var(--viewport-height) - var(--cover-height-offset));
+  height: calc(var(--viewport-height-dynamic) - var(--cover-height-offset));
   max-height: calc(var(--viewport-height) - var(--cover-height-offset));
+  max-height: calc(var(--viewport-height-dynamic) - var(--cover-height-offset));
   background: linear-gradient(to bottom, var(--gradient-default-start) 0%, var(--gradient-default-end) 100%);
   border-radius: var(--radius-cover);
   flex-shrink: 1;
@@ -528,7 +531,7 @@
     var(--gradient-overlay-black-mid) 60%,
     var(--gradient-overlay-black-end) 100%
   );
-  background-size: 200% 200%;
+  background-size: var(--animation-background-size) var(--animation-background-size);
   border-radius: var(--radius-cover);
   animation: gradient-shift var(--duration-slower) var(--easing-gentle) infinite;
   opacity: 1;
@@ -614,14 +617,4 @@
     padding-right: 0;
   }
 
-  .playing-screen-station-name {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .playing-screen-station-name span {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-  }
 }
