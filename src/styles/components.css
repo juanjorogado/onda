@@ -317,20 +317,6 @@
   --color-ink: var(--color-white);
 }
 
-.playing-screen-container[data-brightness="dark"] .playing-screen-station-name,
-.playing-screen-container[data-brightness="dark"] .playing-screen-time,
-.playing-screen-container[data-brightness="dark"] .playing-screen-status,
-.playing-screen-container[data-brightness="dark"] .text-ink {
-  text-shadow: var(--text-shadow-on-dark);
-}
-
-.playing-screen-container[data-brightness="light"] .playing-screen-station-name,
-.playing-screen-container[data-brightness="light"] .playing-screen-time,
-.playing-screen-container[data-brightness="light"] .playing-screen-status,
-.playing-screen-container[data-brightness="light"] .text-ink {
-  text-shadow: var(--text-shadow-on-light);
-}
-
 /* Capa de contraste para landscape */
 @media (orientation: landscape) {
   .playing-screen-container::before {
@@ -468,7 +454,6 @@
   overflow: hidden;
   display: block;
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
-  text-shadow: var(--text-shadow-on-dynamic);
   mask-image: linear-gradient(
     to right,
     black 0%,
@@ -511,7 +496,6 @@
   margin-left: var(--spacing-2);
   margin-right: var(--spacing-4);
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
-  text-shadow: var(--text-shadow-on-dynamic);
 }
 
 .playing-screen-cover {

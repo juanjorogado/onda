@@ -109,15 +109,7 @@
   --opacity-status: 0.85;     /* indicadores de estado (loading, error) */
   --opacity-bg: 0.9;
 
-  /* ==========================================================================
-     Text shadows — para texto sobre fondos dinámicos (imagen/gradiente)
-     ========================================================================== */
-  --text-shadow-on-dynamic: 0 1px 3px rgba(0, 0, 0, 0.2);   /* base, orientación portrait */
-  --text-shadow-on-dark: 0 1px 4px rgba(0, 0, 0, 0.55);     /* texto claro sobre fondo oscuro */
-  --text-shadow-on-light: 0 1px 3px rgba(255, 255, 255, 0.4); /* texto oscuro sobre fondo claro */
-  --text-shadow-status: 0 1px 2px rgba(0, 0, 0, 0.2);       /* texto de estado (xs, 12px) */
-
-  /* ==========================================================================
+/* ==========================================================================
      Z-index layers
      ========================================================================== */
   --z-index-base: 0;
