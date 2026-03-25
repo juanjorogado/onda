@@ -15,6 +15,7 @@ function App() {
     currentStation,
     audioRef,
     isPlaying,
+    isOffline,
     togglePlay,
     nextStation,
     prevStation,
@@ -25,8 +26,6 @@ function App() {
     headerLocation,
     coverArt,
     track,
-    hasError,
-    isLoading,
   } = useRadioPlayer();
 
   // Keyboard navigation for station switching and play/pause
@@ -93,8 +92,7 @@ function App() {
               coverImage={coverArt}
               timezone={currentStation.timezone}
               isPlaying={isPlaying}
-              isLoading={isLoading}
-              hasError={hasError}
+              statusText={isOffline ? 'Esperando a tener conexión' : undefined}
               streamUrl={currentStation?.url}
               onTrackIdentified={updateTrack}
               onToggle={togglePlay}

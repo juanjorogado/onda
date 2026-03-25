@@ -167,6 +167,10 @@
   }
 }
 
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+
 /* Utility classes for animations */
 .animate-fade-in {
   animation: fade-in var(--duration-normal) var(--easing-smooth) both;

@@ -4,7 +4,7 @@
 .waiting-screen-container {
   position: relative;
   width: 100%;
-  max-width: var(--container-width-lg);
+  max-width: var(--container-width-screen);
   min-height: var(--screen-height-min);
   background: var(--color-paper);
   overflow: hidden;
@@ -47,7 +47,7 @@
 .waiting-screen-station-board {
   position: relative;
   width: 100%;
-  max-width: var(--container-width-sm);
+  max-width: 21.3125rem; /* 341px */
   height: auto;
   display: flex;
   align-items: start;
@@ -114,7 +114,7 @@
 
 .waiting-screen-cover {
   width: 100%;
-  max-width: var(--container-width-base);
+  max-width: var(--container-width);
   height: var(--cover-height-waiting);
   background: linear-gradient(to bottom, var(--gradient-waiting-start) 0%, var(--gradient-waiting-end) 100%);
   border-radius: var(--radius-cover);
@@ -149,7 +149,7 @@
 
 .waiting-screen-text {
   width: 100%;
-  max-width: var(--container-width-base);
+  max-width: var(--container-width);
   flex-shrink: 0;
   color: var(--color-ink);
   font-size: 2rem;
@@ -246,7 +246,7 @@
 .shazam-loading-spinner {
   width: var(--size-spinner);
   height: var(--size-spinner);
-  border: var(--border-width-3) solid var(--color-glass-border);
+  border: 3px solid var(--color-glass-border);
   border-top-color: var(--color-white);
   border-radius: 50%;
   animation: spin var(--duration-normal) linear infinite;
@@ -300,12 +300,22 @@
 .playing-screen-landscape-bg {
   display: block;
   position: fixed;
-  inset: var(--bg-blur-inset);
+  inset: -10%;
   z-index: 0;
   pointer-events: none;
-  transform: scale(var(--bg-blur-scale));
+  transform: scale(1.1);
   filter: blur(var(--blur-bg));
   opacity: var(--opacity-bg);
+  transition: none;
+}
+
+.playing-screen-landscape-bg--in {
+  animation: fade-in var(--duration-normal) var(--easing-smooth);
+}
+
+.playing-screen-landscape-bg--out {
+  animation: fade-out var(--duration-normal) var(--easing-smooth) forwards;
+  z-index: -1;
 }
 
 /* Contraste dinámico de texto */
@@ -353,7 +363,7 @@
 .playing-screen-board {
   position: relative;
   width: calc(100% - var(--spacing-4));
-  max-width: var(--container-width-base);
+  max-width: var(--container-width);
   margin: var(--spacing-26px) var(--spacing-2) var(--spacing-4) var(--spacing-2);
   padding-left: 0;
   padding-right: 0;
@@ -501,7 +511,7 @@
 
 .playing-screen-cover {
   width: 100%;
-  max-width: var(--container-width-base);
+  max-width: var(--container-width);
   min-height: var(--cover-height-min);
   height: calc(var(--viewport-height) - var(--cover-height-offset));
   height: calc(var(--viewport-height-dynamic) - var(--cover-height-offset));
@@ -543,10 +553,13 @@
 
 .playing-screen-cover-image {
   animation: cover-fade-in var(--duration-normal) var(--easing-smooth) both;
-  transition: opacity var(--duration-normal) var(--easing-smooth);
   will-change: opacity, transform;
   border-radius: var(--radius-cover);
   overflow: hidden;
+}
+
+.playing-screen-cover-image--out {
+  animation: fade-out var(--duration-normal) var(--easing-smooth) forwards;
 }
 
 .playing-screen-text-container {

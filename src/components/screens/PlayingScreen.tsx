@@ -20,8 +20,7 @@ interface PlayingScreenProps {
   coverImage?: string;
   timezone?: string;
   isPlaying: boolean;
-  isLoading: boolean;
-  hasError: boolean;
+  statusText?: string;
   streamUrl?: string;
   onTrackIdentified?: (track: TrackInfo) => Promise<TrackInfo>;
   onToggle: () => void;
@@ -39,8 +38,7 @@ export const PlayingScreen = memo(({
   coverImage,
   timezone,
   isPlaying,
-  isLoading,
-  hasError,
+  statusText,
   streamUrl,
   onTrackIdentified,
   onToggle,
@@ -59,6 +57,51 @@ export const PlayingScreen = memo(({
   const boardRef = useRef<HTMLDivElement>(null);
   const containerWidth = useRef(0);
   const [isLight, setIsLight] = useState(false);
+
+  // Cross-fade: blurred background
+  const bgSource = coverImage
+    ? `url(${coverImage}) center/cover no-repeat`
+    : (coverGradient || DEFAULT_GRADIENTS.PLAYING);
+  const bgSourceRef = useRef(bgSource);
+  const [displayedBg, setDisplayedBg] = useState(bgSource);
+  const [fadingOutBg, setFadingOutBg] = useState<string | null>(null);
+  const [isBgEntering, setIsBgEntering] = useState(false);
+  const bgTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (bgSource === bgSourceRef.current) return;
+    setFadingOutBg(bgSourceRef.current);
+    bgSourceRef.current = bgSource;
+    setDisplayedBg(bgSource);
+    setIsBgEntering(true);
+    if (bgTimerRef.current) clearTimeout(bgTimerRef.current);
+    bgTimerRef.current = setTimeout(() => {
+      setFadingOutBg(null);
+      setIsBgEntering(false);
+    }, 1000);
+  }, [bgSource]);
+
+  // Cross-fade: portada del álbum
+  const coverImageRef = useRef(coverImage);
+  const [displayedCoverImage, setDisplayedCoverImage] = useState<string | undefined>(coverImage);
+  const [fadingOutCoverImage, setFadingOutCoverImage] = useState<string | undefined>(undefined);
+  const coverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (coverImage === coverImageRef.current) return;
+    if (coverImageRef.current) setFadingOutCoverImage(coverImageRef.current);
+    coverImageRef.current = coverImage;
+    setDisplayedCoverImage(coverImage);
+    if (coverTimerRef.current) clearTimeout(coverTimerRef.current);
+    coverTimerRef.current = setTimeout(() => setFadingOutCoverImage(undefined), 1000);
+  }, [coverImage]);
+
+  useEffect(() => {
+    return () => {
+      if (bgTimerRef.current) clearTimeout(bgTimerRef.current);
+      if (coverTimerRef.current) clearTimeout(coverTimerRef.current);
+    };
+  }, []);
 
   // Hook de feedback háptico para mejor UX en coche
   const { play, pause, swipe } = useHapticFeedback();
@@ -265,12 +308,19 @@ export const PlayingScreen = memo(({
       className="playing-screen-container"
       data-brightness={isLight ? 'light' : 'dark'}
     >
-      {/* Fondo desenfocado para todos los modos */}
+      {/* Fondo desenfocado — cross-fade entre fuente anterior y nueva */}
+      {fadingOutBg && (
+        <div
+          className="playing-screen-landscape-bg playing-screen-landscape-bg--out"
+          style={{ background: fadingOutBg }}
+          aria-hidden="true"
+        />
+      )}
       <div
-        className="playing-screen-landscape-bg"
-        style={{
-          background: coverImage ? `url(${coverImage}) center/cover no-repeat` : (coverGradient || DEFAULT_GRADIENTS.PLAYING),
-        }}
+        key={displayedBg}
+        className={`playing-screen-landscape-bg${isBgEntering ? ' playing-screen-landscape-bg--in' : ''}`}
+        style={{ background: displayedBg }}
+        aria-hidden="true"
       />
       <div 
         ref={boardRef}
@@ -343,24 +393,37 @@ export const PlayingScreen = memo(({
             backgroundRepeat: 'no-repeat'
           }}
         >
-          {/* Cover del álbum si está disponible */}
-          {coverImage && (
-            <div 
-              className="playing-screen-cover-image"
+          {/* Cover del álbum — cross-fade entre imagen anterior y nueva */}
+          {fadingOutCoverImage && (
+            <div
+              className="playing-screen-cover-image playing-screen-cover-image--out"
               style={{
-                backgroundImage: `url(${coverImage})`,
+                backgroundImage: `url(${fadingOutCoverImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                top: 0, left: 0, right: 0, bottom: 0,
                 borderRadius: 'var(--radius-cover)',
-                zIndex: 1
+                zIndex: 1,
               }}
-              key={coverImage}
+              aria-hidden="true"
+            />
+          )}
+          {displayedCoverImage && (
+            <div
+              key={displayedCoverImage}
+              className="playing-screen-cover-image"
+              style={{
+                backgroundImage: `url(${displayedCoverImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                borderRadius: 'var(--radius-cover)',
+                zIndex: 2,
+              }}
             />
           )}
 
@@ -383,23 +446,8 @@ export const PlayingScreen = memo(({
               year={trackYear}
               stationName={stationName}
               isPlaying={isPlaying}
+              statusText={statusText}
             />
-          </div>
-
-          {/* Loading/Error layer - Absolute positioned to avoid layout shifts */}
-          <div className="playing-screen-status-layer" aria-live="polite" aria-atomic="true">
-            {isLoading && (
-              <div className="playing-screen-status" data-status="loading">
-                <span className="status-dot" aria-hidden="true"></span>
-                Conectando...
-              </div>
-            )}
-            {hasError && !isLoading && (
-              <div className="playing-screen-status" data-status="error" role="alert">
-                <span className="status-dot" aria-hidden="true"></span>
-                Error de conexión
-              </div>
-            )}
           </div>
         </div>
       </div>

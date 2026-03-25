@@ -7,6 +7,7 @@ interface NowPlayingProps {
   year?: number;
   stationName?: string;
   isPlaying?: boolean;
+  statusText?: string;
   className?: string;
 }
 
@@ -55,22 +56,23 @@ const formatTrackInfo = (
   return stationName ? `Sonando ${stationName}` : '';
 };
 
-export const NowPlaying = memo(({ 
+export const NowPlaying = memo(({
   title,
   artist,
   album,
   year,
   stationName,
   isPlaying,
-  className = '' 
+  statusText,
+  className = ''
 }: NowPlayingProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [duration, setDuration] = useState(20);
-  
+
   const text = useMemo(
-    () => formatTrackInfo(title, artist, album, year, stationName, isPlaying),
-    [title, artist, album, year, stationName, isPlaying]
+    () => statusText ?? formatTrackInfo(title, artist, album, year, stationName, isPlaying),
+    [statusText, title, artist, album, year, stationName, isPlaying]
   );
   
   // Siempre animamos el marquee para que se mueva incluso con texto corto

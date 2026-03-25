@@ -3,14 +3,17 @@ import { stations } from '../../data/stations';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from '../media/useNowPlaying';
 import { useHapticFeedback } from '../useHapticFeedback';
+import { useOnlineStatus } from '../useOnlineStatus';
 
 const TRANSITION_DURATION = 400; // ms
 
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [hasError, setHasError] = useState<boolean>(false);
+  const [, setHasError] = useState<boolean>(false);
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isOnline = useOnlineStatus();
+  const prevOnlineRef = useRef(isOnline);
 
   // Hook de feedback háptico para mejor UX en coche
   const { stationChange } = useHapticFeedback();
@@ -33,7 +36,7 @@ export function useRadioPlayer() {
   // Memoizar la estación actual para evitar recálculos
   const currentStation = useMemo(() => stations[currentIndex] || null, [currentIndex]);
 
-  const { audioRef, isPlaying, setIsPlaying, togglePlay, isLoading, error } = useAudioPlayer({
+  const { audioRef, isPlaying, setIsPlaying, togglePlay } = useAudioPlayer({
     volume: 1.0,
     src: currentStation?.url,
   });
@@ -70,14 +73,28 @@ export function useRadioPlayer() {
     changeStation(newIndex);
   }, [currentIndex, changeStation]);
 
+  const nextStationRef = useRef(nextStation);
+  useEffect(() => { nextStationRef.current = nextStation; });
+
   const handleAudioError = useCallback(() => {
     setHasError(true);
-    // Auto-skip después de 2 segundos si no se reintenta
-    setTimeout(() => {
+    if (isOnline) {
+      setTimeout(() => {
+        setHasError(false);
+        nextStationRef.current();
+      }, 2000);
+    }
+  }, [isOnline]);
+
+  // Al recuperar la conexión, saltar a la siguiente estación
+  useEffect(() => {
+    if (isOnline && !prevOnlineRef.current) {
       setHasError(false);
-      nextStation();
-    }, 2000);
-  }, [nextStation]);
+      nextStationRef.current();
+    }
+    prevOnlineRef.current = isOnline;
+  }, [isOnline]);
+
   const handleAudioEnded = useCallback(() => setIsPlaying(false), [setIsPlaying]);
 
   // Memoizar valores derivados
@@ -91,8 +108,7 @@ export function useRadioPlayer() {
     audioRef,
     isPlaying,
     isTransitioning,
-    hasError: hasError || !!error,
-    isLoading,
+    isOffline: !isOnline,
     togglePlay,
     nextStation,
     prevStation,

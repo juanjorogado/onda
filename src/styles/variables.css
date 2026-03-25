@@ -17,7 +17,6 @@
   --color-feedback-success-border: rgba(76, 175, 80, 0.6);
   --color-feedback-error-bg: rgba(244, 67, 54, 0.4);
   --color-feedback-error-border: rgba(244, 67, 54, 0.6);
-  --color-feedback-error-text: #c62828;
 
   /* Colors - Glass effect */
   --color-glass-bg: rgba(255, 255, 255, 0.1);
@@ -30,7 +29,6 @@
   --font-family-base: "Helvetica Neue", Helvetica, Arial, sans-serif;
   
   /* Font sizes */
-  --font-size-xs: 12px;
   --font-size-m: 24px;       /* Medium text (headers, labels) */
   --font-size-xl: 40px;      /* Large text (titles, display) */
   
@@ -59,10 +57,9 @@
   /* ==========================================================================
      Layout - Container widths
      ========================================================================== */
-  --container-width-sm: 21.3125rem; /* 341px */
-  --container-width-base: 23.375rem; /* 374px */
-  --container-width-lg: 24.375rem; /* 390px */
-  --container-width-md: 28rem;
+  --container-width: 23.375rem;        /* 374px — content/card width */
+  --container-width-screen: 24.375rem; /* 390px — phone screen width */
+  --container-width-app: 28rem;        /* 448px — max app width */
 
   /* Layout - Heights */
   --cover-height-min: 25rem; /* 400px */
@@ -75,17 +72,10 @@
 
   /* Layout - Border width */
   --border-width-1: 1px;
-  --border-width-3: 3px;
 
   /* Layout - Component sizes */
   --size-identify-button: 3.75rem; /* 60px */
   --size-spinner: 1.75rem;         /* 28px */
-  --size-status-layer: 1.25rem;    /* 20px — status indicator area */
-  --size-status-dot: 0.375rem;     /* 6px — status dot */
-
-  /* Layout - Background blur panel */
-  --bg-blur-inset: -10%;  /* bleed beyond viewport */
-  --bg-blur-scale: 1.1;   /* compensating scale */
 
   /* ==========================================================================
      Viewport
@@ -104,7 +94,6 @@
      ========================================================================== */
   --opacity-60: 0.6;
   --opacity-secondary: 0.75;  /* texto secundario (ubicación, subtítulos) */
-  --opacity-status: 0.85;     /* indicadores de estado (loading, error) */
   --opacity-bg: 0.9;
 
   /* ==========================================================================
@@ -132,7 +121,6 @@
      ========================================================================== */
   --duration-normal: 1s;
   --duration-fast: 0.3s;
-  --duration-medium: 0.4s;
   --duration-faster: 0.2s;
   --duration-slow: 3s;
   --duration-slower: 20s;
@@ -169,6 +157,5 @@
 
   /* Animation - Translations */
   --animation-translate-y: 0.625rem;     /* 10px */
-  --animation-translate-status: -0.25rem; /* -4px initial offset for status fade-in */
 
 }

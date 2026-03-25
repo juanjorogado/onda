@@ -69,7 +69,7 @@ body {
 }
 
 .max-w-md {
-  max-width: var(--container-width-md);
+  max-width: var(--container-width-app);
 }
 
 .mx-auto {
@@ -223,58 +223,3 @@ body {
   animation-play-state: paused !important;
 }
 
-/* Audio status indicator (loading/error) */
-.playing-screen-status-layer {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: var(--size-status-layer);
-  pointer-events: none;
-}
-
-.playing-screen-status {
-  position: absolute;
-  top: var(--spacing-1);
-  left: 0;
-  font-size: var(--font-size-xs);
-  color: var(--color-ink);
-  opacity: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  transform: translateY(var(--animation-translate-status));
-  animation: status-fade-in var(--duration-medium) var(--easing-smooth) forwards;
-}
-
-.status-dot {
-  width: var(--size-status-dot);
-  height: var(--size-status-dot);
-  border-radius: 50%;
-  background-color: currentColor;
-}
-
-.playing-screen-status[data-status="loading"] .status-dot {
-  animation: pulse-dot 1.5s ease-in-out infinite;
-}
-
-.playing-screen-status[data-status="loading"] {
-  opacity: var(--opacity-status);
-}
-
-.playing-screen-status[data-status="error"] {
-  color: var(--color-feedback-error-text);
-  opacity: var(--opacity-bg);
-}
-
-@keyframes status-fade-in {
-  to {
-    opacity: inherit;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.4; }
-}
