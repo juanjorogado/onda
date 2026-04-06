@@ -107,7 +107,6 @@ export default async function handler(
       // Intentar obtener el cover de ACRCloud si está disponible
       // ACRCloud suele devolver metadatos externos en music.external_metadata
       const appleMusic = music.external_metadata?.apple_music;
-      const spotify = music.external_metadata?.spotify;
       
       // ACRCloud devuelve release_date (ej: "2023-01-15"), extraer año
       const releaseDate = music.release_date;
@@ -185,8 +184,8 @@ async function captureStreamChunk(url: string, durationMs: number): Promise<Uint
     }
 
     return result;
-  } catch (error: any) {
-    if (error.name === 'AbortError') {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === 'AbortError') {
       // Si se abortó por tiempo, retornamos lo que tengamos
       // (pero el bucle while ya controla eso, así que esto es por si fetch tarda mucho)
     }

@@ -25,6 +25,7 @@ const STATION_PROVIDERS: Record<string, ProviderConfig> = {
   // Estaciones con APIs específicas
   kexp: { provider: kexpProvider, timeout: PROVIDER_TIMEOUT },
   wfmu: { provider: wfmuProvider, timeout: PROVIDER_TIMEOUT },
+  'wfmu-fixed': { provider: wfmuProvider, timeout: PROVIDER_TIMEOUT },
   'tsf-jazz': { provider: tsfJazzProvider, timeout: PROVIDER_TIMEOUT },
 
   // Providers genéricos para estaciones sin API específica
@@ -191,10 +192,15 @@ async function wfmuProvider(_station: Station, signal: AbortSignal): Promise<Tra
 
 export function useNowPlaying(station?: Station | null) {
   const [track, setTrack] = useState<TrackInfo>({});
+  const trackRef = useRef<TrackInfo>({});
   const abortControllerRef = useRef<AbortController | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stationIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    trackRef.current = track;
+  }, [track]);
 
   const updateTrack = useCallback(async (newTrack: TrackInfo & { duration_ms?: number, offset_ms?: number }): Promise<TrackInfo> => {
     setTrack(prev => ({ ...prev, ...newTrack }));
@@ -247,18 +253,14 @@ export function useNowPlaying(station?: Station | null) {
     // Si tenemos un track identificado manualmente (con título y artista), 
     // y estamos en un polling (no un cambio de estación), NO lo sobreescribimos
     // a menos que el provider encuentre algo nuevo (que no suele ocurrir si ya falló)
-    if (isPolling && track.title && track.artist && !getStationProvider(station.id)) {
+    const latest = trackRef.current;
+    if (isPolling && latest.title && latest.artist && !getStationProvider(station.id)) {
       return;
     }
 
     // Si la estación cambia, LIMPIAR el track identificado manualmente
     if (stationIdRef.current !== station.id) {
       setTrack({});
-    }
-
-    // Skip if already fetching for this station
-    if (stationIdRef.current === station.id && abortControllerRef.current) {
-      return;
     }
 
     stationIdRef.current = station.id;

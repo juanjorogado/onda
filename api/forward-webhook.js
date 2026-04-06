@@ -57,6 +57,7 @@ export default async function handler(req, res) {
     try {
       text = await forwardResp.text();
     } catch {
+      text = '';
     }
 
     return res.status(200).json({

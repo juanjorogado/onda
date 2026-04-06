@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { TrackInfo } from '../../types/track';
 
 interface MediaSessionProps {
@@ -194,18 +194,10 @@ export function useMediaSession({
     return images;
   }, [track?.cover, fallbackGradient, stationName]);
 
-  // Track previous artwork to avoid unnecessary updates
-  const prevArtworkRef = useRef<string>('');
-
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
 
     const mediaSession = navigator.mediaSession;
-
-    // Only update metadata if artwork changed
-    const artworkSrc = artwork.map(a => a.src).join(',');
-    if (prevArtworkRef.current === artworkSrc) return;
-    prevArtworkRef.current = artworkSrc;
 
     mediaSession.metadata = new window.MediaMetadata({
       title: track?.title || stationName || 'ONDA Radio',
