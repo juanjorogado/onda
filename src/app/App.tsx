@@ -97,8 +97,7 @@ function App() {
               onTrackIdentified={updateTrack}
               onToggle={togglePlay}
               onSwipe={handleSwipe}
-            >
-            </PlayingScreen>
+            />
           ) : (
             <div className="w-full flex-1 flex items-center justify-center">
               <WaitingScreen />

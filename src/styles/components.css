@@ -186,7 +186,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-white);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-smooth), transform var(--duration-fast) var(--easing-smooth);
   animation: fade-in var(--duration-normal) var(--easing-smooth) forwards;
@@ -207,25 +206,14 @@
   animation: pulse-soft 1.5s ease-in-out infinite;
 }
 
-.shazam-button.is-identifying svg {
-  animation: mic-bounce 1s ease-in-out infinite;
-}
-
-@keyframes mic-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-
 .shazam-button.is-success {
   background-color: var(--color-feedback-success-bg);
-  color: var(--color-white);
   border-color: var(--color-feedback-success-border);
   animation: scale-up-fade-out 2s var(--easing-smooth) forwards;
 }
 
 .shazam-button.is-error {
   background-color: var(--color-feedback-error-bg);
-  color: var(--color-white);
   border-color: var(--color-feedback-error-border);
 }
 
@@ -242,17 +230,30 @@
   animation: fade-in var(--duration-normal) var(--easing-smooth) both;
 }
 
-.shazam-loading-spinner {
-  width: var(--size-spinner);
-  height: var(--size-spinner);
-  border: 3px solid var(--color-glass-border);
-  border-top-color: var(--color-white);
+/* Dot — lenguaje visual de Onda: solo círculos y bordes */
+.shazam-dot {
+  width: var(--spacing-2);
+  height: var(--spacing-2);
   border-radius: 50%;
-  animation: spin var(--duration-normal) linear infinite;
+  border: var(--border-width-1) solid var(--color-white);
+  background-color: transparent;
+  transition: background-color var(--duration-fast) var(--easing-smooth),
+              border-color var(--duration-fast) var(--easing-smooth);
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.shazam-dot.is-identifying {
+  animation: water-wave-1 var(--duration-very-slow) var(--easing-gentle) infinite;
+  border-color: var(--color-white);
+}
+
+.shazam-dot.is-success {
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+.shazam-dot.is-error {
+  border-color: var(--color-white);
+  opacity: var(--opacity-secondary);
 }
 
 

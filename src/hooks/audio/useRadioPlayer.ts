@@ -4,8 +4,7 @@ import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from '../media/useNowPlaying';
 import { useHapticFeedback } from '../useHapticFeedback';
 import { useOnlineStatus } from '../useOnlineStatus';
-
-const TRANSITION_DURATION = 400; // ms
+import { TRANSITION_DURATION } from '../../constants';
 
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);

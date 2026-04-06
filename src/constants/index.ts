@@ -6,6 +6,7 @@
 // Intervalos de tiempo
 export const POLLING_INTERVAL = 30000; // 30 segundos para polling de APIs
 export const TIME_UPDATE_INTERVAL = 1000; // 1 segundo para actualización de reloj
+export const TRANSITION_DURATION = 300; // ms — coincide con --duration-fast (0.3s)
 
 // Umbrales
 export const SWIPE_THRESHOLD = 50; // Píxeles para detectar swipe
