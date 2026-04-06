@@ -110,11 +110,10 @@
   --gradient-waiting-start: rgba(182, 214, 194, 1);
   --gradient-waiting-end: rgba(74, 96, 162, 0);
 
-  /* Gradients - Overlay opacity (más visible) */
-  --gradient-overlay-white-start: rgba(255, 255, 255, 0.25);
-  --gradient-overlay-white-end: rgba(255, 255, 255, 0.05);
-  --gradient-overlay-black-mid: rgba(0, 0, 0, 0.1);
-  --gradient-overlay-black-end: rgba(0, 0, 0, 0.2);
+  /* Gradients - Overlay (3 paradas en el radial del cover: brillo suave → sombra) */
+  --gradient-overlay-white-start: rgba(255, 255, 255, 0.22);
+  --gradient-overlay-white-end: rgba(255, 255, 255, 0.06);
+  --gradient-overlay-black-end: rgba(0, 0, 0, 0.18);
 
   /* ==========================================================================
      Animation - Timing

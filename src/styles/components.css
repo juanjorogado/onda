@@ -134,8 +134,7 @@
   background: radial-gradient(
     ellipse at center,
     var(--gradient-overlay-white-start) 0%,
-    var(--gradient-overlay-white-end) 40%,
-    var(--gradient-overlay-black-mid) 60%,
+    var(--gradient-overlay-white-end) 48%,
     var(--gradient-overlay-black-end) 100%
   );
   background-size: var(--animation-background-size) var(--animation-background-size);
@@ -537,8 +536,7 @@
   background: radial-gradient(
     ellipse at center,
     var(--gradient-overlay-white-start) 0%,
-    var(--gradient-overlay-white-end) 40%,
-    var(--gradient-overlay-black-mid) 60%,
+    var(--gradient-overlay-white-end) 48%,
     var(--gradient-overlay-black-end) 100%
   );
   background-size: var(--animation-background-size) var(--animation-background-size);

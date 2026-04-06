@@ -24,7 +24,7 @@ export const AUDIO_CONFIG = {
   DEFAULT_VOLUME: 1.0,
 } as const;
 
-// Gradientes por defecto
+// Gradientes por defecto (deben coincidir con --gradient-* en src/styles/variables.css)
 export const DEFAULT_GRADIENTS = {
   PLAYING: 'linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%)',
   WAITING: 'linear-gradient(to bottom, rgba(182, 214, 194, 1) 0%, rgba(74, 96, 162, 0) 100%)',

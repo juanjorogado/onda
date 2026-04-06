@@ -31,23 +31,8 @@ function getTimeOfDay(hour: number): 'dawn' | 'day' | 'dusk' | 'night' {
   return 'night';                               // 8 PM-5 AM: Noche
 }
 
-function getAngleForTimeOfDay(time: 'dawn' | 'day' | 'dusk' | 'night'): number {
-  switch (time) {
-    case 'dawn': return 120;
-    case 'day': return 135;
-    case 'dusk': return 150;
-    case 'night': return 160;
-  }
-}
-
-function getMidStopForTimeOfDay(time: 'dawn' | 'day' | 'dusk' | 'night'): number {
-  switch (time) {
-    case 'dawn': return 40;
-    case 'day': return 50;
-    case 'dusk': return 60;
-    case 'night': return 50;
-  }
-}
+/** Ángulo único: transición suave, sin variar por franja (menos ruido visual). */
+const GRADIENT_ANGLE_DEG = 138;
 
 /**
  * Detecta si el sistema está en modo oscuro
@@ -61,8 +46,8 @@ function isDarkMode(): boolean {
 /**
  * Genera colores de gradiente según el período del día
  * @param timeOfDay - Período del día
- * @param city - Nombre de la ciudad (para variación)
- * @returns Objeto con colores HSL
+ * @param city - Nombre de la ciudad (variación muy sutil entre ciudades)
+ * @returns Objeto con colores HSL (dos paradas, gamas análogas — sin saltos tipo “arcoíris”)
  */
 function getTimeBasedColors(timeOfDay: 'dawn' | 'day' | 'dusk' | 'night', city: string): {
   hue1: number;
@@ -71,54 +56,53 @@ function getTimeBasedColors(timeOfDay: 'dawn' | 'day' | 'dusk' | 'night', city: 
   light1: number;
   light2: number;
 } {
-  // Generar variación basada en la ciudad
   let hash = 0;
   for (let i = 0; i < city.length; i++) {
     hash = city.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const variation = Math.abs(hash) % 20; // Variación de 0-20 grados
+  // Poca variación: la UI no debe “gritar” distinto por ciudad (filosofía: discreto)
+  const variation = Math.abs(hash) % 9;
   const darkMode = isDarkMode();
-  
-  // Ajustar saturación y claridad para dark mode
-  const darkModeSatReduction = darkMode ? 20 : 0;
-  const darkModeLightReduction = darkMode ? 15 : 0;
+
+  const darkModeSatReduction = darkMode ? 18 : 0;
+  const darkModeLightReduction = darkMode ? 12 : 0;
 
   switch (timeOfDay) {
     case 'dawn':
-      // Amanecer: tonos rosas, naranjas suaves
+      // Rosas y melocotón cercanos en el círculo cromático (~18° de separación máx.)
       return {
-        hue1: 15 + variation,      // Naranja-rosa
-        hue2: 35 + variation,       // Naranja más cálido
-        sat: Math.max(40, 70 + (variation % 15) - darkModeSatReduction), // Saturación alta
-        light1: Math.max(25, 45 + (variation % 10) - darkModeLightReduction), // Claridad media
-        light2: Math.max(35, 65 + (variation % 15) - darkModeLightReduction), // Claridad alta
+        hue1: 24 + variation,
+        hue2: 14 + variation,
+        sat: Math.max(38, 52 + (variation % 6) - darkModeSatReduction),
+        light1: Math.max(28, 48 + (variation % 5) - darkModeLightReduction),
+        light2: Math.max(36, 62 + (variation % 6) - darkModeLightReduction),
       };
     case 'day':
-      // Día: tonos azules claros
+      // Azul día: matiz contenido (no cyan-neón)
       return {
-        hue1: 200 + (variation % 20), // Azul
-        hue2: 220 + (variation % 20),  // Azul más claro
-        sat: Math.max(30, 50 + (variation % 20) - darkModeSatReduction),    // Saturación media
-        light1: Math.max(35, 60 + (variation % 15) - darkModeLightReduction), // Claridad alta
-        light2: Math.max(45, 80 + (variation % 10) - darkModeLightReduction), // Claridad muy alta
+        hue1: 208 + (variation % 5),
+        hue2: 218 + (variation % 5),
+        sat: Math.max(28, 42 + (variation % 6) - darkModeSatReduction),
+        light1: Math.max(38, 58 + (variation % 5) - darkModeLightReduction),
+        light2: Math.max(48, 76 + (variation % 4) - darkModeLightReduction),
       };
     case 'dusk':
-      // Atardecer: tonos naranjas, rojos, púrpuras
+      // Caliente y análogo: naranja → ámbar (sin salto a púrpura)
       return {
-        hue1: 10 + (variation % 15),   // Naranja-rojo
-        hue2: 280 + (variation % 20),  // Púrpura
-        sat: Math.max(45, 75 + (variation % 15) - darkModeSatReduction),    // Saturación alta
-        light1: Math.max(25, 40 + (variation % 15) - darkModeLightReduction), // Claridad media-baja
-        light2: Math.max(30, 55 + (variation % 15) - darkModeLightReduction), // Claridad media
+        hue1: 26 + (variation % 6),
+        hue2: 14 + (variation % 5),
+        sat: Math.max(40, 56 + (variation % 7) - darkModeSatReduction),
+        light1: Math.max(26, 42 + (variation % 5) - darkModeLightReduction),
+        light2: Math.max(32, 52 + (variation % 6) - darkModeLightReduction),
       };
     case 'night':
-      // Noche: tonos azules oscuros, púrpuras
+      // Azul profundo → índigo (vecinos en H)
       return {
-        hue1: 240 + (variation % 20),  // Azul oscuro
-        hue2: 270 + (variation % 20),  // Púrpura oscuro
-        sat: Math.max(40, 60 + (variation % 20) - darkModeSatReduction),    // Saturación media-alta
-        light1: Math.max(15, 20 + (variation % 10) - darkModeLightReduction), // Claridad baja
-        light2: Math.max(20, 35 + (variation % 15) - darkModeLightReduction), // Claridad media-baja
+        hue1: 236 + (variation % 6),
+        hue2: 248 + (variation % 6),
+        sat: Math.max(36, 50 + (variation % 6) - darkModeSatReduction),
+        light1: Math.max(16, 22 + (variation % 4) - darkModeLightReduction),
+        light2: Math.max(22, 32 + (variation % 5) - darkModeLightReduction),
       };
   }
 }
@@ -130,17 +114,11 @@ function getTimeBasedColors(timeOfDay: 'dawn' | 'day' | 'dusk' | 'night', city: 
  * @returns String de gradiente CSS
  */
 export function getCityGradientFallback(city: string, timezone?: string): string {
-  // Obtener la hora según timezone o usar hora local como fallback
   const hour = timezone ? getHourInTimezone(timezone) : new Date().getHours();
   const timeOfDay = getTimeOfDay(hour);
   const colors = getTimeBasedColors(timeOfDay, city);
-  const angle = getAngleForTimeOfDay(timeOfDay);
-  const midStop = getMidStopForTimeOfDay(timeOfDay);
 
-  // Color intermedio para representar mejor la transición de la hora
-  const midHue = Math.round((colors.hue1 + colors.hue2) / 2);
-  const midLight = Math.round((colors.light1 + colors.light2) / 2);
-
-  return `linear-gradient(${angle}deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${midHue}, ${colors.sat}%, ${midLight}%) ${midStop}%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
+  // Dos paradas: suficiente profundidad sin competir con el contenido (Rams / filosofía Onda)
+  return `linear-gradient(${GRADIENT_ANGLE_DEG}deg, hsl(${colors.hue1}, ${colors.sat}%, ${colors.light1}%) 0%, hsl(${colors.hue2}, ${colors.sat}%, ${colors.light2}%) 100%)`;
 }
 
