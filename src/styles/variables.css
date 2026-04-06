@@ -122,13 +122,11 @@
   --duration-normal: 1s;
   --duration-fast: 0.3s;
   --duration-faster: 0.2s;
-  --duration-slow: 3s;
   --duration-slower: 20s;
   --duration-very-slow: 4s;
 
   /* Animation - Delays */
   --delay-fast: 0.1s;
-  --delay-normal: 0.15s;
   --delay-medium: var(--duration-faster); /* 0.2s */
   --delay-slow: var(--duration-fast); /* 0.3s */
 
@@ -136,13 +134,7 @@
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  /* ==========================================================================
-     Animation - Overflow and size
-     ========================================================================== */
-  --animation-overflow-top: -10%;
-  --animation-overflow-left: -10%;
-  --animation-overflow-width: 120%;
-  --animation-overflow-height: 120%;
+  /* Animation - Background size */
   --animation-background-size: 200%;
 
   /* ==========================================================================

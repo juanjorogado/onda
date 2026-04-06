@@ -127,10 +127,10 @@
 .waiting-screen-cover::before {
   content: '';
   position: absolute;
-  top: var(--animation-overflow-top);
-  left: var(--animation-overflow-left);
-  width: var(--animation-overflow-width);
-  height: var(--animation-overflow-height);
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
   background: radial-gradient(
     ellipse at center,
     var(--gradient-overlay-white-start) 0%,
@@ -162,7 +162,7 @@
   transition: color var(--duration-normal) var(--easing-smooth);
   animation:
     fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-slow) both,
-    pulse-soft var(--duration-slow) ease-in-out var(--duration-normal) infinite;
+    pulse-soft 3s ease-in-out var(--duration-normal) infinite;
 }
 
 @keyframes pulse-soft {
@@ -405,7 +405,7 @@
   padding-right: var(--spacing-2);
   flex-direction: column;
   flex-wrap: nowrap;
-  animation: fade-in-down var(--duration-normal) var(--easing-smooth) var(--delay-normal) both;
+  animation: fade-in-down var(--duration-normal) var(--easing-smooth) 0.15s both;
 }
 
 .playing-screen-station-board {
