@@ -176,6 +176,10 @@
   animation: fade-in var(--duration-normal) var(--easing-smooth) both;
 }
 
+.animate-fade-in-up {
+  animation: fade-in-up var(--duration-normal) var(--easing-smooth) both;
+}
+
 .animate-cover-fade-in {
   animation: cover-fade-in var(--duration-normal) var(--easing-smooth) both;
 }

@@ -232,8 +232,8 @@
 
 /* Dot — lenguaje visual de Onda: solo círculos y bordes */
 .shazam-dot {
-  width: 0.75rem;
-  height: 0.75rem;
+  width: var(--spacing-3);
+  height: var(--spacing-3);
   border-radius: 50%;
   border: var(--border-width-1) solid var(--color-white);
   background-color: transparent;
@@ -324,13 +324,15 @@
   z-index: -1;
 }
 
-/* Contraste dinámico de texto */
+/* Contraste dinámico de texto e indicador */
 .playing-screen-container[data-brightness="light"] {
   --color-ink: var(--color-black);
+  --color-onda-indicator: var(--color-black);
 }
 
 .playing-screen-container[data-brightness="dark"] {
   --color-ink: var(--color-white);
+  --color-onda-indicator: var(--color-brand);
 }
 
 /* Capa de contraste para landscape */
@@ -443,6 +445,10 @@
   height: var(--spacing-14px);
 }
 
+.playing-screen-onda .wave-circle {
+  border-color: var(--color-onda-indicator, var(--color-brand));
+}
+
 .playing-screen-ellipse-inner {
   position: absolute;
   left: 50%;
@@ -450,7 +456,7 @@
   transform: translate(-50%, -50%);
   width: var(--spacing-2);
   height: var(--spacing-2);
-  border: var(--border-width-1) solid var(--color-brand);
+  border: var(--border-width-1) solid var(--color-onda-indicator, var(--color-brand));
   border-radius: 50%;
   transition: border-color var(--duration-normal) var(--easing-smooth);
 }

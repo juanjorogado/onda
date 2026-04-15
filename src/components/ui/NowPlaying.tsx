@@ -102,8 +102,10 @@ export const NowPlaying = memo(({
   
   if (!text) return null;
   
+  const hasTrack = !!(title || artist);
+
   return (
-    <div key={text} ref={containerRef} className={`now-playing overflow-hidden text-ink animate-fade-in ${className}`}>
+    <div key={text} ref={containerRef} className={`now-playing overflow-hidden text-ink ${hasTrack ? 'animate-fade-in-up' : 'animate-fade-in'} ${className}`}>
       <div className="marquee is-scrolling">
         <div 
           className="marquee-content"

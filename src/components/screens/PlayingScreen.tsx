@@ -337,15 +337,13 @@ export const PlayingScreen = memo(({
         <div className="playing-screen-station">
           {/* Onda Logo */}
           <div className="playing-screen-onda">
-            {isPlaying ? (
+            {isPlaying && !statusText ? (
               <div className={`wave-container playing`}>
                 <span className="wave-circle"></span>
                 <span className="wave-circle"></span>
               </div>
             ) : (
-              <>
-                <div className="playing-screen-ellipse-inner"></div>
-              </>
+              <div className="playing-screen-ellipse-inner"></div>
             )}
           </div>
           
