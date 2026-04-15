@@ -232,18 +232,24 @@
 
 /* Dot — lenguaje visual de Onda: solo círculos y bordes */
 .shazam-dot {
-  width: var(--spacing-2);
-  height: var(--spacing-2);
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
   border: var(--border-width-1) solid var(--color-white);
   background-color: transparent;
   transition: background-color var(--duration-fast) var(--easing-smooth),
-              border-color var(--duration-fast) var(--easing-smooth);
+              border-color var(--duration-fast) var(--easing-smooth),
+              transform var(--duration-fast) var(--easing-smooth);
 }
 
 .shazam-dot.is-identifying {
-  animation: water-wave-1 var(--duration-very-slow) var(--easing-gentle) infinite;
+  animation: dot-pulse var(--duration-very-slow) var(--easing-gentle) infinite;
   border-color: var(--color-white);
+}
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
 }
 
 .shazam-dot.is-success {
