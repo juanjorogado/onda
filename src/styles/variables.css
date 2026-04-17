@@ -106,6 +106,7 @@
   /* ==========================================================================
      Gradients - Base
      ========================================================================== */
+  --gradient-cover-end: var(--color-background);
   --gradient-default-start: rgba(74, 96, 162, 1);
   --gradient-default-end: rgba(74, 96, 162, 0);
   --gradient-waiting-start: rgba(182, 214, 194, 1);
