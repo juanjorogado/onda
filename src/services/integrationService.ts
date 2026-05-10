@@ -48,7 +48,7 @@ export const integrationService = {
 
       // 2) Si no hay proxy o falla, intentar enviar directo (no-cors + text/plain)
       if (!webhookUrl) {
-        console.warn('No hay proxy ni URL de webhook configurada. Saltando guardado.');
+        console.warn('No proxy or webhook URL configured. Skipping save.');
         return false;
       }
 
@@ -63,7 +63,7 @@ export const integrationService = {
 
       return true;
     } catch (error) {
-      console.error('Error al guardar en Anytype:', error);
+      console.error('Failed to save to Anytype:', error);
       return false;
     }
   }

@@ -24,11 +24,10 @@ const DEFAULT_PROVIDER_CONFIG: ProviderConfig = {
 const STATION_PROVIDERS: Record<string, ProviderConfig> = {
   // Estaciones con APIs específicas
   kexp: { provider: kexpProvider, timeout: PROVIDER_TIMEOUT },
-  wfmu: { provider: wfmuProvider, timeout: PROVIDER_TIMEOUT },
-  'wfmu-fixed': { provider: wfmuProvider, timeout: PROVIDER_TIMEOUT },
-  'tsf-jazz': { provider: tsfJazzProvider, timeout: PROVIDER_TIMEOUT },
 
   // Providers genéricos para estaciones sin API específica
+  'wfmu-fixed': DEFAULT_PROVIDER_CONFIG,
+  'tsf-jazz': DEFAULT_PROVIDER_CONFIG,
   'cashmere-radio': DEFAULT_PROVIDER_CONFIG,
   'radio-raheem': DEFAULT_PROVIDER_CONFIG,
   'bbc-6music': DEFAULT_PROVIDER_CONFIG,
@@ -138,57 +137,6 @@ async function icecastMetadataProvider(station: Station, signal: AbortSignal): P
   }
 }
 
-/**
- * Provider para TSF Jazz (Francia)
- */
-async function tsfJazzProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    const response = await fetchWithTimeout('https://www.tsfjazz.com/api/nowplaying', {
-      signal,
-      headers: { 'Accept': 'application/json' },
-      timeout: PROVIDER_TIMEOUT,
-    });
-
-    if (signal.aborted) return null;
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    return {
-      title: data?.title || undefined,
-      artist: data?.artist || undefined,
-      album: data?.album || undefined,
-      cover: data?.cover || undefined,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Provider para WFMU
- */
-async function wfmuProvider(_station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    const response = await fetchWithTimeout('https://wfmu.org/wp-content/themes/wfmu-theme/ajax/now-playing.php', {
-      signal,
-      headers: { 'Accept': 'application/json' },
-      timeout: PROVIDER_TIMEOUT,
-    });
-
-    if (signal.aborted) return null;
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    return {
-      title: data?.song || data?.title || undefined,
-      artist: data?.artist || undefined,
-      album: data?.album || undefined,
-      cover: data?.image || undefined,
-    };
-  } catch {
-    return null;
-  }
-}
 
 export function useNowPlaying(station?: Station | null) {
   const [track, setTrack] = useState<TrackInfo>({});
@@ -237,7 +185,7 @@ export function useNowPlaying(station?: Station | null) {
           setTrack(prev => ({ ...prev, ...enriched }));
         }
       } catch (e) {
-        console.warn('No se pudo encontrar el cover para el track identificado:', e);
+        console.warn('Could not find cover art for identified track:', e);
       }
     }
 
@@ -250,13 +198,10 @@ export function useNowPlaying(station?: Station | null) {
       return;
     }
 
-    // Si tenemos un track identificado manualmente (con título y artista), 
-    // y estamos en un polling (no un cambio de estación), NO lo sobreescribimos
-    // a menos que el provider encuentre algo nuevo (que no suele ocurrir si ya falló)
+    // During polling, don't overwrite a manually-identified track unless the
+    // provider returns a different song (title changed), which means a new track started.
     const latest = trackRef.current;
-    if (isPolling && latest.title && latest.artist && !getStationProvider(station.id)) {
-      return;
-    }
+    const hasManualTrack = isPolling && latest.title && latest.artist;
 
     // Si la estación cambia, LIMPIAR el track identificado manualmente
     if (stationIdRef.current !== station.id) {
@@ -275,28 +220,34 @@ export function useNowPlaying(station?: Station | null) {
 
     try {
       const provider = getStationProvider(station.id);
-      const trackInfo = provider 
+      const trackInfo = provider
         ? await provider(station, signal)
         : null;
 
       // Check if this request is still valid (station didn't change)
       if (signal.aborted || stationIdRef.current !== station.id) return;
 
-      if (trackInfo) {
-        setTrack(trackInfo);
-      } else {
+      if (trackInfo?.title) {
+        // If we have a manual track and the provider returns the same song, skip update
+        if (hasManualTrack && trackInfo.title === latest.title && trackInfo.artist === latest.artist) {
+          return;
+        }
+        // New track from provider — enrich it before setting
+        await updateTrack(trackInfo);
+      } else if (!hasManualTrack) {
+        // No provider result and no manual track — clear
         setTrack({});
       }
+      // If hasManualTrack and provider returned nothing, keep the manual track as-is
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         return;
       }
-      // Only set empty track if request wasn't aborted and station didn't change
-      if (!signal.aborted && stationIdRef.current === station.id) {
+      if (!signal.aborted && stationIdRef.current === station.id && !hasManualTrack) {
         setTrack({});
       }
     }
-  }, [station]);
+  }, [station, updateTrack]);
 
   // Initial fetch and polling
   useEffect(() => {

@@ -12,7 +12,7 @@ export const ShazamButton = memo(({ streamUrl, stationName, onTrackIdentified }:
   const [status, setStatus] = useState<'idle' | 'identifying' | 'success' | 'error'>('idle');
 
   const handleClick = useCallback(async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Evitar pausar la radio al tocar el botón
+    e.stopPropagation();
     
     if (status === 'identifying') return;
 
@@ -30,25 +30,19 @@ export const ShazamButton = memo(({ streamUrl, stationName, onTrackIdentified }:
       const data = await response.json();
 
       if (data.success && data.track) {
-        // Esperar el track enriquecido (género, apple_music_url) antes de guardar
+        // Wait for enriched track (genre, apple_music_url) before saving
         const enrichedTrack = await onTrackIdentified?.(data.track) ?? data.track;
 
-        // Notificar al usuario (Feedback visual sutil)
         if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
-
-        // Guardar con datos completos una vez terminado el enriquecimiento
         await integrationService.saveToAnytype(enrichedTrack, stationName);
-
-        // Mostrar estado de éxito temporalmente
         setStatus('success');
       } else {
-        console.warn('No se pudo identificar la canción:', data.message || 'Sin resultados');
+        console.warn('Could not identify track:', data.message || 'No results');
         setStatus('error');
-        // Volver a estado idle tras 3 segundos de error
         setTimeout(() => setStatus('idle'), 3000);
       }
     } catch (error) {
-      console.error('Error al identificar:', error);
+      console.error('Track identification error:', error);
       setStatus('error');
       setTimeout(() => setStatus('idle'), 3000);
     }

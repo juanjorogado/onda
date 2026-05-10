@@ -99,15 +99,6 @@ export const stations: Station[] = [
     timezone: 'Europe/Rome',
     cover: ''
   },
-  {
-    id: 'radio-paradise',
-    name: 'Radio Paradise',
-    url: 'https://stream.radioparadise.com/mp3-192',
-    genre: 'Eclectic / Rock / World',
-    location: 'California, USA',
-    timezone: 'America/Los_Angeles',
-    cover: '/logos/radioparadise.svg'
-  },
 
   // --- CLÁSICA & NEOCLÁSICA ---
   {

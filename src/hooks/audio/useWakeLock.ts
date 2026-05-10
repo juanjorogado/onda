@@ -18,7 +18,7 @@ export function useWakeLock() {
               try {
                 wakeLock = await navigator.wakeLock.request('screen');
               } catch (err) {
-                console.warn('Error re-requesting wake lock:', err);
+                console.warn('Wake lock re-request failed:', err);
               }
             }
           };
@@ -48,11 +48,11 @@ export function useWakeLock() {
           
           document.body.appendChild(video);
           video.play().catch(err => {
-            console.warn('Error playing wake lock video:', err);
+            console.warn('Wake lock video playback failed:', err);
           });
         }
       } catch (err) {
-        console.warn('Wake Lock no disponible:', err);
+        console.warn('Wake lock unavailable:', err);
       }
     };
     
