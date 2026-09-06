@@ -3,7 +3,7 @@ import { TrackInfo } from '../../types/track';
 import { useCurrentTime } from '../../hooks/time/useCurrentTime';
 import { formatTime } from '../../utils/formatTime';
 import { extractCity } from '../../utils/extractCity';
-import { SWIPE_THRESHOLD, DEFAULT_GRADIENTS } from '../../constants';
+import { PULL_THRESHOLD, PULL_RESISTANCE, PULL_MAX_TRANSLATE, DEFAULT_GRADIENTS } from '../../constants';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
 import { ShazamButton } from '../ui/ShazamButton';
@@ -24,7 +24,9 @@ interface PlayingScreenProps {
   streamUrl?: string;
   onTrackIdentified?: (track: TrackInfo) => Promise<TrackInfo>;
   onToggle: () => void;
-  onSwipe: (direction: 'left' | 'right') => void;
+  onPull: () => void;
+  /** @deprecated usar onPull */
+  onSwipe?: (direction: 'left' | 'right') => void;
 }
 
 export const PlayingScreen = memo(({ 
@@ -42,20 +44,21 @@ export const PlayingScreen = memo(({
   streamUrl,
   onTrackIdentified,
   onToggle,
+  onPull,
   onSwipe,
 }: PlayingScreenProps) => {
   const time = useCurrentTime();
   const startX = useRef(0);
   const startY = useRef(0);
-  const hasCompletedSwipe = useRef(false);
+  const hasCompletedPull = useRef(false);
   const isDragging = useRef(false);
   const [isDraggingState, setIsDraggingState] = useState(false);
-  const [translateX, setTranslateX] = useState(0);
+  const [translateY, setTranslateY] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [swipeDirection, setSwipeDirection] = useState<'horizontal' | null>(null);
-  const swipeDirectionRef = useRef<'horizontal' | null>(null);
+  const [pullDirection, setPullDirection] = useState<'vertical' | null>(null);
+  const pullDirectionRef = useRef<'vertical' | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
-  const containerWidth = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLight, setIsLight] = useState(false);
 
   // Cross-fade: blurred background
@@ -111,30 +114,18 @@ export const PlayingScreen = memo(({
 
   // Reset translate cuando cambia la estación
   useEffect(() => {
-    setTranslateX(0);
+    setTranslateY(0);
     setIsTransitioning(false);
     isDragging.current = false;
     setIsDraggingState(false);
-    setSwipeDirection(null);
-    swipeDirectionRef.current = null;
+    setPullDirection(null);
+    pullDirectionRef.current = null;
   }, [stationName]);
   
   // Sincronizar ref con state
   useEffect(() => {
-    swipeDirectionRef.current = swipeDirection;
-  }, [swipeDirection]);
-
-  // Actualizar el ancho del contenedor
-  useEffect(() => {
-    const updateWidth = () => {
-      if (boardRef.current) {
-        containerWidth.current = boardRef.current.offsetWidth || window.innerWidth;
-      }
-    };
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
+    pullDirectionRef.current = pullDirection;
+  }, [pullDirection]);
 
   // Calcular el brillo del fondo para el contraste de texto
   useEffect(() => {
@@ -196,23 +187,41 @@ export const PlayingScreen = memo(({
   const locationText = city ?? '';
 
   // Event handlers con preventDefault usando listeners nativos (no pasivos)
+  const triggerPull = useRef<(() => void) | null>(null);
+  triggerPull.current = onPull ?? (onSwipe ? () => onSwipe('left') : undefined as unknown as () => void);
+
   useEffect(() => {
     const element = boardRef.current;
-    if (!element || !onSwipe) return;
+    const container = containerRef.current;
+    if (!element) return;
+    const pullTrigger = triggerPull.current;
+    if (!pullTrigger) return;
+
+    const isAtTop = () => {
+      if (container) return container.scrollTop <= 2;
+      // fallback: board parent scrollable
+      return true;
+    };
 
     const handleTouchStart = (e: globalThis.TouchEvent) => {
       const touch = e.touches[0];
       startX.current = touch.clientX;
       startY.current = touch.clientY;
-      hasCompletedSwipe.current = false;
+      hasCompletedPull.current = false;
       isDragging.current = false;
       setIsDraggingState(false);
       setIsTransitioning(false);
-      setSwipeDirection(null);
+      setPullDirection(null);
+      pullDirectionRef.current = null;
     };
 
     const handleTouchMove = (e: globalThis.TouchEvent) => {
-      if (hasCompletedSwipe.current || !onSwipe) return;
+      if (hasCompletedPull.current) {
+        // ya disparado, bloquear scroll residual
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       
       const touch = e.touches[0];
       const dx = touch.clientX - startX.current;
@@ -220,91 +229,141 @@ export const PlayingScreen = memo(({
       const absDx = Math.abs(dx);
       const absDy = Math.abs(dy);
       
-      const currentDirection = swipeDirectionRef.current;
-      
-      // Determinar la dirección del swipe - solo horizontal
-      if (!currentDirection && (absDx > 10 || absDy > 10)) {
-        if (absDx > absDy * 1.2) {
-          setSwipeDirection('horizontal');
-          swipeDirectionRef.current = 'horizontal';
+      const currentDirection = pullDirectionRef.current;
+
+      // Determinar dirección: solo vertical pull-down
+      if (!currentDirection && (absDx > 8 || absDy > 8)) {
+        // Si el gesto es claramente vertical y hacia abajo, reclamarlo
+        if (absDy > absDx * 1.15 && dy > 0) {
+          // Solo reclamar si estamos arriba del todo — evita robar scroll interno
+          if (!isAtTop()) {
+            // Dejar que el navegador haga scroll normal
+            return;
+          }
+          setPullDirection('vertical');
+          pullDirectionRef.current = 'vertical';
+          // Reclamamos el gesto: evita scroll / pull-to-refresh nativo
           e.preventDefault();
           e.stopPropagation();
+        } else if (absDx > absDy * 1.2 || dy < 0) {
+          // Gesto horizontal o pull-up: no es nuestro caso, dejar pasar (no reclamar)
+          return;
         }
       }
       
-      // Procesar swipe horizontal
-      if (currentDirection === 'horizontal' && absDx > 10) {
+      // Procesar pull-down vertical
+      if (pullDirectionRef.current === 'vertical') {
+        // Solo dy positivo (hacia abajo); dy negativo es scroll up y lo ignoramos
+        if (dy <= 0) return;
+
+        // Si durante el arrastre dejamos de estar arriba, cancelar
+        if (!isAtTop() && !isDragging.current) return;
+
         e.preventDefault();
         e.stopPropagation();
         isDragging.current = true;
         setIsDraggingState(true);
 
-        const maxTranslate = containerWidth.current * 0.5;
-        const clampedDx = Math.max(-maxTranslate, Math.min(maxTranslate, dx));
-        setTranslateX(clampedDx);
+        // Resistencia progresiva: más allá del umbral cuesta más avanzar
+        const raw = dy * PULL_RESISTANCE;
+        let damped: number;
+        if (raw <= PULL_THRESHOLD) {
+          damped = raw;
+        } else {
+          const extra = raw - PULL_THRESHOLD;
+          // curva de resistencia: 0.3 de factor extra hasta el máximo
+          damped = PULL_THRESHOLD + Math.min(extra * 0.32, PULL_MAX_TRANSLATE - PULL_THRESHOLD);
+        }
+        const clamped = Math.min(damped, PULL_MAX_TRANSLATE);
+        setTranslateY(clamped);
         
-        if (absDx > SWIPE_THRESHOLD) {
-          hasCompletedSwipe.current = true;
+        if (clamped >= PULL_THRESHOLD && !hasCompletedPull.current) {
+          hasCompletedPull.current = true;
           setIsTransitioning(true);
 
-          // Feedback háptico al completar swipe
+          // Feedback háptico al completar pull
           swipe();
 
-          const direction = dx > 0 ? 1 : -1;
-          const finalTranslate = direction * containerWidth.current;
-          setTranslateX(finalTranslate);
+          // Animar al máximo y disparar cambio de estación
+          setTranslateY(PULL_MAX_TRANSLATE + 20);
 
           setTimeout(() => {
-            onSwipe(dx > 0 ? 'right' : 'left');
-          }, 100);
+            pullTrigger();
+          }, 110);
         }
       }
-      
-
     };
 
     const handleTouchEnd = (e: globalThis.TouchEvent) => {
-      if (hasCompletedSwipe.current) {
+      if (hasCompletedPull.current) {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
       
-      const currentDirection = swipeDirectionRef.current;
-      const currentTranslateX = translateX;
+      const currentDirection = pullDirectionRef.current;
       
       if (isDragging.current) {
-        if (currentDirection === 'horizontal' && Math.abs(currentTranslateX) < SWIPE_THRESHOLD) {
+        // Si no se alcanzó el umbral, volver con rebote
+        if (currentDirection === 'vertical' && translateY < PULL_THRESHOLD) {
           setIsTransitioning(true);
-          setTranslateX(0);
+          setTranslateY(0);
           setTimeout(() => {
             setIsTransitioning(false);
             isDragging.current = false;
             setIsDraggingState(false);
-            setSwipeDirection(null);
-          }, 300);
+            setPullDirection(null);
+            pullDirectionRef.current = null;
+          }, 280);
         } else {
+          // Limpiar estado sin animar (ya se animó al completar)
           isDragging.current = false;
           setIsDraggingState(false);
-          setSwipeDirection(null);
+          setPullDirection(null);
+          pullDirectionRef.current = null;
         }
+      } else {
+        // Toco corto sin arrastre
+        setPullDirection(null);
+        pullDirectionRef.current = null;
       }
     };
 
+    const handleTouchCancel = () => {
+      if (hasCompletedPull.current) return;
+      setIsTransitioning(true);
+      setTranslateY(0);
+      setTimeout(() => {
+        setIsTransitioning(false);
+        isDragging.current = false;
+        setIsDraggingState(false);
+        setPullDirection(null);
+        pullDirectionRef.current = null;
+        hasCompletedPull.current = false;
+      }, 280);
+    };
+
     // Agregar listeners con { passive: false } para permitir preventDefault
+    // touchstart puede ser passive, pero move/end deben ser no-passive
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
     element.addEventListener('touchmove', handleTouchMove, { passive: false });
     element.addEventListener('touchend', handleTouchEnd, { passive: false });
+    element.addEventListener('touchcancel', handleTouchCancel, { passive: false });
 
     return () => {
       element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
+      element.removeEventListener('touchcancel', handleTouchCancel);
     };
-  }, [onSwipe, swipe, translateX]);
+  }, [swipe, translateY]);
+
+  const pullProgress = Math.min(translateY / PULL_THRESHOLD, 1);
+  const pullOpacity = isDraggingState ? Math.max(0.55, 1 - pullProgress * 0.35) : 1;
 
   return (
     <div
+      ref={containerRef}
       className="playing-screen-container"
       data-brightness={isLight ? 'light' : 'dark'}
     >
@@ -322,15 +381,27 @@ export const PlayingScreen = memo(({
         style={{ background: displayedBg }}
         aria-hidden="true"
       />
+      {/* Indicador sutil de pull — solo visible al arrastrar */}
+      {isDraggingState && translateY > 8 && (
+        <div
+          className="playing-screen-pull-indicator"
+          aria-hidden="true"
+          style={{
+            opacity: Math.min(0.9, pullProgress * 0.9),
+            transform: `translateY(${Math.min(translateY * 0.15, 12)}px) scale(${0.9 + pullProgress * 0.1})`,
+          }}
+        >
+          <span className={`playing-screen-pull-dot ${pullProgress >= 1 ? 'is-ready' : ''}`} />
+        </div>
+      )}
+
       <div 
         ref={boardRef}
-        className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning' : ''} ${isDraggingState ? 'swipe-dragging' : ''}`}
+        className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning pull-transitioning' : ''} ${isDraggingState ? 'swipe-dragging pull-dragging' : ''}`}
         style={{
-          transform: `translateX(${translateX}px) rotateY(${translateX * 0.05}deg)`,
-          opacity: isDraggingState && containerWidth.current > 0
-            ? Math.max(0.7, 1 - Math.abs(translateX) / (containerWidth.current * 0.5))
-            : 1,
-          transition: isTransitioning ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+          transform: `translateY(${translateY}px)`,
+          opacity: pullOpacity,
+          transition: isTransitioning ? 'transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1)' : 'none',
         }}
       >
         {/* Station Section */}

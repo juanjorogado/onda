@@ -19,12 +19,17 @@
 }
 
 /* ==========================================================================
-   Base elements
+   Base elements — standalone iOS: fondo continuo bajo status bar
    ========================================================================== */
 html {
   font-size: 16px;
   background-color: var(--color-background);
   color-scheme: light dark;
+  /* Extender viewport bajo notch / status bar (carrier) */
+  min-height: calc(100% + env(safe-area-inset-top));
+  min-height: -webkit-fill-available;
+  /* El html también lleva el fondo para el rebote/overscroll */
+  background: var(--color-background);
 }
 
 body {
@@ -38,7 +43,20 @@ body {
   font-family: var(--font-family-base);
   transition: background-color var(--duration-normal) var(--easing-smooth), color var(--duration-normal) var(--easing-smooth);
   min-height: var(--viewport-height);
+  min-height: -webkit-fill-available;
+  min-height: var(--viewport-height-dynamic);
   width: 100%;
+  /* Evitar que iOS recorte el fondo en el área del carrier */
+  background: var(--color-background);
+}
+
+#root {
+  min-height: inherit;
+  min-height: -webkit-fill-available;
+  min-height: var(--viewport-height-dynamic);
+  display: flex;
+  flex-direction: column;
+  background: inherit;
 }
 
 /* ==========================================================================
@@ -95,11 +113,14 @@ body {
 .h-screen {
   height: var(--viewport-height);
   height: var(--viewport-height-dynamic);
+  /* En standalone el 100dvh ya incluye la dinámica, pero sumamos inset para no recortar el carrier */
+  min-height: -webkit-fill-available;
 }
 
 .min-h-screen {
   min-height: var(--viewport-height);
   min-height: var(--viewport-height-dynamic);
+  min-height: -webkit-fill-available;
 }
 
 .min-h-0 {
@@ -152,13 +173,31 @@ body {
 }
 
 /* ==========================================================================
-   Safe Area
+   Safe Area — usar solo donde el contenido no deba quedar bajo el notch,
+   nunca en el wrapper que lleva el fondo (para mantener fondo continuo)
    ========================================================================== */
 .safe-area {
   padding-top: env(safe-area-inset-top);
   padding-right: env(safe-area-inset-right);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-x {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-y {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Soporte standalone: el fondo debe ocupar también el área de insets */
+@supports (padding: max(0px)) {
+  html {
+    /* viewport-fit=cover ya está en index.html, aquí aseguramos que env() esté activo */
+  }
 }
 
 /* ==========================================================================

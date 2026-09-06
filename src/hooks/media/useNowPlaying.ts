@@ -31,7 +31,6 @@ const STATION_PROVIDERS: Record<string, ProviderConfig> = {
   'cashmere-radio': DEFAULT_PROVIDER_CONFIG,
   'radio-raheem': DEFAULT_PROVIDER_CONFIG,
   'bbc-6music': DEFAULT_PROVIDER_CONFIG,
-  'resonance-fm': DEFAULT_PROVIDER_CONFIG,
   'fip': DEFAULT_PROVIDER_CONFIG,
   'france-musique': DEFAULT_PROVIDER_CONFIG,
   'radio-paradise': DEFAULT_PROVIDER_CONFIG,

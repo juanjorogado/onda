@@ -40,11 +40,10 @@ function App() {
 
   const coverGradient = weatherGradient || DEFAULT_GRADIENTS.PLAYING;
 
-  // Memoizar callbacks para evitar re-renders innecesarios
-  const handleSwipe = useCallback((direction: 'left' | 'right') => {
-    if (direction === 'left') nextStation();
-    else if (direction === 'right') prevStation();
-  }, [nextStation, prevStation]);
+  // Pull-down para pasar de radio: avanza a la siguiente estación
+  const handlePull = useCallback(() => {
+    nextStation();
+  }, [nextStation]);
 
   // Configurar Media Session API para controles en pantalla de bloqueo (iOS/Android)
   useMediaSession({
@@ -60,13 +59,25 @@ function App() {
 
   
 
+  // Fondo continuo en standalone: el gradiente/cover debe llegar bajo el status bar (carrier)
+  // por eso el wrapper externo lleva el fondo y el safe-area se aplica solo al contenido interno
+  const appBackground = coverArt ? '#000' : coverGradient;
+
   return (
-    <div className="min-h-screen bg-black font-sans safe-area">
+    <div
+      className="min-h-screen bg-black font-sans"
+      style={{
+        background: appBackground,
+        // Asegura que html/body y wrapper compartan el mismo fondo para el overscroll
+      }}
+    >
       <main
-        className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
+        className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen min-h-[100dvh] min-h-[-webkit-fill-available]"
         style={{
           background: coverArt ? undefined : coverGradient,
           backgroundSize: '100% 100%',
+          // Extender fondo bajo el notch sin añadir padding extra aquí
+          minHeight: '100dvh',
         }}
       >
         <audio
@@ -96,7 +107,7 @@ function App() {
               streamUrl={currentStation?.url}
               onTrackIdentified={updateTrack}
               onToggle={togglePlay}
-              onSwipe={handleSwipe}
+              onPull={handlePull}
             />
           ) : (
             <div className="w-full flex-1 flex items-center justify-center">

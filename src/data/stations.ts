@@ -13,18 +13,9 @@ export const stations: Station[] = [
     cover: '/logos/nts.svg'
   },
   {
-    id: 'resonance-fm',
-    name: 'Resonance FM',
-    url: 'https://stream.resonance.fm/resonance',
-    genre: 'Experimental / Sound Art / Community',
-    location: 'London, UK',
-    timezone: 'Europe/London',
-    cover: ''
-  },
-  {
     id: 'bbc-6music',
     name: 'BBC 6 Music',
-    url: 'http://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d96000.norewind.m3u8',
+    url: 'https://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d96000.norewind.m3u8',
     genre: 'Alternative / Indie / Rock',
     location: 'London, UK',
     timezone: 'Europe/London',
@@ -64,7 +55,7 @@ export const stations: Station[] = [
   {
     id: 'fip',
     name: 'FIP',
-    url: 'http://icecast.radiofrance.fr/fip-midfi.mp3',
+    url: 'https://icecast.radiofrance.fr/fip-midfi.mp3',
     genre: 'Eclectic / Jazz / Electro / World',
     location: 'Paris, France',
     timezone: 'Europe/Paris',
@@ -73,7 +64,7 @@ export const stations: Station[] = [
   {
     id: 'france-musique',
     name: 'France Musique',
-    url: 'http://icecast.radiofrance.fr/francemusique-midfi.mp3',
+    url: 'https://icecast.radiofrance.fr/francemusique-midfi.mp3',
     genre: 'Classical / Contemporary / Jazz',
     location: 'Paris, France',
     timezone: 'Europe/Paris',
@@ -84,7 +75,7 @@ export const stations: Station[] = [
   {
     id: 'tsf-jazz',
     name: 'TSF Jazz',
-    url: 'http://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3',
+    url: 'https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3',
     genre: 'Jazz / Rare Groove / Soul',
     location: 'Paris, France',
     timezone: 'Europe/Paris',
@@ -104,7 +95,7 @@ export const stations: Station[] = [
   {
     id: 'whisperings-piano',
     name: 'Whisperings Solo Piano',
-    url: 'http://pianosolo.streamguys1.com/live',
+    url: 'https://pianosolo.streamguys1.com/live',
     genre: 'Solo Piano / Neoclassical',
     location: 'Oregon, USA',
     timezone: 'America/Los_Angeles',
