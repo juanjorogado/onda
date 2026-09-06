@@ -127,26 +127,6 @@ export const stations: Station[] = [
     cover: '/logos/francemusique.svg'
   },
 
-  // --- EUROPA BOUTIQUE ---
-  {
-    id: 'tsf-jazz',
-    name: 'TSF Jazz',
-    url: 'https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3',
-    genre: 'Jazz / Rare Groove / Soul',
-    location: 'Paris, France',
-    timezone: 'Europe/Paris',
-    cover: '/logos/tsfjazz.svg'
-  },
-  {
-    id: 'radio-raheem',
-    name: 'Radio Raheem',
-    url: 'https://radioraheem.out.airtime.pro/radioraheem_a',
-    genre: 'Electronic / Cosmic / Jazz',
-    location: 'Milan, Italy',
-    timezone: 'Europe/Rome',
-    cover: ''
-  },
-
   // --- CLÁSICA & NEOCLÁSICA ---
   {
     id: 'whisperings-piano',
