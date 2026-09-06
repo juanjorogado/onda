@@ -48,6 +48,7 @@
   --spacing-4: 1rem;
   --spacing-6: 1.5rem;
   --spacing-8: 2rem;
+  --spacing-12: 3rem;
 
   /* Spacing - Specific values (off-grid, semantic) */
   --spacing-14px: 0.875rem; /* 14px — onda indicator icon */

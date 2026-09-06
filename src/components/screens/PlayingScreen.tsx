@@ -417,22 +417,21 @@ export const PlayingScreen = memo(({
       {/* Indicador sutil de pull — dot con escala + rotación elástica */}
       {isDraggingState && translateY > 6 && (
         <div
-          className="playing-screen-pull-indicator"
+          className={`playing-screen-pull-dial${isDraggingState ? ' visible' : ''}`}
           aria-hidden="true"
-          style={{
-            opacity: Math.min(0.95, 0.4 + pullProgress * 0.6),
-            transform: `translateY(${Math.min(translateY * 0.45, 56)}px) scale(${0.9 + pullProgress * 0.18})`,
-          }}
+          style={{ opacity: Math.min(0.95, 0.4 + pullProgress * 0.6) }}
         >
-          <span
-            className={`playing-screen-pull-dot ${pullProgress >= 1 ? 'is-ready' : ''}`}
+          <div className="playing-screen-pull-dial__bar">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="playing-screen-pull-dial__tick" />
+            ))}
+          </div>
+          <div
+            className="playing-screen-pull-dial__needle playing-screen-pull-dial__needle--dragging"
             style={{
-              transform: `scale(${1 + pullProgress * 0.35}) rotate(${pullProgress * 180}deg)`,
-            }}
+              '--needle-rotate': `${Math.sin(pullProgress * Math.PI) * 15}deg`,
+            } as React.CSSProperties}
           />
-          <span className="playing-screen-pull-label" style={{ opacity: pullProgress > 0.35 ? 1 : 0 }}>
-            {pullProgress >= 1 ? 'suelta' : 'tira'}
-          </span>
         </div>
       )}
 
