@@ -18,6 +18,16 @@
   --color-ink: var(--color-white);
 }
 
+/* iOS standalone: fondo siempre oscuro para continuidad bajo status bar (carrier)
+   En navegador el fondo claro del waiting se ve bien porque el container tapa el inset,
+   pero en standalone el html blanco cortaba el gradiente oscuro del playing. */
+@media (display-mode: standalone) {
+  html, body {
+    background: #000 !important;
+    background-color: #000 !important;
+  }
+}
+
 /* ==========================================================================
    Base elements — standalone iOS: fondo continuo bajo status bar
    ========================================================================== */
@@ -28,14 +38,15 @@ html {
   /* Extender viewport bajo notch / status bar (carrier) */
   min-height: calc(100% + env(safe-area-inset-top));
   min-height: -webkit-fill-available;
-  /* El html también lleva el fondo para el rebote/overscroll */
-  background: var(--color-background);
+  /* El html lleva fondo oscuro por defecto para evitar corte blanco arriba en playing
+     (el waiting tapa con su propio fondo papel en el inset) */
+  background: #000;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-background);
+  background-color: #000;
   color: var(--color-ink);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
@@ -46,8 +57,8 @@ body {
   min-height: -webkit-fill-available;
   min-height: var(--viewport-height-dynamic);
   width: 100%;
-  /* Evitar que iOS recorte el fondo en el área del carrier */
-  background: var(--color-background);
+  /* Fondo negro asegura continuidad bajo status bar en standalone; el waiting tapa con papel */
+  background: #000;
 }
 
 #root {

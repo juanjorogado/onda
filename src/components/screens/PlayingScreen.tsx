@@ -360,6 +360,11 @@ export const PlayingScreen = memo(({
 
   const pullProgress = Math.min(translateY / PULL_THRESHOLD, 1);
   const pullOpacity = isDraggingState ? Math.max(0.55, 1 - pullProgress * 0.35) : 1;
+  // Referencia animación elástica: DGElasticPullToRefresh + Dribbble Hoang Nguyen (Pull Down to Refresh)
+  // El top se deforma como goma con curva Q y el cover escala/ligereza tipo Liquid Glass
+  const elasticAmp = pullProgress * 32 + translateY * 0.12;
+  const coverScale = isDraggingState ? 1 - pullProgress * 0.06 : 1;
+  const boardScale = isDraggingState ? 0.985 + pullProgress * 0.015 : 1;
 
   return (
     <div
@@ -367,6 +372,34 @@ export const PlayingScreen = memo(({
       className="playing-screen-container"
       data-brightness={isLight ? 'light' : 'dark'}
     >
+      {/* Capa elástica superior — referencia DGElasticPullToRefresh (Hoang Nguyen Dribbble) */}
+      {translateY > 2 && (
+        <div
+          className="playing-screen-pull-elastic"
+          aria-hidden="true"
+          style={{ height: translateY + elasticAmp * 0.35 }}
+        >
+          <svg
+            className="playing-screen-pull-elastic__svg"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            width="100%"
+            height="100%"
+          >
+            {/* Fondo elástico con curva — imita goma estirada */}
+            <path
+              d={`M0 0 H100 V${Math.min(92, 30 + pullProgress * 62)} Q50 ${Math.min(100, 30 + pullProgress * 62 + elasticAmp)} 0 ${Math.min(92, 30 + pullProgress * 62)} Z`}
+              fill="currentColor"
+              opacity={0.06 + pullProgress * 0.08}
+            />
+          </svg>
+          {/* Línea sutil de tensión */}
+          <div
+            className="playing-screen-pull-elastic__line"
+            style={{ opacity: pullProgress * 0.5 }}
+          />
+        </div>
+      )}
       {/* Fondo desenfocado — cross-fade entre fuente anterior y nueva */}
       {fadingOutBg && (
         <div
@@ -381,17 +414,25 @@ export const PlayingScreen = memo(({
         style={{ background: displayedBg }}
         aria-hidden="true"
       />
-      {/* Indicador sutil de pull — solo visible al arrastrar */}
-      {isDraggingState && translateY > 8 && (
+      {/* Indicador sutil de pull — dot con escala + rotación elástica */}
+      {isDraggingState && translateY > 6 && (
         <div
           className="playing-screen-pull-indicator"
           aria-hidden="true"
           style={{
-            opacity: Math.min(0.9, pullProgress * 0.9),
-            transform: `translateY(${Math.min(translateY * 0.15, 12)}px) scale(${0.9 + pullProgress * 0.1})`,
+            opacity: Math.min(0.95, 0.4 + pullProgress * 0.6),
+            transform: `translateY(${Math.min(translateY * 0.45, 56)}px) scale(${0.9 + pullProgress * 0.18})`,
           }}
         >
-          <span className={`playing-screen-pull-dot ${pullProgress >= 1 ? 'is-ready' : ''}`} />
+          <span
+            className={`playing-screen-pull-dot ${pullProgress >= 1 ? 'is-ready' : ''}`}
+            style={{
+              transform: `scale(${1 + pullProgress * 0.35}) rotate(${pullProgress * 180}deg)`,
+            }}
+          />
+          <span className="playing-screen-pull-label" style={{ opacity: pullProgress > 0.35 ? 1 : 0 }}>
+            {pullProgress >= 1 ? 'suelta' : 'tira'}
+          </span>
         </div>
       )}
 
@@ -399,9 +440,9 @@ export const PlayingScreen = memo(({
         ref={boardRef}
         className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning pull-transitioning' : ''} ${isDraggingState ? 'swipe-dragging pull-dragging' : ''}`}
         style={{
-          transform: `translateY(${translateY}px)`,
+          transform: `translateY(${translateY}px) scale(${boardScale})`,
           opacity: pullOpacity,
-          transition: isTransitioning ? 'transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1)' : 'none',
+          transition: isTransitioning ? 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1)' : 'none',
         }}
       >
         {/* Station Section */}
@@ -459,7 +500,9 @@ export const PlayingScreen = memo(({
             background: coverGradient || DEFAULT_GRADIENTS.PLAYING,
             backgroundSize: '100% 100%',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
+            backgroundRepeat: 'no-repeat',
+            transform: `scale(${coverScale})`,
+            transition: isTransitioning ? 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
           }}
         >
           {/* Cover del álbum — cross-fade entre imagen anterior y nueva */}

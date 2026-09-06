@@ -424,15 +424,47 @@
   backface-visibility: hidden;
 }
 
-/* Indicador sutil de pull-down */
+/* Elastic pull — referencia DGElasticPullToRefresh (Hoang Nguyen Dribbble) */
+.playing-screen-pull-elastic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 4;
+  overflow: hidden;
+  /* El SVG ocupa toda el área y su path se deforma con pullProgress */
+  color: var(--color-onda-indicator, var(--color-brand));
+}
+
+.playing-screen-pull-elastic__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.playing-screen-pull-elastic__line {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform: scaleX(0.85);
+  transition: opacity var(--duration-fast) var(--easing-smooth);
+}
+
+/* Indicador sutil de pull-down — dot + label elástico */
 .playing-screen-pull-indicator {
   position: absolute;
-  top: var(--spacing-2);
+  top: calc(env(safe-area-inset-top) + var(--spacing-2));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 0.35rem;
   pointer-events: none;
   z-index: 5;
   transition: opacity var(--duration-fast) var(--easing-smooth), transform var(--duration-fast) var(--easing-smooth);
@@ -444,17 +476,38 @@
   border-radius: 50%;
   border: var(--border-width-1) solid var(--color-onda-indicator, var(--color-brand));
   background: transparent;
-  opacity: 0.6;
+  opacity: 0.65;
+  box-shadow: 0 0 0 0 transparent;
   transition: background-color var(--duration-fast) var(--easing-smooth),
               border-color var(--duration-fast) var(--easing-smooth),
               transform var(--duration-fast) var(--easing-smooth),
-              opacity var(--duration-fast) var(--easing-smooth);
+              opacity var(--duration-fast) var(--easing-smooth),
+              box-shadow var(--duration-fast) var(--easing-smooth);
+  will-change: transform;
 }
 
 .playing-screen-pull-dot.is-ready {
   background: var(--color-onda-indicator, var(--color-brand));
   opacity: 1;
   transform: scale(1.25);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  animation: pull-dot-pulse 0.9s var(--easing-gentle) infinite alternate;
+}
+
+@keyframes pull-dot-pulse {
+  from { transform: scale(1.25); }
+  to   { transform: scale(1.42); }
+}
+
+.playing-screen-pull-label {
+  font-family: var(--font-family-base);
+  font-size: 0.62rem;
+  font-weight: var(--font-weight-book);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-onda-indicator, var(--color-brand));
+  opacity: 0.7;
+  transition: opacity var(--duration-fast) var(--easing-smooth);
 }
 
 .playing-screen-station {
