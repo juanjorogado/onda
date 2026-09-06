@@ -55,6 +55,7 @@ export const PlayingScreen = memo(({
   const [isDraggingState, setIsDraggingState] = useState(false);
   const [translateY, setTranslateY] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [dialReleasing, setDialReleasing] = useState(false);
   const [pullDirection, setPullDirection] = useState<'vertical' | null>(null);
   const pullDirectionRef = useRef<'vertical' | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
@@ -116,6 +117,7 @@ export const PlayingScreen = memo(({
   useEffect(() => {
     setTranslateY(0);
     setIsTransitioning(false);
+    setDialReleasing(false);
     isDragging.current = false;
     setIsDraggingState(false);
     setPullDirection(null);
@@ -288,6 +290,7 @@ export const PlayingScreen = memo(({
           setTranslateY(PULL_MAX_TRANSLATE + 20);
 
           setTimeout(() => {
+            setDialReleasing(true);
             pullTrigger();
           }, 110);
         }
@@ -417,22 +420,27 @@ export const PlayingScreen = memo(({
       {/* Indicador sutil de pull — dot con escala + rotación elástica */}
       {isDraggingState && translateY > 6 && (
         <div
-          className={`playing-screen-pull-dial${isTransitioning ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
+          className={`playing-screen-pull-dial${dialReleasing ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
           aria-hidden="true"
           style={{
-            opacity: isTransitioning ? undefined : Math.min(0.95, 0.4 + pullProgress * 0.6),
-            translate: isTransitioning ? '0 -24px' : `${Math.sin(pullProgress * Math.PI) * 4}px`,
-          }}
+            '--dial-translate-x': dialReleasing ? '0' : `${Math.sin(pullProgress * Math.PI) * 8}px`,
+            '--dial-translate-y': dialReleasing ? '-24px' : '0',
+            opacity: dialReleasing ? undefined : Math.min(0.95, 0.4 + pullProgress * 0.6),
+          } as React.CSSProperties}
         >
           <div className="playing-screen-pull-dial__bar">
             {Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="playing-screen-pull-dial__tick" />
+              <div
+                key={i}
+                className="playing-screen-pull-dial__tick"
+                style={{ backgroundColor: isLight ? 'var(--color-black)' : 'var(--color-white)' }}
+              />
             ))}
           </div>
           <div
             className="playing-screen-pull-dial__needle playing-screen-pull-dial__needle--dragging"
             style={{
-              '--needle-rotate': `${Math.sin(pullProgress * Math.PI) * 20}deg`,
+              '--needle-rotate': `${Math.sin(pullProgress * Math.PI) * 25}deg`,
             } as React.CSSProperties}
           />
         </div>

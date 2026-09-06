@@ -522,8 +522,8 @@
   pointer-events: none;
   z-index: 5;
   opacity: 0;
-  translate: 0;
-  transition: opacity 0.3s var(--easing-smooth), translate 0.4s var(--easing-smooth);
+  translate: var(--dial-translate-x, 0) var(--dial-translate-y, 0);
+  transition: opacity 0.2s var(--easing-smooth), translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .playing-screen-pull-dial.visible {
@@ -531,9 +531,9 @@
 }
 
 .playing-screen-pull-dial--releasing {
+  --dial-translate-y: -24px;
   opacity: 0;
-  translate: 0 -24px;
-  transition: opacity 0.25s var(--easing-smooth), translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.2s var(--easing-smooth), translate 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .playing-screen-pull-dial__bar {
