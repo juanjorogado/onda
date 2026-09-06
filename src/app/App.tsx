@@ -93,19 +93,18 @@ function App() {
   }, [appBackground, currentStation]);
 
   return (
-    <div
-      className="min-h-screen bg-black font-sans"
-      style={{
-        background: appBackground,
-        // Asegura que html/body y wrapper compartan el mismo fondo para el overscroll
-      }}
-    >
+    <>
+      {/* Fijo full-bleed: ocupa todo el viewport sin corte (carrier arriba + home abajo) */}
+      <div
+        className="app-background"
+        style={{ background: appBackground }}
+      />
+      <div className="min-h-screen font-sans" style={{ background: 'transparent' }}>
       <main
-        className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen min-h-[100dvh] min-h-[-webkit-fill-available]"
+        className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
         style={{
           background: coverArt ? undefined : coverGradient,
           backgroundSize: '100% 100%',
-          // Extender fondo bajo el notch sin añadir padding extra aquí
           minHeight: '100dvh',
         }}
       >
@@ -145,7 +144,8 @@ function App() {
           )}
         </div>
       </main>
-    </div>
+      </div>
+    </>
   )
 }
 

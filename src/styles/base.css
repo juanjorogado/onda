@@ -18,49 +18,66 @@
   --color-ink: var(--color-white);
 }
 
-/* Fondo continuo: en standalone el html/body deben ser transparentes para que
-   el gradiente dinámico del wrapper (.app) se vea bajo el status bar y home indicator.
-   El fallback #000 se sobreescribe por JS en App.tsx para el gradiente activo. */
-
 /* ==========================================================================
-   Base elements — standalone iOS: fondo continuo bajo status bar
+   Base elements — fondo continuo full-bleed (status bar + home indicator)
    ========================================================================== */
 html {
   font-size: 16px;
   background-color: var(--color-background);
   color-scheme: light dark;
-  /* Extender viewport bajo notch / status bar (carrier) + home indicator */
-  min-height: calc(100% + env(safe-area-inset-top) + env(safe-area-inset-bottom));
+  /* viewport-height incluye safe-area insets para no cortar arriba/abajo */
   min-height: -webkit-fill-available;
-  /* Fondo sincronizado por App.tsx con coverGradient para continuidad arriba/abajo */
-  background: var(--color-background);
+  min-height: 100dvh;
+  /* Fijo full-bleed: ocupa todo el viewport sin recortes */
+  background: #000;
+  background-size: cover;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-background);
+  background-color: #000;
   color: var(--color-ink);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: var(--font-family-base);
   transition: background-color var(--duration-normal) var(--easing-smooth), color var(--duration-normal) var(--easing-smooth);
-  min-height: var(--viewport-height);
+  min-height: 100dvh;
   min-height: -webkit-fill-available;
-  min-height: var(--viewport-height-dynamic);
   width: 100%;
-  /* Transparente para que html (sincronizado con gradiente) se vea en bounce */
-  background: var(--color-background);
+  /* Fijo full-bleed: ocupa todo el viewport sin recortes */
+  background: #000;
+  background-size: cover;
 }
 
 #root {
-  min-height: inherit;
+  min-height: 100dvh;
   min-height: -webkit-fill-available;
-  min-height: var(--viewport-height-dynamic);
   display: flex;
   flex-direction: column;
+  /* background heredado de body; App.tsx sincroniza color sólido */
   background: inherit;
+}
+
+/* ==========================================================================
+   Fondo full-bleed que siempre ocupa toda la pantalla
+   (evita corte del carrier arriba y home indicator abajo)
+   ========================================================================== */
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  /* Cubre todo el viewport incluyendo safe-area insets */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
 }
 
 /* ==========================================================================
