@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useWakeLock } from '../hooks/audio/useWakeLock';
 import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
@@ -60,8 +60,34 @@ function App() {
   
 
   // Fondo continuo en standalone: el gradiente/cover debe llegar bajo el status bar (carrier)
-  // por eso el wrapper externo lleva el fondo y el safe-area se aplica solo al contenido interno
-  const appBackground = coverArt ? '#000' : coverGradient;
+  // y home indicator. Sincronizamos html/body con el gradiente activo para que
+  // el área de safe-insets (status bar + home) no corte con #000/#FFF.
+  const appBackground = !currentStation
+    ? '#fff'
+    : coverArt
+      ? '#000'
+      : coverGradient;
+
+  useEffect(() => {
+    // Resolver color papel para waiting (soporta dark mode)
+    let bg = appBackground;
+    if (!currentStation) {
+      const paper = getComputedStyle(document.documentElement).getPropertyValue('--color-paper').trim();
+      if (paper) bg = paper;
+    }
+    document.documentElement.style.background = bg;
+    document.body.style.background = bg;
+    // theme-color para que Safari/PWA tiña la UI con el mismo color de fondo
+    let metaTheme = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+    if (!metaTheme) {
+      metaTheme = document.createElement('meta');
+      metaTheme.name = 'theme-color';
+      document.head.appendChild(metaTheme);
+    }
+    const solid = bg.match(/rgba?\([^)]+\)|#[0-9a-fA-F]{3,6}/)?.[0] || bg;
+    metaTheme.content = solid;
+    return () => {};
+  }, [appBackground, currentStation]);
 
   return (
     <div

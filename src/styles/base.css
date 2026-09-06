@@ -18,15 +18,9 @@
   --color-ink: var(--color-white);
 }
 
-/* iOS standalone: fondo siempre oscuro para continuidad bajo status bar (carrier)
-   En navegador el fondo claro del waiting se ve bien porque el container tapa el inset,
-   pero en standalone el html blanco cortaba el gradiente oscuro del playing. */
-@media (display-mode: standalone) {
-  html, body {
-    background: #000 !important;
-    background-color: #000 !important;
-  }
-}
+/* Fondo continuo: en standalone el html/body deben ser transparentes para que
+   el gradiente dinámico del wrapper (.app) se vea bajo el status bar y home indicator.
+   El fallback #000 se sobreescribe por JS en App.tsx para el gradiente activo. */
 
 /* ==========================================================================
    Base elements — standalone iOS: fondo continuo bajo status bar
@@ -35,18 +29,17 @@ html {
   font-size: 16px;
   background-color: var(--color-background);
   color-scheme: light dark;
-  /* Extender viewport bajo notch / status bar (carrier) */
-  min-height: calc(100% + env(safe-area-inset-top));
+  /* Extender viewport bajo notch / status bar (carrier) + home indicator */
+  min-height: calc(100% + env(safe-area-inset-top) + env(safe-area-inset-bottom));
   min-height: -webkit-fill-available;
-  /* El html lleva fondo oscuro por defecto para evitar corte blanco arriba en playing
-     (el waiting tapa con su propio fondo papel en el inset) */
-  background: #000;
+  /* Fondo sincronizado por App.tsx con coverGradient para continuidad arriba/abajo */
+  background: var(--color-background);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #000;
+  background-color: var(--color-background);
   color: var(--color-ink);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
@@ -57,8 +50,8 @@ body {
   min-height: -webkit-fill-available;
   min-height: var(--viewport-height-dynamic);
   width: 100%;
-  /* Fondo negro asegura continuidad bajo status bar en standalone; el waiting tapa con papel */
-  background: #000;
+  /* Transparente para que html (sincronizado con gradiente) se vea en bounce */
+  background: var(--color-background);
 }
 
 #root {
