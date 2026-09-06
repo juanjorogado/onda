@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useWakeLock } from '../hooks/audio/useWakeLock';
 import { useRadioPlayer } from '../hooks/audio/useRadioPlayer';
 import { useMediaSession } from '../hooks/media/useMediaSession';
@@ -57,49 +57,9 @@ function App() {
     onNextTrack: nextStation,
   });
 
-  
-
-  // Fondo continuo en standalone: el gradiente/cover debe llegar bajo el status bar (carrier)
-  // y home indicator. Sincronizamos html/body con el gradiente activo para que
-  // el área de safe-insets (status bar + home) no corte con #000/#FFF.
-  const appBackground = !currentStation
-    ? '#fff'
-    : coverArt
-      ? '#000'
-      : coverGradient;
-
-  useEffect(() => {
-    // Resolver fondo continuo: extraer color sólido del gradiente para html/body (evita corte por transparencia)
-    let bg = appBackground;
-    if (!currentStation) {
-      const paper = getComputedStyle(document.documentElement).getPropertyValue('--color-paper').trim();
-      if (paper) bg = paper;
-    }
-    const solid = bg.match(/rgba?\([^)]+\)|#[0-9a-fA-F]{3,6}/)?.[0] || bg;
-    // html/body con color sólido asegura continuidad en safe-area top/bottom (status bar + home indicator)
-    document.documentElement.style.background = solid;
-    document.documentElement.style.backgroundColor = solid;
-    document.body.style.background = solid;
-    document.body.style.backgroundColor = solid;
-    // theme-color para Safari/PWA
-    let metaTheme = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-    if (!metaTheme) {
-      metaTheme = document.createElement('meta');
-      metaTheme.name = 'theme-color';
-      document.head.appendChild(metaTheme);
-    }
-    metaTheme.content = solid;
-    return () => {};
-  }, [appBackground, currentStation]);
-
   return (
     <>
-      {/* Fijo full-bleed: ocupa todo el viewport sin corte (carrier arriba + home abajo) */}
-      <div
-        className="app-background"
-        style={{ background: appBackground }}
-      />
-      <div className="min-h-screen font-sans" style={{ background: 'transparent' }}>
+      <div className="min-h-screen font-sans">
       <main
         className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen"
         style={{

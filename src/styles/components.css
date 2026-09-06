@@ -314,7 +314,7 @@
   touch-action: pan-y;
   /* Evitar pull-to-refresh nativo en Chrome/Android */
   overscroll-behavior: none;
-  /* Safe-area padding para contenido; fondo ya lo cubre el fixed full-bleed .app-background */
+  /* Safe-area padding para contenido; fondo ya lo cubre body #000 */
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);

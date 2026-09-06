@@ -23,14 +23,10 @@
    ========================================================================== */
 html {
   font-size: 16px;
-  background-color: var(--color-background);
+  background-color: #000;
   color-scheme: light dark;
-  /* viewport-height incluye safe-area insets para no cortar arriba/abajo */
   min-height: -webkit-fill-available;
   min-height: 100dvh;
-  /* Fijo full-bleed: ocupa todo el viewport sin recortes */
-  background: #000;
-  background-size: cover;
 }
 
 body {
@@ -42,13 +38,9 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: var(--font-family-base);
-  transition: background-color var(--duration-normal) var(--easing-smooth), color var(--duration-normal) var(--easing-smooth);
   min-height: 100dvh;
   min-height: -webkit-fill-available;
   width: 100%;
-  /* Fijo full-bleed: ocupa todo el viewport sin recortes */
-  background: #000;
-  background-size: cover;
 }
 
 #root {
@@ -56,33 +48,12 @@ body {
   min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
-  /* background heredado de body; App.tsx sincroniza color sólido */
   background: inherit;
 }
 
 /* ==========================================================================
-   Fondo full-bleed que siempre ocupa toda la pantalla
-   (evita corte del carrier arriba y home indicator abajo)
-   ========================================================================== */
-.app-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  /* Cubre todo el viewport incluyendo safe-area insets */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   Layout Utilities
-   ========================================================================== */
+    Layout Utilities
+    ========================================================================== */
 .flex {
   display: flex;
 }
