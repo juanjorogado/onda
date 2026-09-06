@@ -423,9 +423,9 @@ export const PlayingScreen = memo(({
           className={`playing-screen-pull-dial${dialReleasing ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
           aria-hidden="true"
           style={{
-            '--dial-translate-x': dialReleasing ? '0' : `${Math.sin(pullProgress * Math.PI) * 8}px`,
-            '--dial-translate-y': dialReleasing ? '-24px' : '0',
-            opacity: dialReleasing ? undefined : Math.min(0.95, 0.4 + pullProgress * 0.6),
+            '--dial-translate-x': dialReleasing ? '0' : `${Math.sin(pullProgress * Math.PI) * 16}px`,
+            '--dial-translate-y': dialReleasing ? '-32px' : '0',
+            opacity: dialReleasing ? undefined : Math.min(1, 0.3 + pullProgress * 0.7),
           } as React.CSSProperties}
         >
           <div className="playing-screen-pull-dial__bar">
@@ -440,7 +440,7 @@ export const PlayingScreen = memo(({
           <div
             className="playing-screen-pull-dial__needle playing-screen-pull-dial__needle--dragging"
             style={{
-              '--needle-rotate': `${Math.sin(pullProgress * Math.PI) * 25}deg`,
+              '--needle-rotate': `${Math.sin(pullProgress * Math.PI) * 30}deg`,
             } as React.CSSProperties}
           />
         </div>
