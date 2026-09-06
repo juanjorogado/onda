@@ -4,6 +4,15 @@ export const stations: Station[] = [
 
   // --- LONDRES: LA SCENE ALTERNATIVE ---
   {
+    id: 'nts-2',
+    name: 'NTS Radio 2',
+    url: 'https://stream-relay-geo.ntslive.net/stream2',
+    genre: 'Experimental / Underground / Global',
+    location: 'London, UK',
+    timezone: 'Europe/London',
+    cover: '/logos/nts.svg'
+  },
+  {
     id: 'bbc-6music',
     name: 'BBC 6 Music',
     url: 'https://as-hls-ww-live.akamaized.net/pool_81827798/live/ww/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d96000.norewind.m3u8',
@@ -11,6 +20,15 @@ export const stations: Station[] = [
     location: 'London, UK',
     timezone: 'Europe/London',
     cover: '/logos/bbc6.svg'
+  },
+  {
+    id: 'wfmu-fixed',
+    name: 'WFMU',
+    url: 'https://stream0.wfmu.org/freeform-128k.mp3',
+    genre: 'Freeform / Eclectic / Cult',
+    location: 'Jersey City, USA',
+    timezone: 'America/New_York',
+    cover: '/logos/wfmu.svg'
   },
   {
     id: 'kexp',
@@ -32,6 +50,37 @@ export const stations: Station[] = [
     timezone: 'Europe/Berlin',
     cover: '/logos/cashmere.svg'
   },
+
+  // --- RADIO France - LA CURATION PARISINA ---
+  {
+    id: 'fip',
+    name: 'FIP',
+    url: 'https://icecast.radiofrance.fr/fip-midfi.mp3',
+    genre: 'Eclectic / Jazz / Electro / World',
+    location: 'Paris, France',
+    timezone: 'Europe/Paris',
+    cover: '/logos/fip.svg'
+  },
+  {
+    id: 'france-musique',
+    name: 'France Musique',
+    url: 'https://icecast.radiofrance.fr/francemusique-midfi.mp3',
+    genre: 'Classical / Contemporary / Jazz',
+    location: 'Paris, France',
+    timezone: 'Europe/Paris',
+    cover: '/logos/francemusique.svg'
+  },
+
+  // --- EUROPA BOUTIQUE ---
+  {
+    id: 'tsf-jazz',
+    name: 'TSF Jazz',
+    url: 'https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3',
+    genre: 'Jazz / Rare Groove / Soul',
+    location: 'Paris, France',
+    timezone: 'Europe/Paris',
+    cover: '/logos/tsfjazz.svg'
+  },
   {
     id: 'radio-raheem',
     name: 'Radio Raheem',
@@ -39,44 +88,6 @@ export const stations: Station[] = [
     genre: 'Electronic / Cosmic / Jazz',
     location: 'Milan, Italy',
     timezone: 'Europe/Rome',
-    cover: ''
-  },
-
-  // --- CURADURÍA GLOBAL ---
-  {
-    id: 'chilltraxx',
-    name: 'ChillTraxx',
-    url: 'https://streamssleu.chilltrax.com/stream',
-    genre: 'Downtempo / Chillout',
-    location: 'Oakland, USA',
-    timezone: 'America/Los_Angeles',
-    cover: ''
-  },
-  {
-    id: 'jazz24',
-    name: 'Jazz24',
-    url: 'https://stream.jazz24.de/jazz24-128.mp3',
-    genre: 'Jazz / Eclectic',
-    location: 'Germany',
-    timezone: 'Europe/Berlin',
-    cover: ''
-  },
-  {
-    id: 'stereoscenic',
-    name: 'Stereoscenic',
-    url: 'http://radio.stereoscenic.com/ama-h',
-    genre: 'Ambient / Freeform',
-    location: 'Online',
-    timezone: 'UTC',
-    cover: ''
-  },
-  {
-    id: 'ambient-fm',
-    name: 'Ambient.FM',
-    url: 'https://phoebe.streamerr.co:4140/ambient.mp3',
-    genre: 'Ambient / Electronica',
-    location: 'Online',
-    timezone: 'UTC',
     cover: ''
   },
 
@@ -90,4 +101,15 @@ export const stations: Station[] = [
     timezone: 'America/Los_Angeles',
     cover: ''
   },
+
+  // --- CURADURÍA GLOBAL ---
+  {
+    id: 'nts-radio',
+    name: 'NTS Radio',
+    url: 'https://stream-relay-geo.ntslive.net/stream',
+    genre: 'Eclectic / Electronic / Jazz',
+    location: 'London, UK',
+    timezone: 'Europe/London',
+    cover: '/logos/nts.svg'
+  }
 ];
