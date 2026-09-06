@@ -69,22 +69,25 @@ function App() {
       : coverGradient;
 
   useEffect(() => {
-    // Resolver color papel para waiting (soporta dark mode)
+    // Resolver fondo continuo: extraer color sólido del gradiente para html/body (evita corte por transparencia)
     let bg = appBackground;
     if (!currentStation) {
       const paper = getComputedStyle(document.documentElement).getPropertyValue('--color-paper').trim();
       if (paper) bg = paper;
     }
-    document.documentElement.style.background = bg;
-    document.body.style.background = bg;
-    // theme-color para que Safari/PWA tiña la UI con el mismo color de fondo
+    const solid = bg.match(/rgba?\([^)]+\)|#[0-9a-fA-F]{3,6}/)?.[0] || bg;
+    // html/body con color sólido asegura continuidad en safe-area top/bottom (status bar + home indicator)
+    document.documentElement.style.background = solid;
+    document.documentElement.style.backgroundColor = solid;
+    document.body.style.background = solid;
+    document.body.style.backgroundColor = solid;
+    // theme-color para Safari/PWA
     let metaTheme = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
     if (!metaTheme) {
       metaTheme = document.createElement('meta');
       metaTheme.name = 'theme-color';
       document.head.appendChild(metaTheme);
     }
-    const solid = bg.match(/rgba?\([^)]+\)|#[0-9a-fA-F]{3,6}/)?.[0] || bg;
     metaTheme.content = solid;
     return () => {};
   }, [appBackground, currentStation]);
