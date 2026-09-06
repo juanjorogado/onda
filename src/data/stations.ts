@@ -50,6 +50,62 @@ export const stations: Station[] = [
     timezone: 'Europe/Berlin',
     cover: '/logos/cashmere.svg'
   },
+  {
+    id: 'radio-raheem',
+    name: 'Radio Raheem',
+    url: 'https://radioraheem.out.airtime.pro/radioraheem_a',
+    genre: 'Electronic / Cosmic / Jazz',
+    location: 'Milan, Italy',
+    timezone: 'Europe/Rome',
+    cover: ''
+  },
+
+  // --- EUROPA: JAZZ, ROCK ALTERNATIVO, NUEVAS MÚSICAS ---
+  {
+    id: 'fluxfm',
+    name: 'FluxFM',
+    url: 'https://streams.fluxfm.de/live/mp3-128/externplayer/',
+    genre: 'Indie / Alternative / Electronic',
+    location: 'Berlin, Germany',
+    timezone: 'Europe/Berlin',
+    cover: ''
+  },
+  {
+    id: 'fluxfm-neofm',
+    name: 'FluxFM NeoFM',
+    url: 'https://streams.fluxfm.de/neofm/mp3-128/externplayer/',
+    genre: 'Alternative / Indie / Rock',
+    location: 'Berlin, Germany',
+    timezone: 'Europe/Berlin',
+    cover: ''
+  },
+  {
+    id: 'fluxfm-cosmic',
+    name: 'FluxFM Cosmic',
+    url: 'https://streams.fluxfm.de/Cosmic/mp3-128/externplayer/',
+    genre: 'Jazz / Electronic / Cosmic',
+    location: 'Berlin, Germany',
+    timezone: 'Europe/Berlin',
+    cover: ''
+  },
+  {
+    id: 'fluxfm-xjazz',
+    name: 'FluxFM XJAZZ',
+    url: 'https://streams.fluxfm.de/x-jazz/mp3-128/externplayer/',
+    genre: 'Jazz / Nu Jazz',
+    location: 'Berlin, Germany',
+    timezone: 'Europe/Berlin',
+    cover: ''
+  },
+  {
+    id: 'radio-eins',
+    name: 'Radio Eins',
+    url: 'https://dispatcher.rndfnk.com/rbb/radioeins/live/mp3/mid',
+    genre: 'Alternative / Adult Contemporary',
+    location: 'Berlin, Germany',
+    timezone: 'Europe/Berlin',
+    cover: ''
+  },
 
   // --- RADIO France - LA CURATION PARISINA ---
   {

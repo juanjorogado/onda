@@ -36,10 +36,11 @@ const STATION_PROVIDERS: Record<string, ProviderConfig> = {
   'nts-radio': DEFAULT_PROVIDER_CONFIG,
   'nts-2': DEFAULT_PROVIDER_CONFIG,
   'whisperings-piano': DEFAULT_PROVIDER_CONFIG,
-  'chilltraxx': DEFAULT_PROVIDER_CONFIG,
-  'jazz24': DEFAULT_PROVIDER_CONFIG,
-  'stereoscenic': DEFAULT_PROVIDER_CONFIG,
-  'ambient-fm': DEFAULT_PROVIDER_CONFIG,
+  'fluxfm': DEFAULT_PROVIDER_CONFIG,
+  'fluxfm-neofm': DEFAULT_PROVIDER_CONFIG,
+  'fluxfm-cosmic': DEFAULT_PROVIDER_CONFIG,
+  'fluxfm-xjazz': DEFAULT_PROVIDER_CONFIG,
+  'radio-eins': DEFAULT_PROVIDER_CONFIG,
 };
 
 /**
