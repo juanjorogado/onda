@@ -33,10 +33,13 @@ const STATION_PROVIDERS: Record<string, ProviderConfig> = {
   'bbc-6music': DEFAULT_PROVIDER_CONFIG,
   'fip': DEFAULT_PROVIDER_CONFIG,
   'france-musique': DEFAULT_PROVIDER_CONFIG,
-  'radio-paradise': DEFAULT_PROVIDER_CONFIG,
   'nts-radio': DEFAULT_PROVIDER_CONFIG,
   'nts-2': DEFAULT_PROVIDER_CONFIG,
   'whisperings-piano': DEFAULT_PROVIDER_CONFIG,
+  'chilltraxx': DEFAULT_PROVIDER_CONFIG,
+  'jazz24': DEFAULT_PROVIDER_CONFIG,
+  'stereoscenic': DEFAULT_PROVIDER_CONFIG,
+  'ambient-fm': DEFAULT_PROVIDER_CONFIG,
 };
 
 /**
