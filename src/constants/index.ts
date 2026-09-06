@@ -28,10 +28,17 @@ export const AUDIO_CONFIG = {
   DEFAULT_VOLUME: 1.0,
 } as const;
 
-// Gradientes por defecto (deben coincidir con --gradient-* en src/styles/variables.css)
+// Color tokens para gradientes (referencia a --color-* en src/styles/variables.css)
+const DEFAULT_GRADIENT_COLORS = {
+  PLAYING_START: 'rgba(74, 96, 162, 1)',
+  PLAYING_END: 'rgba(74, 96, 162, 0)',
+  WAITING_START: 'rgba(182, 214, 194, 1)',
+} as const;
+
+// Gradientes por defecto (derivados de tokens CSS --color-* en src/styles/variables.css)
 export const DEFAULT_GRADIENTS = {
-  PLAYING: 'linear-gradient(to bottom, rgba(74, 96, 162, 1) 0%, rgba(74, 96, 162, 0) 100%)',
-  WAITING: 'linear-gradient(to bottom, rgba(182, 214, 194, 1) 0%, rgba(74, 96, 162, 0) 100%)',
+  PLAYING: `linear-gradient(to bottom, ${DEFAULT_GRADIENT_COLORS.PLAYING_START} 0%, ${DEFAULT_GRADIENT_COLORS.PLAYING_END} 100%)`,
+  WAITING: `linear-gradient(to bottom, ${DEFAULT_GRADIENT_COLORS.WAITING_START} 0%, ${DEFAULT_GRADIENT_COLORS.PLAYING_END} 100%)`,
 } as const;
 
 // ============================================

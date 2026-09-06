@@ -107,15 +107,25 @@
      Gradients - Base
      ========================================================================== */
   --gradient-cover-end: var(--color-background);
-  --gradient-default-start: rgba(74, 96, 162, 1);
-  --gradient-default-end: rgba(74, 96, 162, 0);
-  --gradient-waiting-start: rgba(182, 214, 194, 1);
-  --gradient-waiting-end: rgba(74, 96, 162, 0);
+  --color-default-start: rgba(74, 96, 162, 1);
+  --color-default-end: rgba(74, 96, 162, 0);
+  --color-waiting-start: rgba(182, 214, 194, 1);
+  --gradient-default-start: var(--color-default-start);
+  --gradient-default-end: var(--color-default-end);
+  --gradient-waiting-start: var(--color-waiting-start);
+  --gradient-waiting-end: var(--color-default-end);
 
   /* Gradients - Overlay (3 paradas en el radial del cover: brillo suave → sombra) */
   --gradient-overlay-white-start: rgba(255, 255, 255, 0.22);
   --gradient-overlay-white-end: rgba(255, 255, 255, 0.06);
   --gradient-overlay-black-end: rgba(0, 0, 0, 0.18);
+
+  /* Overlay contraste para landscape */
+  --color-overlay-dark: rgba(0, 0, 0, 0.15);
+  --color-overlay-light: rgba(255, 255, 255, 0.15);
+
+  /* Shadows */
+  --shadow-pull-ready: 0 2px 12px rgba(0, 0, 0, 0.12);
 
   /* ==========================================================================
      Animation - Timing

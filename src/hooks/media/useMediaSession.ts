@@ -25,6 +25,10 @@ interface MediaMetadataInit {
   artwork?: MediaImage[];
 }
 
+// Colores canónicos (referencia a --color-black/#000000 y --color-white/#FFFFFF en src/styles/variables.css)
+const COLOR_BLACK = '#000000';
+const COLOR_WHITE = '#FFFFFF';
+
 declare global {
   interface Window {
     MediaMetadata: new (init: MediaMetadataInit) => MediaMetadata;
@@ -93,7 +97,7 @@ function generateStationLogoArtwork(stationName: string, size: number): string |
     if (!ctx) return null;
 
     const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    ctx.fillStyle = isDarkMode ? '#000000' : '#FFFFFF';
+    ctx.fillStyle = isDarkMode ? COLOR_BLACK : COLOR_WHITE;
     ctx.fillRect(0, 0, size, size);
 
     const baseFontSize = size * 0.12;
@@ -123,7 +127,7 @@ function generateStationLogoArtwork(stationName: string, size: number): string |
     }
 
     ctx.font = `bold ${fontSize}px Arial, sans-serif`;
-    ctx.fillStyle = isDarkMode ? '#FFFFFF' : '#000000';
+    ctx.fillStyle = isDarkMode ? COLOR_WHITE : COLOR_BLACK;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     

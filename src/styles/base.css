@@ -23,7 +23,7 @@
    ========================================================================== */
 html {
   font-size: 16px;
-  background-color: #000;
+  background-color: var(--color-black);
   color-scheme: light dark;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
@@ -32,7 +32,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #000;
+  background-color: var(--color-black);
   color: var(--color-ink);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
