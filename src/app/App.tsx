@@ -59,12 +59,12 @@ function App() {
 
   return (
     <>
-      <div className="h-full font-sans">
+      <div className="min-h-dvh font-sans">
       {/* Fondo a pantalla completa: cubre todo el viewport incl. carrier/home indicator.
           Color sólido blanco/negro según el tema del sistema (--color-background) */}
       <div className="app-fullscreen-bg" aria-hidden="true" />
       <main
-        className="w-full h-full select-none overflow-hidden app-fullscreen-content"
+        className="w-full select-none app-fullscreen-content"
       >
         <audio
           ref={audioRef}
