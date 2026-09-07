@@ -4,8 +4,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-ink: var(--color-white);
-    --color-paper: var(--color-dark-bg);
-    --color-background: var(--color-dark-bg);
+    --color-paper: var(--color-black);
+    --color-background: var(--color-black);
   }
 }
 
@@ -23,21 +23,21 @@
    ========================================================================== */
 html {
   font-size: 16px;
-  background-color: var(--color-black);
+  background-color: var(--color-background);
   color-scheme: light dark;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
 }
 
-/* Fondo a pantalla completa de la app: se extiende por todo el viewport
-   (incl. áreas de carrier, notch y home indicator) mientras el contenido
-   se mantiene centrado con max-w-md. Independiente del theme-color. */
+/* Fondo a pantalla completa de la app: color sólido del tema (blanco/negro)
+   que se extiende por todo el viewport (incl. áreas de carrier, notch y home
+   indicator) mientras el contenido se mantiene centrado con max-w-md. */
 .app-fullscreen-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  transition: background 0.4s ease;
+  background-color: var(--color-background);
 }
 
 /* Contenido centrado: se sitúa por encima del fondo full-bleed */
@@ -49,7 +49,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-black);
+  background-color: var(--color-background);
   color: var(--color-ink);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
@@ -105,10 +105,6 @@ body {
 }
 
 @media (orientation: landscape) {
-  :root {
-    --color-background: transparent;
-  }
-
   .max-w-md {
     max-width: 100%;
   }

@@ -60,15 +60,9 @@ function App() {
   return (
     <>
       <div className="min-h-screen font-sans">
-      {/* Fondo a pantalla completa: cubre todo el viewport incl. carrier/home indicator */}
-      <div
-        className="app-fullscreen-bg"
-        style={{
-          background: coverArt ? undefined : coverGradient,
-          backgroundSize: '100% 100%',
-        }}
-        aria-hidden="true"
-      />
+      {/* Fondo a pantalla completa: cubre todo el viewport incl. carrier/home indicator.
+          Color sólido blanco/negro según el tema del sistema (--color-background) */}
+      <div className="app-fullscreen-bg" aria-hidden="true" />
       <main
         className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen app-fullscreen-content"
         style={{ minHeight: '100dvh' }}

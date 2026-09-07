@@ -62,10 +62,11 @@ export const PlayingScreen = memo(({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLight, setIsLight] = useState(false);
 
-  // Cross-fade: blurred background
+  // Cross-fade: blurred background (solo con portada; sin imagen se usa
+  // color sólido del tema, no gradiente)
   const bgSource = coverImage
     ? `url(${coverImage}) center/cover no-repeat`
-    : (coverGradient || DEFAULT_GRADIENTS.PLAYING);
+    : 'var(--color-background)';
   const bgSourceRef = useRef(bgSource);
   const [displayedBg, setDisplayedBg] = useState(bgSource);
   const [fadingOutBg, setFadingOutBg] = useState<string | null>(null);
@@ -108,7 +109,7 @@ export const PlayingScreen = memo(({
   }, []);
 
   // Hook de feedback háptico para mejor UX en coche
-  const { play, pause, swipe } = useHapticFeedback();
+  const { play, pause, stationChange, vibrate, playTone } = useHapticFeedback();
 
   // Hora de la ciudad de la estación
   const stationTime = useMemo(() => formatTime(time, timezone), [time, timezone]);
@@ -128,6 +129,20 @@ export const PlayingScreen = memo(({
   useEffect(() => {
     pullDirectionRef.current = pullDirection;
   }, [pullDirection]);
+
+  // Feedback progresivo mientras se arrastra el pull: un "tick" periódico que
+  // refuerza la percepción del gesto (vibración en Android, tono audible en iOS)
+  useEffect(() => {
+    if (!isDraggingState || hasCompletedPull.current) return;
+    const tick = () => {
+      vibrate(10);
+      playTone(1200, 25, 'sine');
+    };
+    tick();
+    const interval = setInterval(tick, 260);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDraggingState]);
 
   // Calcular el brillo del fondo para el contraste de texto
   useEffect(() => {
@@ -283,8 +298,9 @@ export const PlayingScreen = memo(({
           hasCompletedPull.current = true;
           setIsTransitioning(true);
 
-          // Feedback háptico al completar pull
-          swipe();
+          // Feedback háptico + sonoro al completar pull (audible en iOS donde
+          // la Vibration API no está disponible)
+          stationChange();
 
           // Animar al máximo — la animación queda visible/armada mientras se sostiene
           setTranslateY(PULL_MAX_TRANSLATE + 20);
@@ -309,6 +325,8 @@ export const PlayingScreen = memo(({
         hasCompletedPull.current = false;
         setDialReleasing(false);
       }, 380);
+      // Feedback al enganchar la nueva frecuencia
+      stationChange();
       setTimeout(() => pullTrigger(), 400);
     };
 
@@ -379,7 +397,7 @@ export const PlayingScreen = memo(({
       element.removeEventListener('touchend', handleTouchEnd);
       element.removeEventListener('touchcancel', handleTouchCancel);
     };
-  }, [swipe, translateY]);
+  }, [stationChange, translateY]);
 
   const pullProgress = Math.min(translateY / PULL_THRESHOLD, 1);
   const pullOpacity = isDraggingState ? Math.max(0.55, 1 - pullProgress * 0.35) : 1;

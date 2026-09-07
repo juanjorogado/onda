@@ -11,8 +11,8 @@ export const TRANSITION_DURATION = 300; // ms — coincide con --duration-fast (
 // Umbrales
 export const SWIPE_THRESHOLD = 50; // Píxeles para detectar swipe (legacy horizontal, mantener por compatibilidad)
 export const PULL_THRESHOLD = 80; // Píxeles para detectar pull-down para cambio de estación
-export const PULL_RESISTANCE = 0.55; // Factor de resistencia al arrastrar (0-1, menor = más resistencia)
-export const PULL_MAX_TRANSLATE = 140; // Máximo desplazamiento visual en px durante pull
+export const PULL_RESISTANCE = 0.8; // Factor de resistencia al arrastrar (0-1, menor = más resistencia)
+export const PULL_MAX_TRANSLATE = 200; // Máximo desplazamiento visual en px durante pull
 
 // Timeout para providers de now playing (ms)
 export const PROVIDER_TIMEOUT = 8000;
