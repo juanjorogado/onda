@@ -29,6 +29,23 @@ html {
   min-height: 100dvh;
 }
 
+/* Fondo a pantalla completa de la app: se extiende por todo el viewport
+   (incl. áreas de carrier, notch y home indicator) mientras el contenido
+   se mantiene centrado con max-w-md. Independiente del theme-color. */
+.app-fullscreen-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: background 0.4s ease;
+}
+
+/* Contenido centrado: se sitúa por encima del fondo full-bleed */
+.app-fullscreen-content {
+  position: relative;
+  z-index: 1;
+}
+
 body {
   margin: 0;
   padding: 0;
