@@ -127,6 +127,17 @@ export const stations: Station[] = [
     cover: '/logos/francemusique.svg'
   },
 
+  // --- TSF JAZZ ---
+  {
+    id: 'tsf-jazz',
+    name: 'TSF Jazz',
+    url: 'https://web.radio-streaming.fr/tsf-jazz',
+    genre: 'Jazz',
+    location: 'Paris, France',
+    timezone: 'Europe/Paris',
+    cover: ''
+  },
+
   // --- CLÁSICA & NEOCLÁSICA ---
   {
     id: 'whisperings-piano',
