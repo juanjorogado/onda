@@ -286,21 +286,37 @@ export const PlayingScreen = memo(({
           // Feedback háptico al completar pull
           swipe();
 
-          // Animar al máximo y disparar cambio de estación
+          // Animar al máximo — la animación queda visible/armada mientras se sostiene
           setTranslateY(PULL_MAX_TRANSLATE + 20);
-
-          setTimeout(() => {
-            setDialReleasing(true);
-            pullTrigger();
-          }, 110);
+          setDialReleasing(false);
         }
       }
+    };
+
+    // Soltar tras completar el pull: la animación desaparece (board vuelve + dial
+    // sube) y a continuación carga la nueva sintonía.
+    const releasePull = () => {
+      // El dial sube y se desvanece mientras el board vuelve
+      setDialReleasing(true);
+      setIsTransitioning(true);
+      setTranslateY(0);
+      setTimeout(() => {
+        setIsTransitioning(false);
+        isDragging.current = false;
+        setIsDraggingState(false);
+        setPullDirection(null);
+        pullDirectionRef.current = null;
+        hasCompletedPull.current = false;
+        setDialReleasing(false);
+      }, 380);
+      setTimeout(() => pullTrigger(), 400);
     };
 
     const handleTouchEnd = (e: globalThis.TouchEvent) => {
       if (hasCompletedPull.current) {
         e.preventDefault();
         e.stopPropagation();
+        releasePull();
         return;
       }
       
@@ -333,7 +349,11 @@ export const PlayingScreen = memo(({
     };
 
     const handleTouchCancel = () => {
-      if (hasCompletedPull.current) return;
+      if (hasCompletedPull.current) {
+        // Cancelar tras completar el pull: se comporta igual que soltar
+        releasePull();
+        return;
+      }
       setIsTransitioning(true);
       setTranslateY(0);
       setTimeout(() => {
@@ -418,7 +438,7 @@ export const PlayingScreen = memo(({
         aria-hidden="true"
       />
       {/* Indicador sutil de pull — dot con escala + rotación elástica */}
-      {isDraggingState && translateY > 6 && (
+      {(isDraggingState && translateY > 6) || dialReleasing ? (
         <div
           className={`playing-screen-pull-dial${dialReleasing ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
           aria-hidden="true"
@@ -444,7 +464,7 @@ export const PlayingScreen = memo(({
             } as React.CSSProperties}
           />
         </div>
-      )}
+      ) : null}
 
       <div 
         ref={boardRef}
