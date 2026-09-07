@@ -501,7 +501,7 @@
 }
 
 .playing-screen-pull-dial--releasing {
-  --dial-translate-y: -32px;
+  --dial-translate-y: -16px;
   opacity: 0;
   transition: opacity 0.15s var(--easing-smooth), translate 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -545,7 +545,7 @@
   background-color: var(--color-brand);
   position: absolute;
   left: 50%;
-  bottom: calc(100% - 1px);
+  top: -8px;
   transform: translateX(-50%);
 }
 

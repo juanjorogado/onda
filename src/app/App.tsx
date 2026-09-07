@@ -64,8 +64,8 @@ function App() {
           Color sólido blanco/negro según el tema del sistema (--color-background) */}
       <div className="app-fullscreen-bg" aria-hidden="true" />
       <main
-        className="flex flex-col items-start select-none overflow-hidden w-full max-w-md mx-auto h-screen app-fullscreen-content"
-        style={{ minHeight: '100dvh' }}
+        className="flex flex-col items-start select-none overflow-hidden w-full h-full app-fullscreen-content"
+        style={{ minHeight: '100dvh', height: '100dvh' }}
       >
         <audio
           ref={audioRef}
