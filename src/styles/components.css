@@ -321,27 +321,6 @@
   box-sizing: border-box;
 }
 
-.playing-screen-landscape-bg {
-  display: block;
-  position: fixed;
-  inset: -10%;
-  z-index: 0;
-  pointer-events: none;
-  transform: scale(1.1);
-  filter: blur(var(--blur-bg));
-  opacity: var(--opacity-bg);
-  transition: none;
-}
-
-.playing-screen-landscape-bg--in {
-  animation: fade-in var(--duration-normal) var(--easing-smooth);
-}
-
-.playing-screen-landscape-bg--out {
-  animation: fade-out var(--duration-normal) var(--easing-smooth) forwards;
-  z-index: -1;
-}
-
 /* Contraste dinámico de texto e indicador */
 .playing-screen-container[data-brightness="light"] {
   --color-ink: var(--color-black);
@@ -739,10 +718,6 @@
 @media (orientation: landscape) {
   .playing-screen-container {
     background-color: transparent !important;
-  }
-
-  .playing-screen-landscape-bg {
-    display: block;
   }
 
   .playing-screen-board {

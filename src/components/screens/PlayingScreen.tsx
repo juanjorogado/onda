@@ -63,29 +63,8 @@ export const PlayingScreen = memo(({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLight, setIsLight] = useState(false);
 
-  // Cross-fade: blurred background (solo con portada; sin imagen se usa
-  // color sólido del tema, no gradiente)
-  const bgSource = coverImage
-    ? `url(${coverImage}) center/cover no-repeat`
-    : 'var(--color-background)';
-  const bgSourceRef = useRef(bgSource);
-  const [displayedBg, setDisplayedBg] = useState(bgSource);
-  const [fadingOutBg, setFadingOutBg] = useState<string | null>(null);
-  const [isBgEntering, setIsBgEntering] = useState(false);
-  const bgTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (bgSource === bgSourceRef.current) return;
-    setFadingOutBg(bgSourceRef.current);
-    bgSourceRef.current = bgSource;
-    setDisplayedBg(bgSource);
-    setIsBgEntering(true);
-    if (bgTimerRef.current) clearTimeout(bgTimerRef.current);
-    bgTimerRef.current = setTimeout(() => {
-      setFadingOutBg(null);
-      setIsBgEntering(false);
-    }, 1000);
-  }, [bgSource]);
+  // Fondo sólido del tema (blanco/negro): el container es transparente y el
+  // shell .app-fullscreen-content usa --color-background. Sin fondo desenfocado.
 
   // Cross-fade: portada del álbum
   const coverImageRef = useRef(coverImage);
@@ -104,7 +83,6 @@ export const PlayingScreen = memo(({
 
   useEffect(() => {
     return () => {
-      if (bgTimerRef.current) clearTimeout(bgTimerRef.current);
       if (coverTimerRef.current) clearTimeout(coverTimerRef.current);
     };
   }, []);
@@ -423,20 +401,8 @@ export const PlayingScreen = memo(({
       className="playing-screen-container"
       data-brightness={isLight ? 'light' : 'dark'}
     >
-      {/* Fondo desenfocado — cross-fade entre fuente anterior y nueva */}
-      {fadingOutBg && (
-        <div
-          className="playing-screen-landscape-bg playing-screen-landscape-bg--out"
-          style={{ background: fadingOutBg }}
-          aria-hidden="true"
-        />
-      )}
-      <div
-        key={displayedBg}
-        className={`playing-screen-landscape-bg${isBgEntering ? ' playing-screen-landscape-bg--in' : ''}`}
-        style={{ background: displayedBg }}
-        aria-hidden="true"
-      />
+      {/* Fondo sólido del tema: el container es transparente y el shell
+          .app-fullscreen-content muestra --color-background */}
       {/* Dial de sintonía: needle fija en el centro y los ticks se desplazan
           horizontalmente como buscando la nueva frecuencia */}
       {(isDraggingState && translateY > 6) || dialReleasing ? (
