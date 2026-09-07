@@ -5,9 +5,7 @@
   position: relative;
   width: 100%;
   max-width: var(--container-width-screen);
-  min-height: var(--screen-height-min);
-  min-height: 100dvh;
-  min-height: -webkit-fill-available;
+  height: 100%;
   background: var(--color-paper);
   overflow: hidden;
   z-index: var(--z-index-base);
@@ -123,10 +121,12 @@
 .waiting-screen-cover {
   width: 100%;
   max-width: var(--container-width);
-  height: var(--cover-height-waiting);
+  flex: 1 1 auto;
+  min-height: var(--cover-height-min);
+  align-self: center;
   background: linear-gradient(to bottom, var(--gradient-waiting-start) 0%, var(--gradient-cover-end) 100%);
   border-radius: var(--radius-cover);
-  flex-shrink: 0;
+  flex-shrink: 1;
   position: relative;
   overflow: hidden;
   animation: scale-in var(--duration-normal) var(--easing-smooth) var(--delay-medium) both;
@@ -298,8 +298,7 @@
 .playing-screen-container {
   position: relative;
   width: 100%;
-  height: 100dvh;
-  height: -webkit-fill-available;
+  height: 100%;
   background: transparent;
   overflow-y: auto;
   overflow-x: hidden;
@@ -674,14 +673,10 @@
   width: 100%;
   max-width: var(--container-width);
   min-height: var(--cover-height-min);
-  height: calc(var(--viewport-height) - var(--cover-height-offset));
-  height: calc(var(--viewport-height-dynamic) - var(--cover-height-offset));
-  max-height: calc(var(--viewport-height) - var(--cover-height-offset));
-  max-height: calc(var(--viewport-height-dynamic) - var(--cover-height-offset));
+  flex: 1 1 auto;
+  align-self: center;
   background: linear-gradient(to bottom, var(--gradient-default-start) 0%, var(--gradient-cover-end) 100%);
   border-radius: var(--radius-cover);
-  flex-shrink: 1;
-  flex-grow: 0;
   position: relative;
   overflow: hidden !important;
   animation: scale-in var(--duration-normal) var(--easing-smooth) var(--delay-medium) both;

@@ -59,13 +59,12 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen font-sans">
+      <div className="h-full font-sans">
       {/* Fondo a pantalla completa: cubre todo el viewport incl. carrier/home indicator.
           Color sólido blanco/negro según el tema del sistema (--color-background) */}
       <div className="app-fullscreen-bg" aria-hidden="true" />
       <main
-        className="flex flex-col items-start select-none overflow-hidden w-full h-full app-fullscreen-content"
-        style={{ minHeight: '100dvh', height: '100dvh' }}
+        className="w-full h-full select-none overflow-hidden app-fullscreen-content"
       >
         <audio
           ref={audioRef}
@@ -76,7 +75,7 @@ function App() {
           onEnded={handleAudioEnded}
         />
 
-        <div className="flex-1 w-full flex flex-col items-start overflow-hidden min-h-0">
+        <div className="w-full h-full">
           {currentStation ? (
             <PlayingScreen
               key={currentStation.id || currentStation.name}
@@ -97,7 +96,7 @@ function App() {
               onPull={handlePull}
             />
           ) : (
-            <div className="w-full flex-1 flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center">
               <WaitingScreen />
             </div>
           )}
