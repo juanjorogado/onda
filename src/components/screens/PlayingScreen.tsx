@@ -383,9 +383,7 @@ export const PlayingScreen = memo(({
 
   const pullProgress = Math.min(translateY / PULL_THRESHOLD, 1);
   const pullOpacity = isDraggingState ? Math.max(0.55, 1 - pullProgress * 0.35) : 1;
-  // Referencia animación elástica: DGElasticPullToRefresh + Dribbble Hoang Nguyen (Pull Down to Refresh)
-  // El top se deforma como goma con curva Q y el cover escala/ligereza tipo Liquid Glass
-  const elasticAmp = pullProgress * 32 + translateY * 0.12;
+  // El cover escala ligeramente durante el pull (efecto Liquid Glass)
   const coverScale = isDraggingState ? 1 - pullProgress * 0.06 : 1;
   const boardScale = isDraggingState ? 0.985 + pullProgress * 0.015 : 1;
 
@@ -395,34 +393,6 @@ export const PlayingScreen = memo(({
       className="playing-screen-container"
       data-brightness={isLight ? 'light' : 'dark'}
     >
-      {/* Capa elástica superior — referencia DGElasticPullToRefresh (Hoang Nguyen Dribbble) */}
-      {translateY > 2 && (
-        <div
-          className="playing-screen-pull-elastic"
-          aria-hidden="true"
-          style={{ height: translateY + elasticAmp * 0.35 }}
-        >
-          <svg
-            className="playing-screen-pull-elastic__svg"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            width="100%"
-            height="100%"
-          >
-            {/* Fondo elástico con curva — imita goma estirada */}
-            <path
-              d={`M0 0 H100 V${Math.min(92, 30 + pullProgress * 62)} Q50 ${Math.min(100, 30 + pullProgress * 62 + elasticAmp)} 0 ${Math.min(92, 30 + pullProgress * 62)} Z`}
-              fill="currentColor"
-              opacity={0.06 + pullProgress * 0.08}
-            />
-          </svg>
-          {/* Línea sutil de tensión */}
-          <div
-            className="playing-screen-pull-elastic__line"
-            style={{ opacity: pullProgress * 0.5 }}
-          />
-        </div>
-      )}
       {/* Fondo desenfocado — cross-fade entre fuente anterior y nueva */}
       {fadingOutBg && (
         <div
@@ -437,18 +407,18 @@ export const PlayingScreen = memo(({
         style={{ background: displayedBg }}
         aria-hidden="true"
       />
-      {/* Indicador sutil de pull — dot con escala + rotación elástica */}
+      {/* Dial de sintonía: needle fija en el centro y los ticks se desplazan
+          horizontalmente como buscando la nueva frecuencia */}
       {(isDraggingState && translateY > 6) || dialReleasing ? (
         <div
           className={`playing-screen-pull-dial${dialReleasing ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
           aria-hidden="true"
           style={{
-            '--dial-translate-x': dialReleasing ? '0' : `${Math.sin(pullProgress * Math.PI) * 16}px`,
             '--dial-translate-y': dialReleasing ? '-32px' : '0',
             opacity: dialReleasing ? undefined : Math.min(1, 0.3 + pullProgress * 0.7),
           } as React.CSSProperties}
         >
-          <div className="playing-screen-pull-dial__bar">
+          <div className="playing-screen-pull-dial__bar playing-screen-pull-dial__bar--scan">
             {Array.from({ length: 7 }).map((_, i) => (
               <div
                 key={i}
@@ -457,12 +427,7 @@ export const PlayingScreen = memo(({
               />
             ))}
           </div>
-          <div
-            className="playing-screen-pull-dial__needle playing-screen-pull-dial__needle--dragging"
-            style={{
-              '--needle-rotate': `${Math.sin(pullProgress * Math.PI) * 30}deg`,
-            } as React.CSSProperties}
-          />
+          <div className="playing-screen-pull-dial__needle" />
         </div>
       ) : null}
 

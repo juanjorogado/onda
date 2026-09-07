@@ -422,37 +422,6 @@
   backface-visibility: hidden;
 }
 
-/* Elastic pull — referencia DGElasticPullToRefresh (Hoang Nguyen Dribbble) */
-.playing-screen-pull-elastic {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-  z-index: 4;
-  overflow: hidden;
-  /* El SVG ocupa toda el área y su path se deforma con pullProgress */
-  color: var(--color-onda-indicator, var(--color-brand));
-}
-
-.playing-screen-pull-elastic__svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.playing-screen-pull-elastic__line {
-  position: absolute;
-  left: 6%;
-  right: 6%;
-  bottom: 0;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.35;
-  transform: scaleX(0.85);
-  transition: opacity var(--duration-fast) var(--easing-smooth);
-}
-
 /* Indicador sutil de pull-down — dot + label elástico */
 .playing-screen-pull-indicator {
   position: absolute;
@@ -547,6 +516,22 @@
   width: 100%;
 }
 
+/* Animación de búsqueda: los ticks se desplazan lateralmente por debajo
+   de la needle (que permanece fija) como buscando la nueva frecuencia */
+.playing-screen-pull-dial__bar--scan {
+  animation: dial-scan 0.9s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes dial-scan {
+  from {
+    transform: translateX(-26px);
+  }
+  to {
+    transform: translateX(26px);
+  }
+}
+
 .playing-screen-pull-dial__tick {
   width: var(--border-width-1);
   height: var(--spacing-1);
@@ -561,13 +546,7 @@
   position: absolute;
   left: 50%;
   bottom: calc(100% - 1px);
-  transform: translateX(-50%) rotate(var(--needle-rotate, 0deg));
-  transform-origin: bottom center;
-  transition: transform 0.15s var(--easing-smooth);
-}
-
-.playing-screen-pull-dial__needle--dragging {
-  transition: none;
+  transform: translateX(-50%);
 }
 
 .playing-screen-station {
