@@ -1,4 +1,4 @@
-import { memo, KeyboardEvent, useRef, useMemo, useState, useEffect } from 'react';
+import { memo, KeyboardEvent, useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { TrackInfo } from '../../types/track';
 import { useCurrentTime } from '../../hooks/time/useCurrentTime';
 import { formatTime } from '../../utils/formatTime';
@@ -54,6 +54,7 @@ export const PlayingScreen = memo(({
   const isDragging = useRef(false);
   const [isDraggingState, setIsDraggingState] = useState(false);
   const [translateY, setTranslateY] = useState(0);
+  const translateYRef = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [dialReleasing, setDialReleasing] = useState(false);
   const [pullDirection, setPullDirection] = useState<'vertical' | null>(null);
@@ -111,19 +112,26 @@ export const PlayingScreen = memo(({
   // Hook de feedback háptico para mejor UX en coche
   const { play, pause, stationChange, vibrate, playTone } = useHapticFeedback();
 
+  // Setter estable para translateY: mantiene ref y state en sync sin forzar
+  // re-registros de listeners de touch a mitad de gesto (bug en iOS).
+  const updateTranslate = useCallback((y: number) => {
+    translateYRef.current = y;
+    setTranslateY(y);
+  }, []);
+
   // Hora de la ciudad de la estación
   const stationTime = useMemo(() => formatTime(time, timezone), [time, timezone]);
 
   // Reset translate cuando cambia la estación
   useEffect(() => {
-    setTranslateY(0);
+    updateTranslate(0);
     setIsTransitioning(false);
     setDialReleasing(false);
     isDragging.current = false;
     setIsDraggingState(false);
     setPullDirection(null);
     pullDirectionRef.current = null;
-  }, [stationName]);
+  }, [stationName, updateTranslate]);
   
   // Sincronizar ref con state
   useEffect(() => {
@@ -292,7 +300,7 @@ export const PlayingScreen = memo(({
           damped = PULL_THRESHOLD + Math.min(extra * 0.32, PULL_MAX_TRANSLATE - PULL_THRESHOLD);
         }
         const clamped = Math.min(damped, PULL_MAX_TRANSLATE);
-        setTranslateY(clamped);
+        updateTranslate(clamped);
         
         if (clamped >= PULL_THRESHOLD && !hasCompletedPull.current) {
           hasCompletedPull.current = true;
@@ -302,9 +310,13 @@ export const PlayingScreen = memo(({
           // la Vibration API no está disponible)
           stationChange();
 
-          // Animar al máximo — la animación queda visible/armada mientras se sostiene
-          setTranslateY(PULL_MAX_TRANSLATE + 20);
+          // Fijar el translate al máximo: queda visible/armado mientras se
+          // sostiene aunque el dedo siga bajando (evita saltos tras el umbral)
+          updateTranslate(PULL_MAX_TRANSLATE + 20);
           setDialReleasing(false);
+        } else if (hasCompletedPull.current) {
+          // Ya completado: mantener la posición armada, sin seguir el dedo
+          updateTranslate(PULL_MAX_TRANSLATE + 20);
         }
       }
     };
@@ -315,7 +327,7 @@ export const PlayingScreen = memo(({
       // El dial sube y se desvanece mientras el board vuelve
       setDialReleasing(true);
       setIsTransitioning(true);
-      setTranslateY(0);
+      updateTranslate(0);
       setTimeout(() => {
         setIsTransitioning(false);
         isDragging.current = false;
@@ -342,9 +354,9 @@ export const PlayingScreen = memo(({
       
       if (isDragging.current) {
         // Si no se alcanzó el umbral, volver con rebote
-        if (currentDirection === 'vertical' && translateY < PULL_THRESHOLD) {
+        if (currentDirection === 'vertical' && translateYRef.current < PULL_THRESHOLD) {
           setIsTransitioning(true);
-          setTranslateY(0);
+          updateTranslate(0);
           setTimeout(() => {
             setIsTransitioning(false);
             isDragging.current = false;
@@ -373,7 +385,7 @@ export const PlayingScreen = memo(({
         return;
       }
       setIsTransitioning(true);
-      setTranslateY(0);
+      updateTranslate(0);
       setTimeout(() => {
         setIsTransitioning(false);
         isDragging.current = false;
@@ -397,7 +409,7 @@ export const PlayingScreen = memo(({
       element.removeEventListener('touchend', handleTouchEnd);
       element.removeEventListener('touchcancel', handleTouchCancel);
     };
-  }, [stationChange, translateY]);
+  }, [stationChange, updateTranslate]);
 
   const pullProgress = Math.min(translateY / PULL_THRESHOLD, 1);
   const pullOpacity = isDraggingState ? Math.max(0.55, 1 - pullProgress * 0.35) : 1;

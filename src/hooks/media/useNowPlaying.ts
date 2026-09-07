@@ -95,49 +95,126 @@ async function kexpProvider(_station: Station, signal: AbortSignal): Promise<Tra
 }
 
 /**
+ * Lee la metadata ICY del propio stream de audio (Icecast/Shoutcast).
+ * Pide el stream con `Icy-MetaData: 1`, lee el bloque de metadata y lo parsea.
+ * Devuelve null si el servidor no expone metadata (o CORS no lo permite).
+ */
+async function readIcyMetadata(streamUrl: string, signal: AbortSignal, timeoutMs = 6000): Promise<TrackInfo | null> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const onAbort = () => controller.abort();
+  signal.addEventListener('abort', onAbort, { once: true });
+
+  try {
+    const response = await fetch(streamUrl, {
+      headers: {
+        'Icy-MetaData': '1',
+        'Accept': 'audio/mpeg, audio/aac, application/ogg;q=0.9, */*;q=0.8',
+      },
+      signal: controller.signal,
+    });
+    if (!response.ok || !response.body) return null;
+
+    const metaint = parseInt(response.headers.get('icy-metaint') || '', 10);
+    if (!metaint || metaint <= 0) return null;
+
+    // Necesitamos metaint bytes de audio + 1 byte de longitud + hasta 4080 de metadata
+    const target = metaint + 1 + 4080;
+    const reader = response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+
+    while (received < target) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      received += value.length;
+    }
+
+    reader.releaseLock();
+    response.body.cancel().catch(() => {});
+
+    if (received <= metaint) return null;
+
+    const buffer = new Uint8Array(received);
+    let offset = 0;
+    for (const c of chunks) {
+      buffer.set(c, offset);
+      offset += c.length;
+    }
+
+    const metaLenByte = buffer[metaint];
+    const metaLen = metaLenByte * 16;
+    if (metaLen <= 0) return null;
+
+    let metaText = '';
+    for (let i = 0; i < metaLen && metaint + 1 + i < buffer.length; i++) {
+      metaText += String.fromCharCode(buffer[metaint + 1 + i]);
+    }
+
+    const match = metaText.match(/StreamTitle='([^']*)'/);
+    const raw = match?.[1];
+    if (!raw || !raw.trim()) return null;
+
+    const title = raw.trim();
+    // Convención "Artista - Título"
+    const sepIdx = title.indexOf(' - ');
+    if (sepIdx > 0) {
+      return {
+        artist: title.slice(0, sepIdx).trim(),
+        title: title.slice(sepIdx + 3).trim(),
+      };
+    }
+    return { title };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+    signal.removeEventListener('abort', onAbort);
+  }
+}
+
+/**
  * Provider genérico para estaciones con metadata en stream Icecast/Shoutcast
  * Intenta extraer metadata del stream de audio
  */
 async function icecastMetadataProvider(station: Station, signal: AbortSignal): Promise<TrackInfo | null> {
-  try {
-    // Intentar obtener metadata del stream usando CORS proxy o directamente
-    const streamUrl = station.url;
-    const isShoutcast = streamUrl.includes('shoutcast') || streamUrl.includes(':8');
+  const streamUrl = station.url;
+  const isShoutcast = streamUrl.includes('shoutcast') || streamUrl.includes(':8');
 
-    if (isShoutcast) {
-      // Intentar obtener metadata de Shoutcast
-      const statsUrl = streamUrl.replace(/\.mp3$|\.aac$/, '') + '/stats';
-      try {
-        const response = await fetchWithTimeout(statsUrl, {
-          signal,
-          headers: { 'Accept': 'application/json' },
-          timeout: 5000,
-        });
+  if (isShoutcast) {
+    // Intentar obtener metadata de Shoutcast via /stats primero
+    const statsUrl = streamUrl.replace(/\.mp3$|\.aac$/, '') + '/stats';
+    try {
+      const response = await fetchWithTimeout(statsUrl, {
+        signal,
+        headers: { 'Accept': 'application/json' },
+        timeout: 5000,
+      });
 
-        if (!signal.aborted && response.ok) {
-          const data = await response.json();
-          const title = data?.currentTrack || data?.title || data?.song || undefined;
-          if (title) {
-            // Parsear "Artist - Title"
-            const parts = title.split(' - ');
-            if (parts.length >= 2) {
-              return {
-                artist: parts[0].trim(),
-                title: parts[1].trim(),
-              };
-            }
-            return { title };
+      if (!signal.aborted && response.ok) {
+        const data = await response.json();
+        const title = data?.currentTrack || data?.title || data?.song || undefined;
+        if (title) {
+          // Parsear "Artist - Title"
+          const parts = title.split(' - ');
+          if (parts.length >= 2) {
+            return {
+              artist: parts[0].trim(),
+              title: parts[1].trim(),
+            };
           }
+          return { title };
         }
-      } catch {
-        // Fallback silencioso
       }
+    } catch {
+      // Fallback silencioso
     }
-
-    return null;
-  } catch {
-    return null;
   }
+
+  // Intentar leer metadata ICY del stream (funciona en Icecast y Shoutcast
+  // que expongan icy-metaint con CORS).
+  return readIcyMetadata(streamUrl, signal);
 }
 
 

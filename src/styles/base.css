@@ -23,10 +23,26 @@
    ========================================================================== */
 html {
   font-size: 16px;
-  height: 100dvh;
-  max-height: 100dvh;
+  height: 100%;
   background-color: var(--color-background);
   color-scheme: light dark;
+}
+
+/* Box-sizing global: sin esto, height:100% + env(safe-area-inset-*) desborda
+   el viewport y se corta contenido por abajo en iOS. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* En navegadores con soporte dynamic viewport units (iOS 16.4+), usar 100dvh
+   para que la altura siga a la barra de Safari al expandirse/colapsarse.
+   Fallback 100% para el resto. */
+@supports (height: 100dvh) {
+  html {
+    height: 100dvh;
+  }
 }
 
 /* Fondo a pantalla completa de la app: color sólido del tema (blanco/negro)
@@ -40,9 +56,14 @@ html {
   background-color: var(--color-background);
 }
 
-/* Contenido centrado: se sitúa por encima del fondo full-bleed */
+/* Contenido: shell de la app a pantalla completa.
+   position: fixed + inset: 0 garantiza llenar SIEMPRE el viewport visible,
+   independiente de la cadena de alturas html/body/#root (que varía según el
+   navegador iOS y la barra de Safari). Hijos con height:100% resuelven contra
+   este box definido. */
 .app-fullscreen-content {
-  position: relative;
+  position: fixed;
+  inset: 0;
   z-index: 1;
 }
 

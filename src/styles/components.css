@@ -405,8 +405,10 @@
   flex: 1 1 auto;
   animation: fade-in-up var(--duration-normal) var(--easing-smooth) var(--delay-fast) both;
   will-change: transform, opacity;
-  /* Permite scroll vertical nativo; el pull se reclama solo en el top con preventDefault */
-  touch-action: pan-y;
+  /* El pull reclama el gesto con preventDefault; touch-action: none evita que
+     iOS Safari ignore el preventDefault mientras se arrastra. El scroll interno
+     del container se gestiona por el propio touch (isAtTop bloquea arriba). */
+  touch-action: none;
 }
 
 /* Compatibilidad con nombres antiguos */
