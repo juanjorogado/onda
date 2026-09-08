@@ -59,7 +59,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-dvh font-sans">
+      <div className="h-full font-sans">
       {/* Fondo a pantalla completa: cubre todo el viewport incl. carrier/home indicator.
           Color sólido blanco/negro según el tema del sistema (--color-background) */}
       <div className="app-fullscreen-bg" aria-hidden="true" />
