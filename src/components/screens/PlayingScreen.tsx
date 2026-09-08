@@ -403,30 +403,6 @@ export const PlayingScreen = memo(({
     >
       {/* Fondo sólido del tema: el container es transparente y el shell
           .app-fullscreen-content muestra --color-background */}
-      {/* Dial de sintonía: needle fija en el centro y los ticks se desplazan
-          horizontalmente como buscando la nueva frecuencia */}
-      {(isDraggingState && translateY > 6) || dialReleasing ? (
-        <div
-          className={`playing-screen-pull-dial${dialReleasing ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
-          aria-hidden="true"
-          style={{
-            '--dial-translate-y': dialReleasing ? '-32px' : '0',
-            opacity: dialReleasing ? undefined : Math.min(1, 0.3 + pullProgress * 0.7),
-          } as React.CSSProperties}
-        >
-          <div className="playing-screen-pull-dial__bar playing-screen-pull-dial__bar--scan">
-            {Array.from({ length: 7 }).map((_, i) => (
-              <div
-                key={i}
-                className="playing-screen-pull-dial__tick"
-                style={{ backgroundColor: isLight ? 'var(--color-black)' : 'var(--color-white)' }}
-              />
-            ))}
-          </div>
-          <div className="playing-screen-pull-dial__needle" />
-        </div>
-      ) : null}
-
       <div 
         ref={boardRef}
         className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning pull-transitioning' : ''} ${isDraggingState ? 'swipe-dragging pull-dragging' : ''}`}
@@ -436,6 +412,29 @@ export const PlayingScreen = memo(({
           transition: isTransitioning ? 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1)' : 'none',
         }}
       >
+        {/* Dial de sintonía: se desplaza junto con el board durante el pull */}
+        {(isDraggingState && translateY > 6) || dialReleasing ? (
+          <div
+            className={`playing-screen-pull-dial${dialReleasing ? ' playing-screen-pull-dial--releasing' : ' visible'}`}
+            aria-hidden="true"
+            style={{
+              '--dial-translate-y': dialReleasing ? '-32px' : '0',
+              opacity: dialReleasing ? undefined : Math.min(1, 0.3 + pullProgress * 0.7),
+            } as React.CSSProperties}
+          >
+            <div className="playing-screen-pull-dial__bar playing-screen-pull-dial__bar--scan">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="playing-screen-pull-dial__tick"
+                  style={{ backgroundColor: isLight ? 'var(--color-black)' : 'var(--color-white)' }}
+                />
+              ))}
+            </div>
+            <div className="playing-screen-pull-dial__needle" />
+          </div>
+        ) : null}
+
         {/* Station Section */}
         <div className="playing-screen-station">
           {/* Onda Logo */}
