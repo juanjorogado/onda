@@ -84,7 +84,7 @@ export default async function handler(
     const formData = new FormData();
     // En Node, Buffer es compatible con BlobPart pero TS puede quejarse
     // Usamos Uint8Array que es lo que devuelve captureStreamChunk
-    formData.append('sample', new Blob([audioData]));
+    formData.append('sample', new Blob([Buffer.from(audioData)]));
     formData.append('access_key', accessKey);
     formData.append('data_type', 'audio');
     formData.append('signature_version', '1');

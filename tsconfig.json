@@ -18,5 +18,6 @@
     "types": []
   },
   "include": ["src"],
+  "exclude": ["api", "node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
