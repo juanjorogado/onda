@@ -4,11 +4,9 @@ import { useAudioPlayer } from './useAudioPlayer';
 import { useNowPlaying } from '../media/useNowPlaying';
 import { useHapticFeedback } from '../useHapticFeedback';
 import { useOnlineStatus } from '../useOnlineStatus';
-import { TRANSITION_DURATION } from '../../constants';
 
 export function useRadioPlayer() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [, setHasError] = useState<boolean>(false);
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isOnline = useOnlineStatus();
@@ -43,24 +41,18 @@ export function useRadioPlayer() {
   const { updateTrack, ...track } = useNowPlaying(currentStation);
 
   const changeStation = useCallback((newIndex: number) => {
-    if (stations.length <= 1 || isTransitioning) return;
+    if (stations.length <= 1) return;
 
-    setIsTransitioning(true);
+    // Permitir cambios encadenados (cada pull-down cambia de emisora, suene o no)
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
+    }
 
-    // Feedback háptico y sonoro al cambiar de estación
     stationChange();
-
-    // Cambiar estación después de iniciar la transición
-    transitionTimeoutRef.current = setTimeout(() => {
-      setCurrentIndex(newIndex);
-      setIsPlaying(true);
-      
-      // Finalizar transición
-      transitionTimeoutRef.current = setTimeout(() => {
-        setIsTransitioning(false);
-      }, TRANSITION_DURATION);
-    }, TRANSITION_DURATION / 2);
-  }, [isTransitioning, setIsPlaying, stationChange]);
+    setCurrentIndex(newIndex);
+    setIsPlaying(true);
+  }, [setIsPlaying, stationChange]);
 
   const nextStation = useCallback(() => {
     const newIndex = (currentIndex + 1) % stations.length;
@@ -106,7 +98,6 @@ export function useRadioPlayer() {
     currentStation,
     audioRef,
     isPlaying,
-    isTransitioning,
     isOffline: !isOnline,
     togglePlay,
     nextStation,

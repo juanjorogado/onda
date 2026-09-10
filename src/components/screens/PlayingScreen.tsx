@@ -7,7 +7,6 @@ import { PULL_THRESHOLD, PULL_RESISTANCE, PULL_MAX_TRANSLATE, DEFAULT_GRADIENTS 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { NowPlaying } from '../ui/NowPlaying';
 import { ShazamButton } from '../ui/ShazamButton';
-import { getImageBrightness, getGradientBrightness } from '../../utils/getBrightness';
 
 interface PlayingScreenProps {
   stationName: string;
@@ -61,7 +60,19 @@ export const PlayingScreen = memo(({
   const pullDirectionRef = useRef<'vertical' | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLight, setIsLight] = useState(false);
+
+  // Contraste de texto según el tema del sistema: fondo blanco → texto negro,
+  // fondo negro → texto blanco. Independiente del brillo de la portada.
+  const [isDark, setIsDark] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    mq.addEventListener('change', handleChange);
+    return () => mq.removeEventListener('change', handleChange);
+  }, []);
 
   // Fondo sólido del tema (blanco/negro): el container es transparente y el
   // shell .app-fullscreen-content usa --color-background. Sin fondo desenfocado.
@@ -129,60 +140,6 @@ export const PlayingScreen = memo(({
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDraggingState]);
-
-  // Calcular el brillo del fondo para el contraste de texto
-  useEffect(() => {
-    let isMounted = true;
-    let mediaQuery: MediaQueryList | null = null;
-    
-    const checkContrast = async () => {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      // El fondo siempre es la imagen o gradiente desenfocado — detectar brillo real.
-      // Sin imagen ni gradiente, se usa la preferencia del sistema como fallback.
-      let brightness = prefersDark ? 0 : 255;
-
-      if (coverImage) {
-        try {
-          brightness = await getImageBrightness(coverImage);
-        } catch {
-          if (coverGradient) {
-            brightness = getGradientBrightness(coverGradient);
-          }
-        }
-      } else if (coverGradient) {
-        brightness = getGradientBrightness(coverGradient);
-      }
-
-      if (isMounted) {
-        setIsLight(brightness > 128);
-      }
-    };
-    
-    checkContrast();
-    
-    // Escuchar cambios en orientación
-    mediaQuery = window.matchMedia('(orientation: landscape)');
-    const handleOrientationChange = () => {
-      checkContrast();
-    };
-    mediaQuery.addEventListener('change', handleOrientationChange);
-    
-    // Escuchar cambios en modo del sistema
-    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleDarkModeChange = () => {
-      checkContrast();
-    };
-    darkModeQuery.addEventListener('change', handleDarkModeChange);
-    
-    return () => {
-      isMounted = false;
-      if (mediaQuery) {
-        mediaQuery.removeEventListener('change', handleOrientationChange);
-      }
-      darkModeQuery.removeEventListener('change', handleDarkModeChange);
-    };
-  }, [coverImage, coverGradient]);
 
   // Formatear nombre de estación: "BBC 6 — London" (book para "BBC 6", light para "— London")
   const stationText = stationName;
@@ -317,7 +274,7 @@ export const PlayingScreen = memo(({
       }, 380);
       // Feedback al enganchar la nueva frecuencia
       stationChange();
-      setTimeout(() => pullTrigger(), 400);
+      setTimeout(() => pullTrigger(), 500);
     };
 
     const handleTouchEnd = (e: globalThis.TouchEvent) => {
@@ -390,16 +347,14 @@ export const PlayingScreen = memo(({
   }, [stationChange, updateTranslate]);
 
   const pullProgress = Math.min(translateY / PULL_THRESHOLD, 1);
-  const pullOpacity = isDraggingState ? Math.max(0.55, 1 - pullProgress * 0.35) : 1;
-  // El cover escala ligeramente durante el pull (efecto Liquid Glass)
-  const coverScale = isDraggingState ? 1 - pullProgress * 0.06 : 1;
-  const boardScale = isDraggingState ? 0.985 + pullProgress * 0.015 : 1;
+  const coverScale = 1;
+  const boardScale = 1;
 
   return (
     <div
       ref={containerRef}
       className="playing-screen-container"
-      data-brightness={isLight ? 'light' : 'dark'}
+      data-brightness={isDark ? 'dark' : 'light'}
     >
       {/* Fondo sólido del tema: el container es transparente y el shell
           .app-fullscreen-content muestra --color-background */}
@@ -408,7 +363,7 @@ export const PlayingScreen = memo(({
         className={`playing-screen-board ${isTransitioning ? 'swipe-transitioning pull-transitioning' : ''} ${isDraggingState ? 'swipe-dragging pull-dragging' : ''}`}
         style={{
           transform: `translateY(${translateY}px) scale(${boardScale})`,
-          opacity: pullOpacity,
+          opacity: 1,
           transition: isTransitioning ? 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1)' : 'none',
         }}
       >
@@ -427,7 +382,6 @@ export const PlayingScreen = memo(({
                 <div
                   key={i}
                   className="playing-screen-pull-dial__tick"
-                  style={{ backgroundColor: isLight ? 'var(--color-black)' : 'var(--color-white)' }}
                 />
               ))}
             </div>
