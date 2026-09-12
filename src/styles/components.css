@@ -12,8 +12,8 @@
   margin: 0 auto;
   transition: background-color var(--duration-normal) var(--easing-smooth);
   /* Respetar notch sin cortar fondo: padding interno, fondo llega hasta el borde */
-  padding-top: var(--spacing-6);
-  padding-bottom: var(--spacing-6);
+  padding-top: max(var(--spacing-6), env(safe-area-inset-top));
+  padding-bottom: max(var(--spacing-6), env(safe-area-inset-bottom));
   padding-left: max(var(--spacing-6), env(safe-area-inset-left));
   padding-right: max(var(--spacing-6), env(safe-area-inset-right));
   box-sizing: border-box;
@@ -313,9 +313,10 @@
   touch-action: pan-y;
   /* Evitar pull-to-refresh nativo en Chrome/Android */
   overscroll-behavior: none;
-  /* Interior exacto: 24px arriba y abajo */
-  padding-top: var(--spacing-6);
-  padding-bottom: var(--spacing-6);
+  /* Interior 24px, pero se respeta el notch/status bar (si no, el header y el
+   dial quedan bajo la Dynamic Island). max() usa 24 como mínimo. */
+  padding-top: max(var(--spacing-6), env(safe-area-inset-top));
+  padding-bottom: max(var(--spacing-6), env(safe-area-inset-bottom));
   padding-left: max(var(--spacing-6), env(safe-area-inset-left));
   padding-right: max(var(--spacing-6), env(safe-area-inset-right));
   box-sizing: border-box;
