@@ -12,8 +12,8 @@
   margin: 0 auto;
   transition: background-color var(--duration-normal) var(--easing-smooth);
   /* Respetar notch sin cortar fondo: padding interno, fondo llega hasta el borde */
-  padding-top: max(var(--spacing-6), env(safe-area-inset-top));
-  padding-bottom: max(var(--spacing-6), env(safe-area-inset-bottom));
+  padding-top: var(--spacing-6);
+  padding-bottom: var(--spacing-6);
   padding-left: max(var(--spacing-6), env(safe-area-inset-left));
   padding-right: max(var(--spacing-6), env(safe-area-inset-right));
   box-sizing: border-box;
@@ -313,9 +313,9 @@
   touch-action: pan-y;
   /* Evitar pull-to-refresh nativo en Chrome/Android */
   overscroll-behavior: none;
-  /* Interior 24px; se respeta el notch/home indicator con env() */
-  padding-top: max(var(--spacing-6), env(safe-area-inset-top));
-  padding-bottom: max(var(--spacing-6), env(safe-area-inset-bottom));
+  /* Interior exacto: 24px arriba y abajo */
+  padding-top: var(--spacing-6);
+  padding-bottom: var(--spacing-6);
   padding-left: max(var(--spacing-6), env(safe-area-inset-left));
   padding-right: max(var(--spacing-6), env(safe-area-inset-right));
   box-sizing: border-box;
@@ -463,17 +463,16 @@
     ========================================================================== */
 .playing-screen-pull-dial {
   position: absolute;
-  top: -24px;
+  top: calc(-1 * var(--spacing-6));
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(var(--dial-translate-y, 0));
   display: flex;
   flex-direction: column;
   align-items: center;
   pointer-events: none;
   z-index: 5;
   opacity: 0;
-  translate: var(--dial-translate-x, 0) var(--dial-translate-y, 0);
-  transition: opacity 0.2s var(--easing-smooth), translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.2s var(--easing-smooth), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .playing-screen-pull-dial.visible {
@@ -481,9 +480,9 @@
 }
 
 .playing-screen-pull-dial--releasing {
-  --dial-translate-y: -16px;
+  --dial-translate-y: -32px;
   opacity: 0;
-  transition: opacity 0.15s var(--easing-smooth), translate 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.15s var(--easing-smooth), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .playing-screen-pull-dial__bar {
