@@ -310,7 +310,7 @@
   align-items: center;
   transition: background-color var(--duration-normal) var(--easing-smooth);
   animation: fade-in var(--duration-fast) var(--easing-smooth);
-  touch-action: pan-y;
+  touch-action: none;
   /* Evitar pull-to-refresh nativo en Chrome/Android */
   overscroll-behavior: none;
   /* Interior 24px, pero se respeta el notch/status bar (si no, el header y el
