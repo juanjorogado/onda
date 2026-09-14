@@ -365,6 +365,17 @@ padding-top: max(var(--spacing-12), env(safe-area-inset-top));
   }
 }
 
+/* Standalone PWA: valores explícitos sin depender de env() que puede no
+   reportar correctamente en WKWebView. Arriba: notch/Dynamic Island (~59px),
+   abajo: 0 para que el texto quede al borde inferior. */
+@media (display-mode: standalone) {
+  .playing-screen-container,
+  .waiting-screen-container {
+    padding-top: 59px;
+    padding-bottom: 0;
+  }
+}
+
 
 .playing-screen-board {
   position: relative;
