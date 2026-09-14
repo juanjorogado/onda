@@ -286,6 +286,17 @@ export const PlayingScreen = memo(({
         releasePull();
         return;
       }
+
+      // Fallback para gestos rápidos: iOS compacta los touchmove, y si el dedo
+      // bajó más del umbral antes de soltar, dispara el pull igualmente.
+      const touch = e.changedTouches && e.changedTouches[0];
+      if (touch && touch.clientY - startY.current > PULL_THRESHOLD) {
+        hasCompletedPull.current = true;
+        e.preventDefault();
+        e.stopPropagation();
+        releasePull();
+        return;
+      }
       
       const currentDirection = pullDirectionRef.current;
       
