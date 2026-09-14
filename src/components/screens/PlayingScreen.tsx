@@ -151,8 +151,10 @@ export const PlayingScreen = memo(({
   triggerPull.current = onPull ?? (onSwipe ? () => onSwipe('left') : undefined as unknown as () => void);
 
   useEffect(() => {
-    const element = boardRef.current;
+    // La superficie de gestos es TODO el container (no solo el board): el pull
+    // funciona también si el gesto empieza en el padding/huecos de los bordes.
     const container = containerRef.current;
+    const element = container ?? boardRef.current;
     if (!element) return;
     const pullTrigger = triggerPull.current;
     if (!pullTrigger) return;
