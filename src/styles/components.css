@@ -657,7 +657,7 @@ padding-top: max(var(--spacing-12), env(safe-area-inset-top));
   text-align: start;
   white-space: pre;
   margin-left: var(--spacing-2);
-  margin-right: var(--spacing-4);
+  margin-right: 0;
   transition: color var(--duration-normal) var(--easing-smooth), opacity var(--duration-fast) var(--easing-smooth);
 }
 
