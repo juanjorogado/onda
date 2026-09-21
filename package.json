@@ -41,6 +41,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.11",
     "postcss": "^8.4.32",
+    "serve": "^14.2.1",
     "sharp": "^0.34.5",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.0.0",

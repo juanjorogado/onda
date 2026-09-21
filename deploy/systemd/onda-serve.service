@@ -1,0 +1,16 @@
+[Unit]
+Description=ONDA Radio static frontend (serve)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/juanjo/public_html/onda
+Environment=PATH=/home/juanjo/.nvm/versions/node/v24.15.0/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/juanjo/.nvm/versions/node/v24.15.0/bin/serve -s . -l 8090
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
