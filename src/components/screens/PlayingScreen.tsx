@@ -151,19 +151,10 @@ export const PlayingScreen = memo(({
   triggerPull.current = onPull ?? (onSwipe ? () => onSwipe('left') : undefined as unknown as () => void);
 
   useEffect(() => {
-    // La superficie de gestos es TODO el container (no solo el board): el pull
-    // funciona también si el gesto empieza en el padding/huecos de los bordes.
-    const container = containerRef.current;
-    const element = container ?? boardRef.current;
-    if (!element) return;
+    // Listeners en DOCUMENT para capturar touches en toda la pantalla.
+    // Con touch-action:none en html/body, el browser no maneja nada — solo JS.
     const pullTrigger = triggerPull.current;
     if (!pullTrigger) return;
-
-    const isAtTop = () => {
-      if (container) return container.scrollTop <= 2;
-      // fallback: board parent scrollable
-      return true;
-    };
 
     const handleTouchStart = (e: globalThis.TouchEvent) => {
       const touch = e.touches[0];
@@ -179,183 +170,128 @@ export const PlayingScreen = memo(({
 
     const handleTouchMove = (e: globalThis.TouchEvent) => {
       if (hasCompletedPull.current) {
-        // ya disparado, bloquear scroll residual
         e.preventDefault();
-        e.stopPropagation();
         return;
       }
-      
-      const touch = e.touches[0];
-      const dx = touch.clientX - startX.current;
-      const dy = touch.clientY - startY.current;
-      const absDx = Math.abs(dx);
-      const absDy = Math.abs(dy);
-      
-      const currentDirection = pullDirectionRef.current;
 
-      // Determinar dirección: solo vertical pull-down
-      if (!currentDirection && (absDx > 8 || absDy > 8)) {
-        // Si el gesto es claramente vertical y hacia abajo, reclamarlo
-        if (absDy > absDx * 1.15 && dy > 0) {
-          // Solo reclamar si estamos arriba del todo — evita robar scroll interno
-          if (!isAtTop()) {
-            // Dejar que el navegador haga scroll normal
-            return;
-          }
-          setPullDirection('vertical');
+      const touch = e.touches[0];
+      const dy = touch.clientY - startY.current;
+      const dx = touch.clientX - startX.current;
+      const absDy = Math.abs(dy);
+      const absDx = Math.abs(dx);
+
+      // Esperar 4px para detectar dirección
+      if (!pullDirectionRef.current && absDy > 4) {
+        if (absDy > absDx && dy > 0) {
           pullDirectionRef.current = 'vertical';
-          // Reclamamos el gesto: evita scroll / pull-to-refresh nativo
-          e.preventDefault();
-          e.stopPropagation();
-        } else if (absDx > absDy * 1.2 || dy < 0) {
-          // Gesto horizontal o pull-up: no es nuestro caso, dejar pasar (no reclamar)
+        } else {
           return;
         }
       }
-      
-      // Procesar pull-down vertical
-      if (pullDirectionRef.current === 'vertical') {
-        // Solo dy positivo (hacia abajo); dy negativo es scroll up y lo ignoramos
-        if (dy <= 0) return;
 
-        // Si durante el arrastre dejamos de estar arriba, cancelar
-        if (!isAtTop() && !isDragging.current) return;
-
+      if (pullDirectionRef.current === 'vertical' && dy > 0) {
         e.preventDefault();
-        e.stopPropagation();
         isDragging.current = true;
         setIsDraggingState(true);
 
-        // Resistencia progresiva: más allá del umbral cuesta más avanzar
         const raw = dy * PULL_RESISTANCE;
-        let damped: number;
-        if (raw <= PULL_THRESHOLD) {
-          damped = raw;
-        } else {
-          const extra = raw - PULL_THRESHOLD;
-          // curva de resistencia: 0.3 de factor extra hasta el máximo
-          damped = PULL_THRESHOLD + Math.min(extra * 0.32, PULL_MAX_TRANSLATE - PULL_THRESHOLD);
-        }
+        const damped = raw <= PULL_THRESHOLD
+          ? raw
+          : PULL_THRESHOLD + Math.min((raw - PULL_THRESHOLD) * 0.32, PULL_MAX_TRANSLATE - PULL_THRESHOLD);
         const clamped = Math.min(damped, PULL_MAX_TRANSLATE);
         updateTranslate(clamped);
-        
+
         if (clamped >= PULL_THRESHOLD && !hasCompletedPull.current) {
           hasCompletedPull.current = true;
-          setIsTransitioning(true);
-
-          // Feedback háptico + sonoro al completar pull (audible en iOS donde
-          // la Vibration API no está disponible)
           stationChange();
-
-          // Fijar el translate al máximo: queda visible/armado mientras se
-          // sostiene aunque el dedo siga bajando (evita saltos tras el umbral)
           updateTranslate(PULL_MAX_TRANSLATE + 20);
           setDialReleasing(false);
         } else if (hasCompletedPull.current) {
-          // Ya completado: mantener la posición armada, sin seguir el dedo
           updateTranslate(PULL_MAX_TRANSLATE + 20);
         }
       }
-    };
-
-    // Soltar tras completar el pull: la animación desaparece (board vuelve + dial
-    // sube) y a continuación carga la nueva sintonía.
-    const releasePull = () => {
-      // El dial sube y se desvanece mientras el board vuelve
-      setDialReleasing(true);
-      setIsTransitioning(true);
-      updateTranslate(0);
-      setTimeout(() => {
-        setIsTransitioning(false);
-        isDragging.current = false;
-        setIsDraggingState(false);
-        setPullDirection(null);
-        pullDirectionRef.current = null;
-        hasCompletedPull.current = false;
-        setDialReleasing(false);
-      }, 380);
-      // Feedback al enganchar la nueva frecuencia
-      stationChange();
-      setTimeout(() => pullTrigger(), 500);
     };
 
     const handleTouchEnd = (e: globalThis.TouchEvent) => {
       if (hasCompletedPull.current) {
         e.preventDefault();
-        e.stopPropagation();
-        releasePull();
-        return;
-      }
-
-      // Fallback para gestos rápidos: iOS compacta los touchmove, y si el dedo
-      // bajó más del umbral antes de soltar, dispara el pull igualmente.
-      const touch = e.changedTouches && e.changedTouches[0];
-      if (touch && touch.clientY - startY.current > PULL_THRESHOLD) {
-        hasCompletedPull.current = true;
-        e.preventDefault();
-        e.stopPropagation();
-        releasePull();
-        return;
-      }
-      
-      const currentDirection = pullDirectionRef.current;
-      
-      if (isDragging.current) {
-        // Si no se alcanzó el umbral, volver con rebote
-        if (currentDirection === 'vertical' && translateYRef.current < PULL_THRESHOLD) {
-          setIsTransitioning(true);
-          updateTranslate(0);
-          setTimeout(() => {
-            setIsTransitioning(false);
-            isDragging.current = false;
-            setIsDraggingState(false);
-            setPullDirection(null);
-            pullDirectionRef.current = null;
-          }, 280);
-        } else {
-          // Limpiar estado sin animar (ya se animó al completar)
+        // Release: dial sube, board vuelve, cambia estación
+        setDialReleasing(true);
+        setIsTransitioning(true);
+        updateTranslate(0);
+        setTimeout(() => {
+          setIsTransitioning(false);
           isDragging.current = false;
           setIsDraggingState(false);
           setPullDirection(null);
           pullDirectionRef.current = null;
-        }
+          hasCompletedPull.current = false;
+          setDialReleasing(false);
+        }, 380);
+        stationChange();
+        setTimeout(() => pullTrigger(), 500);
+        return;
+      }
+
+      // Fallback: si el dedo bajó >80px sin que touchmove lo captara
+      const touch = e.changedTouches && e.changedTouches[0];
+      if (touch && touch.clientY - startY.current > PULL_THRESHOLD) {
+        hasCompletedPull.current = true;
+        setDialReleasing(true);
+        setIsTransitioning(true);
+        updateTranslate(0);
+        setTimeout(() => {
+          setIsTransitioning(false);
+          isDragging.current = false;
+          setIsDraggingState(false);
+          setPullDirection(null);
+          pullDirectionRef.current = null;
+          hasCompletedPull.current = false;
+          setDialReleasing(false);
+        }, 380);
+        stationChange();
+        setTimeout(() => pullTrigger(), 500);
+        return;
+      }
+
+      // Sin pull: reset
+      if (isDragging.current && translateYRef.current < PULL_THRESHOLD) {
+        setIsTransitioning(true);
+        updateTranslate(0);
+        setTimeout(() => {
+          setIsTransitioning(false);
+          isDragging.current = false;
+          setIsDraggingState(false);
+          setPullDirection(null);
+          pullDirectionRef.current = null;
+        }, 280);
       } else {
-        // Toco corto sin arrastre
+        isDragging.current = false;
+        setIsDraggingState(false);
         setPullDirection(null);
         pullDirectionRef.current = null;
       }
     };
 
     const handleTouchCancel = () => {
-      if (hasCompletedPull.current) {
-        // Cancelar tras completar el pull: se comporta igual que soltar
-        releasePull();
-        return;
-      }
-      setIsTransitioning(true);
+      isDragging.current = false;
+      setIsDraggingState(false);
+      setPullDirection(null);
+      pullDirectionRef.current = null;
+      hasCompletedPull.current = false;
       updateTranslate(0);
-      setTimeout(() => {
-        setIsTransitioning(false);
-        isDragging.current = false;
-        setIsDraggingState(false);
-        setPullDirection(null);
-        pullDirectionRef.current = null;
-        hasCompletedPull.current = false;
-      }, 280);
     };
 
-    // Agregar listeners con { passive: false } para permitir preventDefault
-    // touchstart puede ser passive, pero move/end deben ser no-passive
-    element.addEventListener('touchstart', handleTouchStart, { passive: true });
-    element.addEventListener('touchmove', handleTouchMove, { passive: false });
-    element.addEventListener('touchend', handleTouchEnd, { passive: false });
-    element.addEventListener('touchcancel', handleTouchCancel, { passive: false });
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    document.addEventListener('touchcancel', handleTouchCancel, { passive: false });
 
     return () => {
-      element.removeEventListener('touchstart', handleTouchStart);
-      element.removeEventListener('touchmove', handleTouchMove);
-      element.removeEventListener('touchend', handleTouchEnd);
-      element.removeEventListener('touchcancel', handleTouchCancel);
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('touchcancel', handleTouchCancel);
     };
   }, [stationChange, updateTranslate]);
 

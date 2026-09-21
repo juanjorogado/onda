@@ -26,9 +26,6 @@ html {
   height: 100%;
   background-color: var(--color-background);
   color-scheme: light dark;
-  touch-action: none;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: auto;
 }
 
 /* Box-sizing global: sin esto, height:100% + env(safe-area-inset-*) desborda
@@ -84,8 +81,6 @@ body {
   text-rendering: optimizeLegibility;
   font-family: var(--font-family-base);
   width: 100%;
-  touch-action: none;
-  overflow: hidden;
 }
 
 #root {
